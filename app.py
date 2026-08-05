@@ -89,7 +89,7 @@ BASE_DATOS = {
         "Deportivo Saprissa": {"gf": 1.60, "gc": 1.20, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.6},
         "FC Motagua": {"gf": 1.45, "gc": 1.30, "gf1t": 0.60, "corners": 4.5, "tarjetas": 2.7},
         "CS Herediano": {"gf": 1.50, "gc": 1.25, "gf1t": 0.60, "corners": 4.6, "tarjetas": 2.5},
-        "Seattle Sounders": {"gf": 1.60, "gc": 1.10, "gf1t": 0.65, "corners": 5.2, "tarjetas": 2.1},
+        "Seattle Sounders FC": {"gf": 1.60, "gc": 1.10, "gf1t": 0.65, "corners": 5.2, "tarjetas": 2.1},
         "Pachuca FC": {"gf": 1.80, "gc": 1.25, "gf1t": 0.80, "corners": 5.5, "tarjetas": 2.3}
     },
     "Leagues Cup (MLS vs Liga MX)": {
@@ -236,9 +236,8 @@ BASE_DATOS = {
 }
 
 st.title("⚽ SIMULADOR PREDICTIVO MONTE CARLO ULTRA PRO")
-st.markdown("Incluye probabilidades de **Goles (1T y FT)**, **Córners**, **Tarjetas Amarillas** y **Tarjeta Roja**.")
+st.markdown("Resultados 1X2 Tiempo Completo y 1er Tiempo, Goles, Córners y Tarjetas.")
 
-# Opciones de Modo de Uso
 modo = st.sidebar.radio("Modo de Selección de Equipos:", ["📋 Elegir de la Lista de Ligas", "✍️ Ingresar Equipos Manualmente"])
 
 data_loc, data_vis = None, None
@@ -298,7 +297,6 @@ f_prio_loc = 1.0 + (prio_loc - 5) * 0.04
 f_prio_vis = 1.0 + (prio_vis - 5) * 0.04
 
 if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_width=True):
-    # Lambdas ajustados
     l_gf_loc = data_loc["gf"] * 1.10 * f_prio_loc * f_ritmo
     l_gf_vis = data_vis["gf"] * f_prio_vis * f_ritmo
 
@@ -308,7 +306,6 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
     l_corners_tot = (data_loc["corners"] + data_vis["corners"]) * f_ritmo
     l_tarjetas_tot = (data_loc["tarjetas"] + data_vis["tarjetas"]) * f_ritmo
 
-    # Motor Monte Carlo (10,000 sim)
     N = 10000
     goles_loc = np.random.poisson(l_gf_loc, N)
     goles_vis = np.random.poisson(l_gf_vis, N)
@@ -321,14 +318,18 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
 
     tarjetas_ft = np.random.poisson(l_tarjetas_tot, N)
     
-    # Probabilidad de tarjeta roja basada en agresividad combinada
     p_roja_base = min(0.42, 0.16 * (l_tarjetas_tot / 4.2))
     rojas = np.random.binomial(1, p_roja_base, N)
 
-    # Porcentajes calculados
+    # Probabilidades 1X2 Tiempo Completo
     p_win_loc = np.mean(goles_loc > goles_vis) * 100
     p_draw = np.mean(goles_loc == goles_vis) * 100
     p_win_vis = np.mean(goles_loc < goles_vis) * 100
+
+    # Probabilidades 1X2 1er Tiempo (Ganador al Descanso)
+    p_1t_win_loc = np.mean(goles_1t_loc > goles_1t_vis) * 100
+    p_1t_draw = np.mean(goles_1t_loc == goles_1t_vis) * 100
+    p_1t_win_vis = np.mean(goles_1t_loc < goles_1t_vis) * 100
 
     p_1t_05 = np.mean((goles_1t_loc + goles_1t_vis) > 0.5) * 100
     p_ft_25 = np.mean((goles_loc + goles_vis) > 2.5) * 100
@@ -338,12 +339,19 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
     p_roja = np.mean(rojas) * 100
 
     st.markdown("---")
-    st.subheader(f"📊 Probabilidades 1X2: {eq_local_nombre} vs {eq_visita_nombre}")
+    st.subheader(f"📊 Probabilidades 1X2 (Tiempo Completo): {eq_local_nombre} vs {eq_visita_nombre}")
 
     c1, c2, c3 = st.columns(3)
     c1.metric(f"Victoria {eq_local_nombre}", f"{p_win_loc:.1f}%")
-    c2.metric("Empate", f"{p_draw:.1f}%")
+    c2.metric("Empate Final", f"{p_draw:.1f}%")
     c3.metric(f"Victoria {eq_visita_nombre}", f"{p_win_vis:.1f}%")
+
+    st.subheader(f"⏱️ Probabilidades 1X2 (Resultado al Descanso / 1er Tiempo)")
+
+    d1, d2, d3 = st.columns(3)
+    d1.metric(f"Gana 1T {eq_local_nombre}", f"{p_1t_win_loc:.1f}%")
+    d2.metric("Empate al 1T", f"{p_1t_draw:.1f}%")
+    d3.metric(f"Gana 1T {eq_visita_nombre}", f"{p_1t_win_vis:.1f}%")
 
     st.subheader("🎯 Pronósticos Sugeridos y Líneas de Valor")
     
