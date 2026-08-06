@@ -2,10 +2,11 @@ name: Actualizacion Diaria de Datos
 
 on:
   schedule:
-    # Formato Cron: Minuto Hora Día Mes Día_Semana (en horario UTC)
-    # Ejemplo: '0 8 * * *' corre todos los días a las 02:00 AM hora de Honduras/Centroamérica (UTC-6)
     - cron: '0 6 * * *'
-  workflow_dispatch: # Permite presionar un botón en GitHub para probar la ejecución cuando quieras
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   run-app:
@@ -23,9 +24,7 @@ jobs:
       - name: Instalar librerías requeridas
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # Si no usas requirements.txt, descomenta la siguiente línea y agrega las librerías que usa tu app.py:
-          # pip install pandas requests
+          pip install streamlit numpy pandas requests
 
       - name: Ejecutar app.py
         run: python app.py
