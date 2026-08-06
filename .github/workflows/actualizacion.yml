@@ -1,0 +1,40 @@
+name: Actualizacion Diaria de Datos
+
+on:
+  schedule:
+    # Formato Cron: Minuto Hora Día Mes Día_Semana (en horario UTC)
+    # Ejemplo: '0 8 * * *' corre todos los días a las 02:00 AM hora de Honduras/Centroamérica (UTC-6)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Permite presionar un botón en GitHub para probar la ejecución cuando quieras
+
+jobs:
+  run-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar librerías requeridas
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Si no usas requirements.txt, descomenta la siguiente línea y agrega las librerías que usa tu app.py:
+          # pip install pandas requests
+
+      - name: Ejecutar app.py
+        run: python app.py
+
+      - name: Guardar y subir cambios al repositorio
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Actualización automática de datos [skip ci]"
+          git push
+
