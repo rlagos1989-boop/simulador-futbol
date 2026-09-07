@@ -9,9 +9,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Base de datos completa con los equipos exactos de tus tablas, UEFA y Leagues Cup
+# Base de datos completa
 BASE_DATOS = {
-    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League (2026/27)": {
+      "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League (2026/27)": {
         "Arsenal": {"gf": 2.20, "gc": 0.80, "gf1t": 1.10, "corners": 6.5, "tarjetas": 1.8},
         "Aston Villa": {"gf": 1.80, "gc": 1.30, "gf1t": 0.80, "corners": 5.3, "tarjetas": 2.4},
         "Chelsea": {"gf": 1.75, "gc": 1.30, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.5},
@@ -220,6 +220,7 @@ BASE_DATOS = {
         "Marseille": {"gf": 1.80, "gc": 1.25, "gf1t": 0.80, "corners": 5.6, "tarjetas": 2.5},
         "Toulouse": {"gf": 1.25, "gc": 1.35, "gf1t": 0.45, "corners": 4.4, "tarjetas": 2.3},
         "Lens": {"gf": 1.50, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.4},
+        "Olympique Lyon": {"gf": 1.65,"gc": 1.25,"gf1t": 0.70,"corners": 5.4,"tarjetas": 2.2, "posicion": 6 # 
         "Rennes": {"gf": 1.55, "gc": 1.30, "gf1t": 0.65, "corners": 5.1, "tarjetas": 2.1}
     },
     "🏆 Leagues Cup (2026)": {
@@ -261,47 +262,1468 @@ BASE_DATOS = {
         "Puebla": {"gf": 1.00, "gc": 1.00, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.6}
     },
     "🇪🇺 UEFA Champions League (2026/27)": {
-        "Real Madrid": {"gf": 2.25, "gc": 0.85, "gf1t": 1.05, "corners": 6.0, "tarjetas": 1.9},
-        "Manchester City": {"gf": 2.40, "gc": 0.90, "gf1t": 1.20, "corners": 7.0, "tarjetas": 1.6},
-        "Bayern Munich": {"gf": 2.35, "gc": 1.00, "gf1t": 1.15, "corners": 6.6, "tarjetas": 1.8},
-        "Paris Saint-Germain": {"gf": 2.30, "gc": 0.95, "gf1t": 1.10, "corners": 6.5, "tarjetas": 2.0},
-        "FC Barcelona": {"gf": 2.10, "gc": 1.00, "gf1t": 0.95, "corners": 6.1, "tarjetas": 2.1},
-        "Inter Milan": {"gf": 1.85, "gc": 0.85, "gf1t": 0.90, "corners": 5.2, "tarjetas": 2.2},
-        "Arsenal": {"gf": 2.15, "gc": 0.85, "gf1t": 1.05, "corners": 6.4, "tarjetas": 1.9},
-        "Bayer Leverkusen": {"gf": 2.20, "gc": 1.00, "gf1t": 1.10, "corners": 6.2, "tarjetas": 2.0},
-        "Liverpool": {"gf": 2.25, "gc": 1.05, "gf1t": 1.05, "corners": 6.7, "tarjetas": 1.8},
-        "Atletico Madrid": {"gf": 1.65, "gc": 0.90, "gf1t": 0.70, "corners": 4.9, "tarjetas": 2.7},
-        "Borussia Dortmund": {"gf": 1.90, "gc": 1.25, "gf1t": 0.85, "corners": 5.6, "tarjetas": 2.1},
-        "Juventus": {"gf": 1.50, "gc": 0.85, "gf1t": 0.65, "corners": 4.5, "tarjetas": 2.3}
+      🏆 UEFA Champions League": {
+        "Arsenal": {
+            "gf": 2.35,
+            "gc": 0.72,
+            "gf1t": 1.12,
+            "gc1t": 0.22,
+            "corners": 6.8,
+            "tarjetas": 1.6,
+            "rojas": 0.05,
+            "posicion": 1,
+            "pts_ult_5": 13,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Aston Villa": {
+            "gf": 1.85,
+            "gc": 1.15,
+            "gf1t": 0.82,
+            "gc1t": 0.48,
+            "corners": 5.4,
+            "tarjetas": 2.1,
+            "rojas": 0.06,
+            "posicion": 2,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Liverpool": {
+            "gf": 2.40,
+            "gc": 0.88,
+            "gf1t": 1.15,
+            "gc1t": 0.35,
+            "corners": 7.0,
+            "tarjetas": 1.6,
+            "rojas": 0.04,
+            "posicion": 3,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Manchester City": {
+            "gf": 2.45,
+            "gc": 0.80,
+            "gf1t": 1.20,
+            "gc1t": 0.30,
+            "corners": 7.4,
+            "tarjetas": 1.4,
+            "rojas": 0.03,
+            "posicion": 4,
+            "pts_ult_5": 11,
+            "sin_ganar": 1,
+            "bajas_clave": 2,
+        },
+        "Manchester United": {
+            "gf": 1.80,
+            "gc": 1.18,
+            "gf1t": 0.78,
+            "gc1t": 0.48,
+            "corners": 5.8,
+            "tarjetas": 2.0,
+            "rojas": 0.07,
+            "posicion": 5,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Lille": {
+            "gf": 1.75,
+            "gc": 1.00,
+            "gf1t": 0.78,
+            "gc1t": 0.42,
+            "corners": 5.3,
+            "tarjetas": 2.0,
+            "rojas": 0.07,
+            "posicion": 6,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "PSG": {
+            "gf": 2.38,
+            "gc": 0.85,
+            "gf1t": 1.15,
+            "gc1t": 0.32,
+            "corners": 6.6,
+            "tarjetas": 1.8,
+            "rojas": 0.05,
+            "posicion": 7,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Napoli": {
+            "gf": 1.90,
+            "gc": 0.95,
+            "gf1t": 0.85,
+            "gc1t": 0.38,
+            "corners": 5.9,
+            "tarjetas": 2.0,
+            "rojas": 0.05,
+            "posicion": 8,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "LASK": {
+            "gf": 1.50,
+            "gc": 1.25,
+            "gf1t": 0.62,
+            "gc1t": 0.50,
+            "corners": 4.9,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 9,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Slavia Praga": {
+            "gf": 1.95,
+            "gc": 0.88,
+            "gf1t": 0.88,
+            "gc1t": 0.32,
+            "corners": 5.8,
+            "tarjetas": 2.1,
+            "rojas": 0.08,
+            "posicion": 10,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Club Brujas": {
+            "gf": 1.88,
+            "gc": 1.05,
+            "gf1t": 0.82,
+            "gc1t": 0.42,
+            "corners": 5.7,
+            "tarjetas": 2.1,
+            "rojas": 0.08,
+            "posicion": 11,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Lens": {
+            "gf": 1.68,
+            "gc": 1.02,
+            "gf1t": 0.72,
+            "gc1t": 0.40,
+            "corners": 5.2,
+            "tarjetas": 2.1,
+            "rojas": 0.06,
+            "posicion": 12,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Slovan Bratislava": {
+            "gf": 1.45,
+            "gc": 1.58,
+            "gf1t": 0.58,
+            "gc1t": 0.65,
+            "corners": 4.4,
+            "tarjetas": 2.5,
+            "rojas": 0.12,
+            "posicion": 13,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
+        "Bayern Múnich": {
+            "gf": 2.62,
+            "gc": 0.82,
+            "gf1t": 1.25,
+            "gc1t": 0.30,
+            "corners": 7.2,
+            "tarjetas": 1.5,
+            "rojas": 0.04,
+            "posicion": 14,
+            "pts_ult_5": 13,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Borussia Dortmund": {
+            "gf": 2.10,
+            "gc": 1.18,
+            "gf1t": 0.95,
+            "gc1t": 0.48,
+            "corners": 5.9,
+            "tarjetas": 2.0,
+            "rojas": 0.07,
+            "posicion": 15,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "AS Roma": {
+            "gf": 1.70,
+            "gc": 1.10,
+            "gf1t": 0.68,
+            "gc1t": 0.42,
+            "corners": 5.5,
+            "tarjetas": 2.3,
+            "rojas": 0.10,
+            "posicion": 16,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Inter de Milán": {
+            "gf": 2.18,
+            "gc": 0.68,
+            "gf1t": 0.98,
+            "gc1t": 0.22,
+            "corners": 6.0,
+            "tarjetas": 1.7,
+            "rojas": 0.03,
+            "posicion": 17,
+            "pts_ult_5": 13,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "PSV Eindhoven": {
+            "gf": 2.45,
+            "gc": 0.85,
+            "gf1t": 1.18,
+            "gc1t": 0.32,
+            "corners": 6.6,
+            "tarjetas": 1.5,
+            "rojas": 0.04,
+            "posicion": 18,
+            "pts_ult_5": 13,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Feyenoord": {
+            "gf": 2.05,
+            "gc": 1.02,
+            "gf1t": 0.92,
+            "gc1t": 0.38,
+            "corners": 6.1,
+            "tarjetas": 1.8,
+            "rojas": 0.05,
+            "posicion": 19,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Real Madrid": {
+            "gf": 2.48,
+            "gc": 0.78,
+            "gf1t": 1.15,
+            "gc1t": 0.28,
+            "corners": 6.5,
+            "tarjetas": 1.7,
+            "rojas": 0.04,
+            "posicion": 20,
+            "pts_ult_5": 13,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Villarreal": {
+            "gf": 1.82,
+            "gc": 1.15,
+            "gf1t": 0.78,
+            "gc1t": 0.48,
+            "corners": 5.4,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 21,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "FC Barcelona": {
+            "gf": 2.58,
+            "gc": 0.88,
+            "gf1t": 1.20,
+            "gc1t": 0.35,
+            "corners": 6.7,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 22,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Atlético de Madrid": {
+            "gf": 1.88,
+            "gc": 0.82,
+            "gf1t": 0.88,
+            "gc1t": 0.32,
+            "corners": 5.4,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 23,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Real Betis": {
+            "gf": 1.72,
+            "gc": 1.02,
+            "gf1t": 0.72,
+            "gc1t": 0.40,
+            "corners": 5.5,
+            "tarjetas": 2.2,
+            "rojas": 0.07,
+            "posicion": 24,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "FC Porto": {
+            "gf": 2.10,
+            "gc": 0.85,
+            "gf1t": 0.98,
+            "gc1t": 0.32,
+            "corners": 6.1,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 25,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "VfB Stuttgart": {
+            "gf": 1.90,
+            "gc": 1.28,
+            "gf1t": 0.82,
+            "gc1t": 0.52,
+            "corners": 5.6,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 26,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "AEK Atenas": {
+            "gf": 1.65,
+            "gc": 1.15,
+            "gf1t": 0.72,
+            "gc1t": 0.45,
+            "corners": 5.1,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 27,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Viking FK": {
+            "gf": 1.58,
+            "gc": 1.32,
+            "gf1t": 0.65,
+            "gc1t": 0.52,
+            "corners": 5.0,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 28,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Bodø/Glimt": {
+            "gf": 2.02,
+            "gc": 1.22,
+            "gf1t": 0.92,
+            "gc1t": 0.50,
+            "corners": 5.9,
+            "tarjetas": 1.7,
+            "rojas": 0.05,
+            "posicion": 29,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Sporting CP": {
+            "gf": 2.25,
+            "gc": 0.82,
+            "gf1t": 1.08,
+            "gc1t": 0.28,
+            "corners": 6.3,
+            "tarjetas": 1.8,
+            "rojas": 0.05,
+            "posicion": 30,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Galatasaray": {
+            "gf": 2.22,
+            "gc": 1.12,
+            "gf1t": 1.02,
+            "gc1t": 0.45,
+            "corners": 6.2,
+            "tarjetas": 2.5,
+            "rojas": 0.12,
+            "posicion": 31,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Fenerbahçe": {
+            "gf": 2.12,
+            "gc": 0.98,
+            "gf1t": 0.98,
+            "gc1t": 0.38,
+            "corners": 6.0,
+            "tarjetas": 2.4,
+            "rojas": 0.11,
+            "posicion": 32,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Shakhtar Donetsk": {
+            "gf": 1.80,
+            "gc": 1.15,
+            "gf1t": 0.78,
+            "gc1t": 0.48,
+            "corners": 5.2,
+            "tarjetas": 2.0,
+            "rojas": 0.07,
+            "posicion": 33,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Como 1907": {
+            "gf": 1.48,
+            "gc": 1.35,
+            "gf1t": 0.62,
+            "gc1t": 0.55,
+            "corners": 4.8,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 34,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "RB Leipzig": {
+            "gf": 2.00,
+            "gc": 1.08,
+            "gf1t": 0.90,
+            "gc1t": 0.42,
+            "corners": 5.8,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 35,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Sabah Bakú": {
+            "gf": 1.30,
+            "gc": 1.55,
+            "gf1t": 0.50,
+            "gc1t": 0.62,
+            "corners": 4.2,
+            "tarjetas": 2.6,
+            "rojas": 0.13,
+            "posicion": 36,
+            "pts_ult_5": 4,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
     },
-    "🇪🇺 UEFA Europa League (2026/27)": {
-        "AS Roma": {"gf": 1.65, "gc": 1.10, "gf1t": 0.70, "corners": 5.2, "tarjetas": 2.3},
-        "Manchester United": {"gf": 1.70, "gc": 1.25, "gf1t": 0.75, "corners": 5.4, "tarjetas": 2.2},
-        "Tottenham Hotspur": {"gf": 1.85, "gc": 1.35, "gf1t": 0.80, "corners": 6.0, "tarjetas": 2.2},
-        "Athletic Bilbao": {"gf": 1.60, "gc": 1.00, "gf1t": 0.65, "corners": 5.4, "tarjetas": 2.3},
-        "SS Lazio": {"gf": 1.55, "gc": 1.10, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.5},
-        "Eintracht Frankfurt": {"gf": 1.75, "gc": 1.30, "gf1t": 0.75, "corners": 5.1, "tarjetas": 2.2},
-        "Real Betis": {"gf": 1.50, "gc": 1.20, "gf1t": 0.60, "corners": 4.9, "tarjetas": 2.3},
-        "Olympique Lyonnais": {"gf": 1.65, "gc": 1.30, "gf1t": 0.70, "corners": 5.3, "tarjetas": 2.4},
-        "FC Porto": {"gf": 1.90, "gc": 0.90, "gf1t": 0.90, "corners": 5.8, "tarjetas": 2.2},
-        "Ajax Amsterdam": {"gf": 1.70, "gc": 1.25, "gf1t": 0.75, "corners": 5.5, "tarjetas": 2.0}
+    "🟧 UEFA Europa League": {
+        "Sunderland": {
+            "gf": 1.55,
+            "gc": 1.25,
+            "gf1t": 0.65,
+            "gc1t": 0.50,
+            "corners": 5.0,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 1,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Crystal Palace": {
+            "gf": 1.62,
+            "gc": 1.20,
+            "gf1t": 0.68,
+            "gc1t": 0.48,
+            "corners": 5.2,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 2,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Bournemouth": {
+            "gf": 1.68,
+            "gc": 1.28,
+            "gf1t": 0.72,
+            "gc1t": 0.52,
+            "corners": 5.4,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 3,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Real Sociedad": {
+            "gf": 1.48,
+            "gc": 1.05,
+            "gf1t": 0.65,
+            "gc1t": 0.42,
+            "corners": 5.5,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 4,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Celta Vigo": {
+            "gf": 1.60,
+            "gc": 1.30,
+            "gf1t": 0.68,
+            "gc1t": 0.52,
+            "corners": 5.1,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 5,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Salzburgo": {
+            "gf": 1.95,
+            "gc": 1.20,
+            "gf1t": 0.88,
+            "gc1t": 0.48,
+            "corners": 5.8,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 6,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Sturm Graz": {
+            "gf": 1.60,
+            "gc": 1.30,
+            "gf1t": 0.68,
+            "gc1t": 0.52,
+            "corners": 4.9,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 7,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Viktoria Plzen": {
+            "gf": 1.62,
+            "gc": 1.08,
+            "gf1t": 0.68,
+            "gc1t": 0.42,
+            "corners": 5.0,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 8,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Sparta Praga": {
+            "gf": 1.75,
+            "gc": 1.20,
+            "gf1t": 0.72,
+            "gc1t": 0.48,
+            "corners": 5.3,
+            "tarjetas": 2.3,
+            "rojas": 0.10,
+            "posicion": 9,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Anderlecht": {
+            "gf": 1.68,
+            "gc": 1.12,
+            "gf1t": 0.72,
+            "gc1t": 0.45,
+            "corners": 5.2,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 10,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Union Saint-Gilloise": {
+            "gf": 1.58,
+            "gc": 1.18,
+            "gf1t": 0.68,
+            "gc1t": 0.48,
+            "corners": 5.1,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 11,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Marsella": {
+            "gf": 1.95,
+            "gc": 1.15,
+            "gf1t": 0.85,
+            "gc1t": 0.45,
+            "corners": 5.8,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 12,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Rennes": {
+            "gf": 1.70,
+            "gc": 1.20,
+            "gf1t": 0.72,
+            "gc1t": 0.48,
+            "corners": 5.3,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 13,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Lyon": {
+            "gf": 1.82,
+            "gc": 1.22,
+            "gf1t": 0.78,
+            "gc1t": 0.50,
+            "corners": 5.4,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 14,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Bayer Leverkusen": {
+            "gf": 2.20,
+            "gc": 0.92,
+            "gf1t": 1.02,
+            "gc1t": 0.32,
+            "corners": 6.2,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 15,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Hoffenheim": {
+            "gf": 1.85,
+            "gc": 1.35,
+            "gf1t": 0.80,
+            "gc1t": 0.55,
+            "corners": 5.3,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 16,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Juventus": {
+            "gf": 1.80,
+            "gc": 0.68,
+            "gf1t": 0.80,
+            "gc1t": 0.22,
+            "corners": 5.5,
+            "tarjetas": 2.0,
+            "rojas": 0.04,
+            "posicion": 17,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "AC Milán": {
+            "gf": 1.85,
+            "gc": 1.15,
+            "gf1t": 0.82,
+            "gc1t": 0.48,
+            "corners": 5.7,
+            "tarjetas": 2.2,
+            "rojas": 0.09,
+            "posicion": 18,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Nijmegen": {
+            "gf": 1.45,
+            "gc": 1.35,
+            "gf1t": 0.60,
+            "gc1t": 0.55,
+            "corners": 4.8,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 19,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "AZ Alkmaar": {
+            "gf": 1.88,
+            "gc": 1.10,
+            "gf1t": 0.82,
+            "gc1t": 0.48,
+            "corners": 5.7,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 20,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Torreense": {
+            "gf": 1.25,
+            "gc": 1.48,
+            "gf1t": 0.50,
+            "gc1t": 0.60,
+            "corners": 4.2,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 21,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
+        "Levski Sofía": {
+            "gf": 1.40,
+            "gc": 1.32,
+            "gf1t": 0.58,
+            "gc1t": 0.52,
+            "corners": 4.6,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 22,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Dinamo Zagreb": {
+            "gf": 1.85,
+            "gc": 1.25,
+            "gf1t": 0.82,
+            "gc1t": 0.52,
+            "corners": 5.4,
+            "tarjetas": 2.2,
+            "rojas": 0.09,
+            "posicion": 23,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Omonia": {
+            "gf": 1.42,
+            "gc": 1.28,
+            "gf1t": 0.58,
+            "gc1t": 0.50,
+            "corners": 4.6,
+            "tarjetas": 2.6,
+            "rojas": 0.12,
+            "posicion": 24,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "OFI Creta": {
+            "gf": 1.35,
+            "gc": 1.42,
+            "gf1t": 0.52,
+            "gc1t": 0.58,
+            "corners": 4.4,
+            "tarjetas": 2.6,
+            "rojas": 0.12,
+            "posicion": 25,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
+        "Olympiacos Piraeus": {
+            "gf": 1.78,
+            "gc": 0.98,
+            "gf1t": 0.78,
+            "gc1t": 0.38,
+            "corners": 5.3,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 26,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Hapoel Beer Sheva": {
+            "gf": 1.42,
+            "gc": 1.30,
+            "gf1t": 0.58,
+            "gc1t": 0.52,
+            "corners": 4.5,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 27,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Lillestrom": {
+            "gf": 1.48,
+            "gc": 1.38,
+            "gf1t": 0.60,
+            "gc1t": 0.55,
+            "corners": 4.8,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 28,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Jagiellonia": {
+            "gf": 1.72,
+            "gc": 1.22,
+            "gf1t": 0.72,
+            "gc1t": 0.50,
+            "corners": 5.1,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 29,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Lech Poznan": {
+            "gf": 1.62,
+            "gc": 1.20,
+            "gf1t": 0.68,
+            "gc1t": 0.48,
+            "corners": 5.0,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 30,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Benfica": {
+            "gf": 2.10,
+            "gc": 0.88,
+            "gf1t": 0.98,
+            "gc1t": 0.32,
+            "corners": 6.0,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 31,
+            "pts_ult_5": 10,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Céltico": {
+            "gf": 2.25,
+            "gc": 1.10,
+            "gf1t": 1.02,
+            "gc1t": 0.42,
+            "corners": 6.4,
+            "tarjetas": 1.6,
+            "rojas": 0.05,
+            "posicion": 32,
+            "pts_ult_5": 12,
+            "sin_ganar": 0,
+            "bajas_clave": 0,
+        },
+        "Celje": {
+            "gf": 1.42,
+            "gc": 1.38,
+            "gf1t": 0.58,
+            "gc1t": 0.55,
+            "corners": 4.6,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 33,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Besiktas": {
+            "gf": 1.78,
+            "gc": 1.18,
+            "gf1t": 0.78,
+            "gc1t": 0.50,
+            "corners": 5.5,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 34,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Ferencvaros": {
+            "gf": 1.58,
+            "gc": 1.22,
+            "gf1t": 0.68,
+            "gc1t": 0.50,
+            "corners": 5.0,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 35,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Ararat-Armenia": {
+            "gf": 1.25,
+            "gc": 1.50,
+            "gf1t": 0.48,
+            "gc1t": 0.62,
+            "corners": 4.1,
+            "tarjetas": 2.6,
+            "rojas": 0.13,
+            "posicion": 36,
+            "pts_ult_5": 4,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
     },
-    "🇪🇺 UEFA Conference League (2026/27)": {
-        "Fiorentina": {"gf": 1.70, "gc": 1.15, "gf1t": 0.75, "corners": 5.6, "tarjetas": 2.4},
-        "Chelsea": {"gf": 1.95, "gc": 1.10, "gf1t": 0.90, "corners": 5.8, "tarjetas": 2.3},
-        "Real Betis": {"gf": 1.55, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.3},
-        "RC Lens": {"gf": 1.50, "gc": 1.10, "gf1t": 0.65, "corners": 5.1, "tarjetas": 2.3},
-        "1. FC Heidenheim": {"gf": 1.40, "gc": 1.35, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.1},
-        "Panathinaikos": {"gf": 1.45, "gc": 1.20, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.6},
-        "Gent": {"gf": 1.50, "gc": 1.30, "gf1t": 0.60, "corners": 4.9, "tarjetas": 2.2},
-        "FC Copenhagen": {"gf": 1.60, "gc": 1.15, "gf1t": 0.70, "corners": 5.2, "tarjetas": 2.0}
-    }
-}
+    "🟩 UEFA Conference League": {
+        "Mjallby": {
+            "gf": 1.38,
+            "gc": 1.28,
+            "gf1t": 0.55,
+            "gc1t": 0.52,
+            "corners": 4.6,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 1,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Brighton": {
+            "gf": 1.88,
+            "gc": 1.25,
+            "gf1t": 0.82,
+            "gc1t": 0.50,
+            "corners": 5.8,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 2,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Mónaco": {
+            "gf": 1.95,
+            "gc": 1.10,
+            "gf1t": 0.88,
+            "gc1t": 0.48,
+            "corners": 5.6,
+            "tarjetas": 2.1,
+            "rojas": 0.10,
+            "posicion": 3,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Jablonec": {
+            "gf": 1.32,
+            "gc": 1.40,
+            "gf1t": 0.52,
+            "gc1t": 0.58,
+            "corners": 4.3,
+            "tarjetas": 2.4,
+            "rojas": 0.09,
+            "posicion": 4,
+            "pts_ult_5": 5,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Caballero": {
+            "gf": 1.45,
+            "gc": 1.35,
+            "gf1t": 0.58,
+            "gc1t": 0.55,
+            "corners": 4.7,
+            "tarjetas": 2.3,
+            "rojas": 0.08,
+            "posicion": 5,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "San Truiden": {
+            "gf": 1.40,
+            "gc": 1.38,
+            "gf1t": 0.55,
+            "gc1t": 0.55,
+            "corners": 4.5,
+            "tarjetas": 2.2,
+            "rojas": 0.07,
+            "posicion": 6,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Friburgo": {
+            "gf": 1.72,
+            "gc": 1.18,
+            "gf1t": 0.72,
+            "gc1t": 0.48,
+            "corners": 5.4,
+            "tarjetas": 1.9,
+            "rojas": 0.05,
+            "posicion": 7,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Atalanta": {
+            "gf": 2.15,
+            "gc": 1.00,
+            "gf1t": 1.00,
+            "gc1t": 0.38,
+            "corners": 6.1,
+            "tarjetas": 2.0,
+            "rojas": 0.05,
+            "posicion": 8,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Ajax": {
+            "gf": 2.02,
+            "gc": 1.05,
+            "gf1t": 0.92,
+            "gc1t": 0.42,
+            "corners": 5.9,
+            "tarjetas": 1.8,
+            "rojas": 0.05,
+            "posicion": 9,
+            "pts_ult_5": 11,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Twente": {
+            "gf": 1.72,
+            "gc": 1.18,
+            "gf1t": 0.72,
+            "gc1t": 0.50,
+            "corners": 5.4,
+            "tarjetas": 2.0,
+            "rojas": 0.06,
+            "posicion": 10,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Getafe": {
+            "gf": 1.30,
+            "gc": 1.10,
+            "gf1t": 0.52,
+            "gc1t": 0.42,
+            "corners": 4.6,
+            "tarjetas": 2.8,
+            "rojas": 0.14,
+            "posicion": 11,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "KuPS": {
+            "gf": 1.32,
+            "gc": 1.38,
+            "gf1t": 0.52,
+            "gc1t": 0.55,
+            "corners": 4.4,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 12,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
+        "CSKA Sofía": {
+            "gf": 1.45,
+            "gc": 1.30,
+            "gf1t": 0.60,
+            "gc1t": 0.52,
+            "corners": 4.8,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 13,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Hajduk Split": {
+            "gf": 1.52,
+            "gc": 1.25,
+            "gf1t": 0.62,
+            "gc1t": 0.50,
+            "corners": 4.9,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 14,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Pafos": {
+            "gf": 1.48,
+            "gc": 1.18,
+            "gf1t": 0.62,
+            "gc1t": 0.45,
+            "corners": 4.7,
+            "tarjetas": 2.5,
+            "rojas": 0.10,
+            "posicion": 15,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Aarhus": {
+            "gf": 1.42,
+            "gc": 1.30,
+            "gf1t": 0.58,
+            "gc1t": 0.52,
+            "corners": 4.7,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 16,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "FC Copenhague": {
+            "gf": 1.82,
+            "gc": 1.08,
+            "gf1t": 0.78,
+            "gc1t": 0.42,
+            "corners": 5.6,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 17,
+            "pts_ult_5": 10,
+            "sin_ganar": 0,
+            "bajas_clave": 1,
+        },
+        "Midtjylland": {
+            "gf": 1.72,
+            "gc": 1.22,
+            "gf1t": 0.72,
+            "gc1t": 0.50,
+            "corners": 5.3,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 18,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Nordsjaelland": {
+            "gf": 1.78,
+            "gc": 1.28,
+            "gf1t": 0.78,
+            "gc1t": 0.52,
+            "corners": 5.5,
+            "tarjetas": 1.8,
+            "rojas": 0.05,
+            "posicion": 19,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Panathinaikos": {
+            "gf": 1.58,
+            "gc": 1.08,
+            "gf1t": 0.68,
+            "gc1t": 0.42,
+            "corners": 5.2,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 20,
+            "pts_ult_5": 8,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Brann": {
+            "gf": 1.62,
+            "gc": 1.28,
+            "gf1t": 0.68,
+            "gc1t": 0.52,
+            "corners": 5.2,
+            "tarjetas": 1.9,
+            "rojas": 0.06,
+            "posicion": 21,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Braga": {
+            "gf": 1.82,
+            "gc": 1.18,
+            "gf1t": 0.78,
+            "gc1t": 0.48,
+            "corners": 5.6,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 22,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 1,
+        },
+        "Copas": {
+            "gf": 1.38,
+            "gc": 1.32,
+            "gf1t": 0.58,
+            "gc1t": 0.55,
+            "corners": 4.9,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 23,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Lugano": {
+            "gf": 1.52,
+            "gc": 1.28,
+            "gf1t": 0.62,
+            "gc1t": 0.50,
+            "corners": 4.9,
+            "tarjetas": 2.2,
+            "rojas": 0.08,
+            "posicion": 24,
+            "pts_ult_5": 7,
+            "sin_ganar": 2,
+            "bajas_clave": 0,
+        },
+        "Crvena zvezda": {
+            "gf": 1.90,
+            "gc": 1.35,
+            "gf1t": 0.82,
+            "gc1t": 0.58,
+            "corners": 5.5,
+            "tarjetas": 2.4,
+            "rojas": 0.11,
+            "posicion": 25,
+            "pts_ult_5": 9,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Thun": {
+            "gf": 1.45,
+            "gc": 1.35,
+            "gf1t": 0.58,
+            "gc1t": 0.55,
+            "corners": 4.6,
+            "tarjetas": 2.1,
+            "rojas": 0.07,
+            "posicion": 26,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Trabzonspor": {
+            "gf": 1.68,
+            "gc": 1.22,
+            "gf1t": 0.72,
+            "gc1t": 0.50,
+            "corners": 5.3,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 27,
+            "pts_ult_5": 7,
+            "sin_ganar": 1,
+            "bajas_clave": 0,
+        },
+        "Borac Banja Luka": {
+            "gf": 1.22,
+            "gc": 1.38,
+            "gf1t": 0.48,
+            "gc1t": 0.55,
+            "corners": 4.2,
+            "tarjetas": 2.6,
+            "rojas": 0.13,
+            "posicion": 28,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 0,
+        },
+        "Kairat Almaty": {
+            "gf": 1.35,
+            "gc": 1.40,
+            "gf1t": 0.52,
+            "gc1t": 0.58,
+            "corners": 4.3,
+            "tarjetas": 2.3,
+            "rojas": 0.09,
+            "posicion": 29,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 1,
+        },
+        "Egnatia": {
+            "gf": 1.18,
+            "gc": 1.45,
+            "gf1t": 0.45,
+            "gc1t": 0.60,
+            "corners": 4.0,
+            "tarjetas": 2.6,
+            "rojas": 0.12,
+            "posicion": 30,
+            "pts_ult_5": 4,
+            "sin_ganar": 3,
+            "bajas_clave": 0,
+        },
+        "Inter Escaldes": {
+            "gf": 1.12,
+            "gc": 1.55,
+            "gf1t": 0.42,
+            "gc1t": 0.65,
+            "corners": 3.8,
+            "tarjetas": 2.7,
+            "rojas": 0.14,
+            "posicion": 31,
+            "pts_ult_5": 3,
+            "sin_ganar": 4,
+            "bajas_clave": 1,
+        },
+        "Kauno Zalgiris": {
+            "gf": 1.20,
+            "gc": 1.48,
+            "gf1t": 0.45,
+            "gc1t": 0.62,
+            "corners": 4.1,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 32,
+            "pts_ult_5": 4,
+            "sin_ganar": 3,
+            "bajas_clave": 0,
+        },
+        "Universidad de Craiova": {
+            "gf": 1.48,
+            "gc": 1.28,
+            "gf1t": 0.60,
+            "gc1t": 0.52,
+            "corners": 4.8,
+            "tarjetas": 2.4,
+            "rojas": 0.10,
+            "posicion": 33,
+            "pts_ult_5": 6,
+            "sin_ganar": 2,
+            "bajas_clave": 1,
+        },
+        "Iberia 1999": {
+            "gf": 1.25,
+            "gc": 1.42,
+            "gf1t": 0.48,
+            "gc1t": 0.60,
+            "corners": 4.1,
+            "tarjetas": 2.5,
+            "rojas": 0.11,
+            "posicion": 34,
+            "pts_ult_5": 4,
+            "sin_ganar": 3,
+            "bajas_clave": 0,
+        },
+        "Lincoln Red Imps": {
+            "gf": 1.08,
+            "gc": 1.60,
+            "gf1t": 0.40,
+            "gc1t": 0.68,
+            "corners": 3.7,
+            "tarjetas": 2.8,
+            "rojas": 0.15,
+            "posicion": 35,
+            "pts_ult_5": 3,
+            "sin_ganar": 4,
+            "bajas_clave": 1,
+        },
+        "Riga FC": {
+            "gf": 1.32,
+            "gc": 1.48,
+            "gf1t": 0.52,
+            "gc1t": 0.60,
+            "corners": 4.4,
+            "tarjetas": 2.5,
+            "rojas": 0.12,
+            "posicion": 36,
+            "pts_ult_5": 5,
+            "sin_ganar": 3,
+            "bajas_clave": 0,
+        },
+    },
+# Diccionario global para búsquedas
+EQUIPOS_GLOBALES = {}
+for liga, equipos in BASE_DATOS.items():
+    for eq_nombre, stats in equipos.items():
+        EQUIPOS_GLOBALES[eq_nombre.strip().lower()] = (eq_nombre, stats)
+
+def buscar_equipo_bd(nombre_ingresado):
+    if not nombre_ingresado:
+        return None, None
+    nombre_clean = nombre_ingresado.strip().lower()
+    if nombre_clean in EQUIPOS_GLOBALES:
+        return EQUIPOS_GLOBALES[nombre_clean]
+    for key in EQUIPOS_GLOBALES:
+        if nombre_clean in key or key in nombre_clean:
+            return EQUIPOS_GLOBALES[key]
+    return None, None
+
+def calcular_factor_forma_prioridad(data_eq):
+    diff_goles = data_eq["gf"] - data_eq["gc"]
+    ratio_ofensivo = data_eq["gf"] / (data_eq["gc"] + 0.1)
+    eficiencia_1t = data_eq["gf1t"] / (data_eq["gf"] + 0.1)
+    factor = 1.0 + (diff_goles * 0.08) + (ratio_ofensivo * 0.03) + (eficiencia_1t * 0.05)
+    return float(np.clip(factor, 0.80, 1.25))
+
+def calcular_factor_ritmo_intensidad(data_loc, data_vis):
+    friccion = (data_loc["tarjetas"] + data_vis["tarjetas"]) / 2.0
+    verticalidad = (data_loc["corners"] + data_vis["corners"]) / 2.0
+    intensidad = 0.80 + (friccion * 0.06) + (verticalidad * 0.03)
+    return float(np.clip(intensidad, 0.85, 1.30))
+
+def evaluar_mercado_dinamico(simulaciones, nombre_mercado, unidad=""):
+    promedio = float(np.mean(simulaciones))
+    linea_base = np.floor(promedio) + 0.5
+    if linea_base < 0.5:
+        linea_base = 0.5
+    
+    p_over = float(np.mean(simulaciones > linea_base) * 100)
+    p_under = 100.0 - p_over
+
+    if p_over >= 50.0:
+        verdicto = f"🟢 **MÁS DE {linea_base:.1f} {unidad}**"
+        prob_verdicto = p_over
+    else:
+        verdicto = f"🔴 **MENOS DE {linea_base:.1f} {unidad}**"
+        prob_verdicto = p_under
+
+    return promedio, linea_base, p_over, p_under, verdicto, prob_verdicto
 
 st.title("⚽ SIMULADOR PREDICTIVO MONTE CARLO ULTRA PRO")
-st.markdown("Resultados 1X2 Tiempo Completo y 1er Tiempo, Goles, Córners y Tarjetas.")
+st.markdown("Resultados 1X2, Goles, Córners y Tarjetas con Líneas Ajustadas y Búsqueda Automática.")
 
-modo = st.sidebar.radio("Modo de Selección de Equipos:", ["📋 Elegir de la Lista de Ligas", "✍️ Ingresar Equipos Manualmente"])
+modo = st.sidebar.radio("Modo de Selección de Equipos:", ["📋 Elegir de la Lista de Ligas", "✍️ Ingresar / Buscar Equipos Manualmente"])
 
 data_loc, data_vis = None, None
 eq_local_nombre, eq_visita_nombre = "Local", "Visitante"
@@ -314,66 +1736,82 @@ if modo == "📋 Elegir de la Lista de Ligas":
     with col_inputs1:
         st.subheader("🏠 Equipo Local")
         eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
-        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_1")
 
     with col_inputs2:
         st.subheader("✈️ Equipo Visitante")
         idx_vis = 1 if len(equipos_liga) > 1 else 0
         eq_visita_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
-        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_1")
 
     data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
     data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
 
 else:
-    st.subheader("✍️ Ingreso Manual y Ajuste Estadístico de Equipos")
+    st.subheader("✍️ Ingreso Manual con Auto-Carga de Datos")
+    st.info("Escribe el nombre de cualquier equipo. Si está en la base de datos, sus estadísticas se cargarán automáticamente.")
+    
     col_m1, col_m2 = st.columns(2)
     
     with col_m1:
-        eq_local_nombre = st.text_input("Nombre del Equipo Local:", "Equipo A")
-        gf_loc = st.number_input("Goles Promedio Favor (Local):", 0.1, 5.0, 1.8, step=0.1)
-        gc_loc = st.number_input("Goles Promedio Contra (Local):", 0.1, 5.0, 1.0, step=0.1)
-        gf1t_loc = st.number_input("Goles Promedio 1er Tiempo (Local):", 0.0, 3.0, 0.8, step=0.1)
-        corn_loc = st.number_input("Córners Promedio por Partido (Local):", 0.0, 12.0, 5.2, step=0.1)
-        tarj_loc = st.number_input("Tarjetas Promedio por Partido (Local):", 0.0, 8.0, 2.3, step=0.1)
-        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_2")
+        st.markdown("### 🏠 Equipo Local")
+        eq_local_nombre = st.text_input("Buscar o Escribir Local:", "Real Madrid", key="search_loc")
+        match_nom_loc, match_stats_loc = buscar_equipo_bd(eq_local_nombre)
+
+        if match_stats_loc:
+            st.success(f"✨ ¡Equipo encontrado!: **{match_nom_loc}** (Datos cargados)")
+            def_gf_loc = float(match_stats_loc["gf"])
+            def_gc_loc = float(match_stats_loc["gc"])
+            def_gf1t_loc = float(match_stats_loc["gf1t"])
+            def_corn_loc = float(match_stats_loc["corners"])
+            def_tarj_loc = float(match_stats_loc["tarjetas"])
+        else:
+            st.caption("ℹ️ Equipo no encontrado en BD. Ingresa estadísticas manualmente.")
+            def_gf_loc, def_gc_loc, def_gf1t_loc, def_corn_loc, def_tarj_loc = 1.8, 1.0, 0.8, 5.2, 2.3
+
+        gf_loc = st.number_input("Goles Favor (Local):", 0.0, 6.0, def_gf_loc, step=0.1, key="gf_loc")
+        gc_loc = st.number_input("Goles Contra (Local):", 0.0, 6.0, def_gc_loc, step=0.1, key="gc_loc")
+        gf1t_loc = st.number_input("Goles 1er Tiempo (Local):", 0.0, 4.0, def_gf1t_loc, step=0.1, key="gf1t_loc")
+        corn_loc = st.number_input("Córners Partido (Local):", 0.0, 15.0, def_corn_loc, step=0.1, key="corn_loc")
+        tarj_loc = st.number_input("Tarjetas Partido (Local):", 0.0, 10.0, def_tarj_loc, step=0.1, key="tarj_loc")
+        
         data_loc = {"gf": gf_loc, "gc": gc_loc, "gf1t": gf1t_loc, "corners": corn_loc, "tarjetas": tarj_loc}
 
     with col_m2:
-        eq_visita_nombre = st.text_input("Nombre del Equipo Visitante:", "Equipo B")
-        gf_vis = st.number_input("Goles Promedio Favor (Visitante):", 0.1, 5.0, 1.3, step=0.1)
-        gc_vis = st.number_input("Goles Promedio Contra (Visitante):", 0.1, 5.0, 1.4, step=0.1)
-        gf1t_vis = st.number_input("Goles Promedio 1er Tiempo (Visitante):", 0.0, 3.0, 0.5, step=0.1)
-        corn_vis = st.number_input("Córners Promedio por Partido (Visitante):", 0.0, 12.0, 4.4, step=0.1)
-        tarj_vis = st.number_input("Tarjetas Promedio por Partido (Visitante):", 0.0, 8.0, 2.5, step=0.1)
-        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_2")
+        st.markdown("### ✈️ Equipo Visitante")
+        eq_visita_nombre = st.text_input("Buscar o Escribir Visitante:", "Barcelona", key="search_vis")
+        match_nom_vis, match_stats_vis = buscar_equipo_bd(eq_visita_nombre)
+
+        if match_stats_vis:
+            st.success(f"✨ ¡Equipo encontrado!: **{match_nom_vis}** (Datos cargados)")
+            def_gf_vis = float(match_stats_vis["gf"])
+            def_gc_vis = float(match_stats_vis["gc"])
+            def_gf1t_vis = float(match_stats_vis["gf1t"])
+            def_corn_vis = float(match_stats_vis["corners"])
+            def_tarj_vis = float(match_stats_vis["tarjetas"])
+        else:
+            st.caption("ℹ️ Equipo no encontrado en BD. Ingresa estadísticas manualmente.")
+            def_gf_vis, def_gc_vis, def_gf1t_vis, def_corn_vis, def_tarj_vis = 1.3, 1.4, 0.5, 4.4, 2.5
+
+        gf_vis = st.number_input("Goles Favor (Visitante):", 0.0, 6.0, def_gf_vis, step=0.1, key="gf_vis")
+        gc_vis = st.number_input("Goles Contra (Visitante):", 0.0, 6.0, def_gc_vis, step=0.1, key="gc_vis")
+        gf1t_vis = st.number_input("Goles 1er Tiempo (Visitante):", 0.0, 4.0, def_gf1t_vis, step=0.1, key="gf1t_vis")
+        corn_vis = st.number_input("Córners Partido (Visitante):", 0.0, 15.0, def_corn_vis, step=0.1, key="corn_vis")
+        tarj_vis = st.number_input("Tarjetas Partido (Visitante):", 0.0, 10.0, def_tarj_vis, step=0.1, key="tarj_vis")
+
         data_vis = {"gf": gf_vis, "gc": gc_vis, "gf1t": gf1t_vis, "corners": corn_vis, "tarjetas": tarj_vis}
 
-# --- NUEVA INTERFAZ MODERNA Y LIMPIA PARA RITMO / INTENSIDAD ---
-st.markdown("### 🔥 Ritmo e Intensidad del Partido")
+# Contexto
+f_prio_loc = calcular_factor_forma_prioridad(data_loc)
+f_prio_vis = calcular_factor_forma_prioridad(data_vis)
+f_ritmo = calcular_factor_ritmo_intensidad(data_loc, data_vis)
 
-# Opciones con tarjetas estilizadas horizontales
-opciones_ritmo = {
-    "🍵 Calmado / Amistoso": 0.80,
-    "⚡ Normal / Estándar": 1.00,
-    "🔥 Intenso / Directo": 1.15,
-    "⚔️ Clásico / Alta Rivalidad": 1.28
-}
+st.markdown("---")
+st.markdown("### ⚙️ Contexto Calculado del Enfrentamiento")
+col_c1, col_c2, col_c3 = st.columns(3)
+col_c1.metric(f"Competitividad ({eq_local_nombre})", f"{f_prio_loc:.2f}x")
+col_c2.metric("Intensidad y Dinámica de Juego", f"{f_ritmo:.2f}x")
+col_c3.metric(f"Competitividad ({eq_visita_nombre})", f"{f_prio_vis:.2f}x")
 
-ritmo_sel = st.radio(
-    label="Selecciona la intensidad de juego:",
-    options=list(opciones_ritmo.keys()),
-    index=2,
-    horizontal=True,
-    label_visibility="collapsed"
-)
-
-f_ritmo = opciones_ritmo[ritmo_sel]
-
-f_prio_loc = 1.0 + (prio_loc - 5) * 0.04
-f_prio_vis = 1.0 + (prio_vis - 5) * 0.04
-
-if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_width=True):
+if st.button("🚀 CALCULAR PRONÓSTICOS PRECISOS (10,000 SIMULACIONES)", use_container_width=True):
     l_gf_loc = data_loc["gf"] * 1.10 * f_prio_loc * f_ritmo
     l_gf_vis = data_vis["gf"] * f_prio_vis * f_ritmo
 
@@ -408,40 +1846,49 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
     p_1t_draw = np.mean(goles_1t_loc == goles_1t_vis) * 100
     p_1t_win_vis = np.mean(goles_1t_loc < goles_1t_vis) * 100
 
-    p_1t_05 = np.mean((goles_1t_loc + goles_1t_vis) > 0.5) * 100
-    p_ft_25 = np.mean((goles_loc + goles_vis) > 2.5) * 100
-    p_corn_95 = np.mean(corners_ft > 9.5) * 100
-    p_corn_45_1t = np.mean(corners_1t > 4.5) * 100
-    p_tarj_45 = np.mean(tarjetas_ft > 4.5) * 100
-    p_roja = np.mean(rojas) * 100
+    # Evaluaciones de mercado dinámicas
+    prom_g1t, lin_g1t, p_over_g1t, p_under_g1t, verd_g1t, prob_v_g1t = evaluar_mercado_dinamico(goles_1t_loc + goles_1t_vis, "Goles 1T", "goles")
+    prom_gft, lin_gft, p_over_gft, p_under_gft, verd_gft, prob_v_gft = evaluar_mercado_dinamico(goles_loc + goles_vis, "Goles FT", "goles")
+    prom_c1t, lin_c1t, p_over_c1t, p_under_c1t, verd_c1t, prob_v_c1t = evaluar_mercado_dinamico(corners_1t, "Córners 1T", "córners")
+    prom_cft, lin_cft, p_over_cft, p_under_cft, verd_cft, prob_v_cft = evaluar_mercado_dinamico(corners_ft, "Córners FT", "córners")
+    prom_tft, lin_tft, p_over_tft, p_under_tft, verd_tft, prob_v_tft = evaluar_mercado_dinamico(tarjetas_ft, "Tarjetas FT", "tarjetas")
 
     st.markdown("---")
-    st.subheader(f"📊 Probabilidades 1X2 (Tiempo Completo): {eq_local_nombre} vs {eq_visita_nombre}")
-
+    st.subheader(f"📊 Probabilidades 1X2 Final: {eq_local_nombre} vs {eq_visita_nombre}")
     c1, c2, c3 = st.columns(3)
     c1.metric(f"Victoria {eq_local_nombre}", f"{p_win_loc:.1f}%")
     c2.metric("Empate Final", f"{p_draw:.1f}%")
     c3.metric(f"Victoria {eq_visita_nombre}", f"{p_win_vis:.1f}%")
 
-    st.subheader(f"⏱️ Probabilidades 1X2 (Resultado al Descanso / 1er Tiempo)")
-
+    st.subheader("⏱️ Probabilidades 1X2 Al Descanso (1er Tiempo)")
     d1, d2, d3 = st.columns(3)
     d1.metric(f"Gana 1T {eq_local_nombre}", f"{p_1t_win_loc:.1f}%")
-    d2.metric("Empate al 1T", f"{p_1t_draw:.1f}%")
+    d2.metric("Empate 1T", f"{p_1t_draw:.1f}%")
     d3.metric(f"Gana 1T {eq_visita_nombre}", f"{p_1t_win_vis:.1f}%")
 
-    st.subheader("🎯 Pronósticos Sugeridos y Líneas de Valor")
+    st.markdown("---")
+    st.subheader("🎯 Pronósticos de Mercado Ajustados y Exactos")
     
     col_a, col_b = st.columns(2)
     with col_a:
         st.markdown("### ⚽ Goles y Córners")
-        st.write(f"⏱️ **Goles 1er Tiempo (> 0.5 1T):** **{p_1t_05:.1f}%** (Promedio esperable: {np.mean(goles_1t_loc + goles_1t_vis):.2f} goles)")
-        st.write(f"⚽ **Goles Partido Completo (> 2.5 FT):** **{p_ft_25:.1f}%** (Promedio esperable: {np.mean(goles_loc + goles_vis):.2f} goles)")
-        st.write(f"🚩 **Córners 1er Tiempo (> 4.5 1T):** **{p_corn_45_1t:.1f}%** (Promedio esperable: {np.mean(corners_1t):.1f} córners)")
-        st.write(f"🚩 **Córners Totales (> 9.5 FT):** **{p_corn_95:.1f}%** (Promedio esperable: {np.mean(corners_ft):.1f} córners)")
+        st.write(f"⏱️ **Goles 1er Tiempo:** Promedio esperable **{prom_g1t:.2f}**")
+        st.write(f"👉 Pronóstico: {verd_g1t} (Acierto: **{prob_v_g1t:.1f}%**)")
+        st.write("---")
+        st.write(f"⚽ **Goles Partido Completo:** Promedio esperable **{prom_gft:.2f}**")
+        st.write(f"👉 Pronóstico: {verd_gft} (Acierto: **{prob_v_gft:.1f}%**)")
+        st.write("---")
+        st.write(f"🚩 **Córners 1er Tiempo:** Promedio esperable **{prom_c1t:.1f}**")
+        st.write(f"👉 Pronóstico: {verd_c1t} (Acierto: **{prob_v_c1t:.1f}%**)")
+        st.write("---")
+        st.write(f"🚩 **Córners Totales:** Promedio esperable **{prom_cft:.1f}**")
+        st.write(f"👉 Pronóstico: {verd_cft} (Acierto: **{prob_v_cft:.1f}%**)")
 
     with col_b:
         st.markdown("### 🟨🟫 Tarjetas y Disciplina")
-        st.write(f"🟨 **Total Tarjetas Amarillas (> 4.5):** **{p_tarj_45:.1f}%** (Promedio esperable: {np.mean(tarjetas_ft):.1f} tarjetas)")
-        st.write(f"🟥 **Probabilidad de Tarjeta Roja en el Partido:** **{p_roja:.1f}%**")
+        st.write(f"🟨 **Total Tarjetas:** Promedio esperable **{prom_tft:.1f}**")
+        st.write(f"👉 Pronóstico: {verd_tft} (Acierto: **{prob_v_tft:.1f}%**)")
+        st.write("---")
+        st.write(f"🟥 **Probabilidad Tarjeta Roja:** **{np.mean(rojas)*100:.1f}%**")
+
 
