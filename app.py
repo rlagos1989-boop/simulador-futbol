@@ -262,7 +262,6 @@ BASE_DATOS={
 "Puebla":{"gf":1.00,"gc":1.00,"gf1t":0.45,"corners":4.2,"tarjetas":2.6}
 },
 "🇪🇺UEFAChampionsLeague(2026/27)":{
-🏆UEFAChampionsLeague":{
 "Arsenal":{"gf":2.35,"gc":0.72,"gf1t":1.12,"gc1t":0.22,"corners":6.8,"tarjetas":1.6,"rojas":0.05,"posicion":1,"pts_ult_5":13,"sin_ganar":0,"bajas_clave":0,},
 "AstonVilla":{"gf":1.85,"gc":1.15,"gf1t":0.82,"gc1t":0.48,"corners":5.4,"tarjetas":2.1,"rojas":0.06,"posicion":2,"pts_ult_5":10,"sin_ganar":1,"bajas_clave":1,},
 "Liverpool":{"gf":2.40,"gc":0.88,"gf1t":1.15,"gc1t":0.35,"corners":7.0,"tarjetas":1.6,"rojas":0.04,"posicion":3,"pts_ult_5":12,"sin_ganar":0,"bajas_clave":1,},
