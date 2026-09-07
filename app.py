@@ -307,6 +307,7 @@ BASE_DATOS = {
 },
     },
     "🇪🇺 UEFA Europa League (2026/27)": {
+"HapoelBeerSheva":{"gf":1.42,"gc":1.30,"gf1t":0.58,"gc1t":0.52,"corners":4.5,"tarjetas":2.5,"rojas"0.11},
 "Sunderland":{"gf":1.55,"gc":1.25,"gf1t":0.65,"gc1t":0.50,"corners":5.0,"tarjetas":2.1,"rojas":0.07
 },
 "CrystalPalace":{"gf":1.62,"gc":1.20,"gf1t":0.68,"gc1t":0.48,"corners":5.2,"tarjetas":2.0,"rojas":0.06},
