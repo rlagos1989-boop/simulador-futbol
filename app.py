@@ -8,8 +8,6 @@ page_icon="⚽",
 layout="wide",
 initial_sidebar_state="expanded"
 )
-
-#Basededatoscompleta
 BASE_DATOS={
 "🏴󠁧󠁢󠁥󠁮󠁧󠁿PremierLeague(2026/27)":{
 "Arsenal":{"gf":2.20,"gc":0.80,"gf1t":1.10,"corners":6.5,"tarjetas":1.8},
