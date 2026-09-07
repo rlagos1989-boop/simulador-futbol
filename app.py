@@ -203,7 +203,7 @@ BASE_DATOS={
 "CFMontreal":{"gf":1.30,"gc":1.55,"gf1t":0.50,"corners":4.4,"tarjetas":2.2},
 "AtlantaUtd":{"gf":1.50,"gc":1.45,"gf1t":0.65,"corners":5.2,"tarjetas":2.0}
 },
-"🇫🇷Ligue1(Francia2026/27)":{
+"Ligue1(Francia2026/27)":{
 "Auxerre":{"gf":1.15,"gc":1.45,"gf1t":0.40,"corners":4.1,"tarjetas":2.4},
 "LeHavre":{"gf":1.05,"gc":1.40,"gf1t":0.35,"corners":3.9,"tarjetas":2.5},
 "LeMans":{"gf":1.00,"gc":1.55,"gf1t":0.35,"corners":3.8,"tarjetas":2.6},
