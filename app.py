@@ -340,7 +340,6 @@ BASE_DATOS = {
 "Omonia":{"gf":1.42,"gc":1.28,"gf1t":0.58,"gc1t":0.50,"corners":4.6,"tarjetas":2.6,"rojas":0.12},
 "OFICreta":{"gf":1.35,"gc":1.42,"gf1t":0.52,"gc1t":0.58,"corners":4.4,"tarjetas":2.6,"rojas":0.12},
 "OlympiacosPiraeus":{"gf":1.78,"gc":0.98,"gf1t":0.78,"gc1t":0.38,"corners":5.3,"tarjetas":2.3,"rojas":0.09},
-"HapoelBeerSheva":{"gf":1.42,"gc":1.30,"gf1t":0.58,"gc1t":0.52,"corners":4.5,"tarjetas":2.5,"rojas"0.11},
 "Lillestrom":{"gf":1.48,"gc":1.38,"gf1t":0.60,"gc1t":0.55,"corners":4.8,"tarjetas":2.1,"rojas":0.07},
 "Jagiellonia":{"gf":1.72,"gc":1.22,"gf1t":0.72,"gc1t":0.50,"corners":5.1,"tarjetas":2.3,"rojas":0.09},
 "LechPoznan":{"gf":1.62,"gc":1.20,"gf1t":0.68,"gc1t":0.48,"corners":5.0,"tarjetas":2.2,"rojas":0.08},
