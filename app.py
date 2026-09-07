@@ -220,7 +220,7 @@ BASE_DATOS = {
         "Marseille": {"gf": 1.80, "gc": 1.25, "gf1t": 0.80, "corners": 5.6, "tarjetas": 2.5},
         "Toulouse": {"gf": 1.25, "gc": 1.35, "gf1t": 0.45, "corners": 4.4, "tarjetas": 2.3},
         "Lens": {"gf": 1.50, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.4},
-        "Rennes": {"gf": 1.55, "gc": 1.30, "gf1t": 0.65, "corners": 5.1, "tarjetas": 2.1}
+        "Rennes": {"gf": 1.55, "gc": 1.30, "gf1t": 0.65, "corners": 5.1, "tarjetas": 2.1},
         "Lyon":{"gf":1.65,"gc":1.25,"gf1t":0.70,"corners":5.4,"tarjetas":2.2,}
     },
     "🏆 Leagues Cup (2026)": {
