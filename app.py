@@ -8,52 +8,59 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+import pandas as pd
+import streamlit as st
 
-# Base de datos completa con los equipos exactos de tus tablas, UEFA y Leagues Cup
-BASE_DATOS = {
-    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League (2026/27)": {
-        "Arsenal": {"gf": 2.20, "gc": 0.80, "gf1t": 1.10, "corners": 6.5, "tarjetas": 1.8},
-        "Aston Villa": {"gf": 1.80, "gc": 1.30, "gf1t": 0.80, "corners": 5.3, "tarjetas": 2.4},
-        "Chelsea": {"gf": 1.75, "gc": 1.30, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.5},
-        "Everton": {"gf": 1.20, "gc": 1.40, "gf1t": 0.45, "corners": 4.4, "tarjetas": 2.3},
-        "Fulham": {"gf": 1.40, "gc": 1.40, "gf1t": 0.55, "corners": 4.8, "tarjetas": 2.3},
-        "Liverpool": {"gf": 2.30, "gc": 1.00, "gf1t": 1.05, "corners": 6.9, "tarjetas": 1.7},
-        "Manchester City": {"gf": 2.40, "gc": 0.85, "gf1t": 1.20, "corners": 7.1, "tarjetas": 1.5},
-        "Manchester Utd": {"gf": 1.55, "gc": 1.35, "gf1t": 0.65, "corners": 5.2, "tarjetas": 2.2},
-        "Newcastle": {"gf": 1.75, "gc": 1.25, "gf1t": 0.75, "corners": 5.6, "tarjetas": 2.1},
-        "Sunderland": {"gf": 1.25, "gc": 1.50, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-        "Tottenham": {"gf": 1.90, "gc": 1.45, "gf1t": 0.85, "corners": 6.1, "tarjetas": 2.3},
-        "Coventry": {"gf": 1.15, "gc": 1.55, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
-        "Crystal Palace": {"gf": 1.30, "gc": 1.40, "gf1t": 0.45, "corners": 4.5, "tarjetas": 2.1},
-        "Hull": {"gf": 1.10, "gc": 1.60, "gf1t": 0.35, "corners": 4.0, "tarjetas": 2.6},
-        "Ipswich": {"gf": 1.15, "gc": 1.65, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
-        "Bournemouth": {"gf": 1.45, "gc": 1.55, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.3},
-        "Brighton": {"gf": 1.60, "gc": 1.40, "gf1t": 0.70, "corners": 5.5, "tarjetas": 2.0},
-        "Leeds": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.6, "tarjetas": 2.5},
-        "Nottingham": {"gf": 1.25, "gc": 1.45, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-        "Brentford": {"gf": 1.50, "gc": 1.50, "gf1t": 0.65, "corners": 4.6, "tarjetas": 2.0}
-    },
-    "🇩🇪 Bundesliga (2026/27)": {
-        "Union Berlin": {"gf": 1.25, "gc": 1.30, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-        "Eintracht Frankfurt": {"gf": 1.75, "gc": 1.35, "gf1t": 0.75, "corners": 5.0, "tarjetas": 2.2},
-        "Bayern Munich": {"gf": 2.50, "gc": 1.05, "gf1t": 1.30, "corners": 6.7, "tarjetas": 1.7},
-        "Bayer Leverkusen": {"gf": 2.35, "gc": 0.90, "gf1t": 1.15, "corners": 6.4, "tarjetas": 1.9},
-        "Werder Bremen": {"gf": 1.40, "gc": 1.50, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.2},
-        "Schalke": {"gf": 1.25, "gc": 1.55, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.6},
-        "Hamburger SV": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.5},
-        "Dortmund": {"gf": 2.00, "gc": 1.20, "gf1t": 0.90, "corners": 5.7, "tarjetas": 2.0},
-        "B. Monchengladbach": {"gf": 1.50, "gc": 1.50, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.1},
-        "Hoffenheim": {"gf": 1.60, "gc": 1.70, "gf1t": 0.70, "corners": 5.1, "tarjetas": 2.4},
-        "FC Koln": {"gf": 1.25, "gc": 1.50, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-        "Mainz": {"gf": 1.35, "gc": 1.40, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.5},
-        "Freiburg": {"gf": 1.45, "gc": 1.30, "gf1t": 0.60, "corners": 4.7, "tarjetas": 1.9},
-        "Augsburg": {"gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.3, "tarjetas": 2.6},
-        "Paderborn": {"gf": 1.15, "gc": 1.60, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.4},
-        "Stuttgart": {"gf": 1.95, "gc": 1.25, "gf1t": 0.85, "corners": 5.5, "tarjetas": 2.0},
-        "Elversberg": {"gf": 1.10, "gc": 1.65, "gf1t": 0.35, "corners": 4.0, "tarjetas": 2.5},
-        "RB Leipzig": {"gf": 1.90, "gc": 1.10, "gf1t": 0.85, "corners": 5.2, "tarjetas": 2.1}
-    },
-    "🇭🇳 Liga Nacional (Honduras 2026/27)": {
+@st.cache_data(ttl=86400) # Se ejecuta e impacta los cambios 1 vez al día de forma automática
+def cargar_base_datos_dinamica():
+    # URLs con los datos oficiales de la temporada actual
+    urls_ligas = {
+        "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League": "https://www.football-data.co.uk/mmz4281/2526/E0.csv",
+        "🇪🇸 LaLiga Española": "https://www.football-data.co.uk/mmz4281/2526/SP1.csv",
+        "🇩🇪 Bundesliga": "https://www.football-data.co.uk/mmz4281/2526/D1.csv",
+        "🇮🇹 Serie A": "https://www.football-data.co.uk/mmz4281/2526/I1.csv"
+    }
+    
+    bd_actualizada = {}
+
+    for nombre_liga, url in urls_ligas.items():
+        try:
+            df = pd.read_csv(url)
+            equipos = set(df['HomeTeam'].dropna().unique()).union(set(df['AwayTeam'].dropna().unique()))
+            stats_liga = {}
+
+            for eq in equipos:
+                home = df[df['HomeTeam'] == eq]
+                away = df[df['AwayTeam'] == eq]
+                partidos = len(home) + len(away)
+
+                if partidos == 0:
+                    continue
+
+                gf = (home['FTHG'].sum() + away['FTAG'].sum()) / partidos
+                gc = (home['FTAG'].sum() + away['FTHG'].sum()) / partidos
+                gf1t = (home['HTHG'].sum() + away['HTAG'].sum()) / partidos
+                corners = (home['HC'].sum() + away['AC'].sum()) / partidos
+                tarjetas = (home['HY'].sum() + (home['HR'].sum() * 2) + away['AY'].sum() + (away['AR'].sum() * 2)) / partidos
+
+                stats_liga[eq] = {
+                    "gf": round(float(gf), 2),
+                    "gc": round(float(gc), 2),
+                    "gf1t": round(float(gf1t), 2),
+                    "corners": round(float(corners), 1),
+                    "tarjetas": round(float(tarjetas), 1)
+                }
+
+            bd_actualizada[nombre_liga] = stats_liga
+        except Exception:
+            pass
+
+    return bd_actualizada
+
+# Sustituir la asignación estática de BASE_DATOS por la llamada a la función:
+BASE_DATOS = cargar_base_datos_dinamica()
+
+"🇭🇳 Liga Nacional (Honduras 2026/27)": {
         "Real Espana": {"gf": 2.50, "gc": 0.00, "gf1t": 1.00, "corners": 5.5, "tarjetas": 2.3},
         "Olimpia": {"gf": 2.50, "gc": 0.50, "gf1t": 1.10, "corners": 5.8, "tarjetas": 2.4},
         "Marathon": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.8, "tarjetas": 2.7},
@@ -67,28 +74,7 @@ BASE_DATOS = {
         "Choloma": {"gf": 0.50, "gc": 2.00, "gf1t": 0.20, "corners": 3.6, "tarjetas": 3.2},
         "Juticalpa": {"gf": 0.50, "gc": 3.00, "gf1t": 0.15, "corners": 3.5, "tarjetas": 3.0}
     },
-    "🇮🇹 Serie A (2026/27)": {
-        "Lecce": {"gf": 1.05, "gc": 1.45, "gf1t": 0.35, "corners": 3.9, "tarjetas": 2.6},
-        "Bologna": {"gf": 1.40, "gc": 1.00, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.3},
-        "Frosinone": {"gf": 1.10, "gc": 1.55, "gf1t": 0.40, "corners": 4.0, "tarjetas": 2.7},
-        "Genoa": {"gf": 1.15, "gc": 1.30, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.6},
-        "Napoli": {"gf": 1.75, "gc": 0.90, "gf1t": 0.80, "corners": 5.6, "tarjetas": 2.0},
-        "Udinese": {"gf": 1.25, "gc": 1.35, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-        "Monza": {"gf": 1.05, "gc": 1.40, "gf1t": 0.35, "corners": 4.1, "tarjetas": 2.3},
-        "Sassuolo": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.4},
-        "Venezia": {"gf": 1.00, "gc": 1.60, "gf1t": 0.35, "corners": 3.8, "tarjetas": 2.5},
-        "AS Roma": {"gf": 1.55, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.4},
-        "Inter": {"gf": 1.90, "gc": 0.85, "gf1t": 0.95, "corners": 5.1, "tarjetas": 2.1},
-        "Juventus": {"gf": 1.45, "gc": 0.80, "gf1t": 0.60, "corners": 4.3, "tarjetas": 2.3},
-        "Fiorentina": {"gf": 1.60, "gc": 1.25, "gf1t": 0.70, "corners": 5.4, "tarjetas": 2.5},
-        "AC Milan": {"gf": 1.70, "gc": 1.15, "gf1t": 0.75, "corners": 5.3, "tarjetas": 2.2},
-        "Atalanta": {"gf": 2.05, "gc": 1.20, "gf1t": 0.95, "corners": 6.0, "tarjetas": 2.1},
-        "Lazio": {"gf": 1.50, "gc": 1.10, "gf1t": 0.60, "corners": 4.9, "tarjetas": 2.6},
-        "Cagliari": {"gf": 1.10, "gc": 1.50, "gf1t": 0.40, "corners": 4.2, "tarjetas": 2.6},
-        "Torino": {"gf": 1.15, "gc": 1.05, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-        "Parma": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.4},
-        "Como": {"gf": 1.20, "gc": 1.50, "gf1t": 0.45, "corners": 4.4, "tarjetas": 2.4}
-    },
+   
     "🇲🇽 Liga MX (2026/27)": {
         "Club America": {"gf": 1.67, "gc": 0.33, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.1},
         "Club Tijuana": {"gf": 1.33, "gc": 0.33, "gf1t": 0.60, "corners": 4.7, "tarjetas": 2.5},
@@ -149,29 +135,7 @@ BASE_DATOS = {
         "Al Fayha": {"gf": 1.15, "gc": 1.45, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
         "Al Kholood": {"gf": 1.05, "gc": 1.60, "gf1t": 0.35, "corners": 3.8, "tarjetas": 2.7}
     },
-    "🇪🇸 LaLiga Española (2026/27)": {
-        "Real Sociedad": {"gf": 1.45, "gc": 1.05, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.4},
-        "Elche": {"gf": 1.10, "gc": 1.45, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.6},
-        "Alaves": {"gf": 1.15, "gc": 1.40, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.7},
-        "Celta Vigo": {"gf": 1.35, "gc": 1.45, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.4},
-        "Malaga": {"gf": 1.10, "gc": 1.50, "gf1t": 0.35, "corners": 4.0, "tarjetas": 2.7},
-        "Rayo Vallecano": {"gf": 1.15, "gc": 1.30, "gf1t": 0.40, "corners": 4.3, "tarjetas": 2.7},
-        "Real Madrid": {"gf": 2.15, "gc": 0.80, "gf1t": 1.00, "corners": 5.8, "tarjetas": 1.8},
-        "Villarreal": {"gf": 1.70, "gc": 1.40, "gf1t": 0.75, "corners": 5.1, "tarjetas": 2.5},
-        "Barcelona": {"gf": 2.05, "gc": 0.95, "gf1t": 0.90, "corners": 6.2, "tarjetas": 2.0},
-        "Atl. Madrid": {"gf": 1.65, "gc": 0.85, "gf1t": 0.70, "corners": 4.9, "tarjetas": 2.6},
-        "Sevilla": {"gf": 1.35, "gc": 1.30, "gf1t": 0.50, "corners": 4.7, "tarjetas": 2.8},
-        "Racing Santander": {"gf": 1.10, "gc": 1.55, "gf1t": 0.35, "corners": 3.9, "tarjetas": 2.6},
-        "Dep. A Coruna": {"gf": 1.15, "gc": 1.50, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
-        "Valencia": {"gf": 1.25, "gc": 1.25, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.6},
-        "Ath Bilbao": {"gf": 1.55, "gc": 1.00, "gf1t": 0.65, "corners": 5.3, "tarjetas": 2.3},
-        "Espanyol": {"gf": 1.15, "gc": 1.50, "gf1t": 0.40, "corners": 4.2, "tarjetas": 2.6},
-        "Betis": {"gf": 1.40, "gc": 1.20, "gf1t": 0.55, "corners": 4.8, "tarjetas": 2.3},
-        "Getafe": {"gf": 0.95, "gc": 1.10, "gf1t": 0.30, "corners": 3.8, "tarjetas": 3.2},
-        "Osasuna": {"gf": 1.30, "gc": 1.35, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.5},
-        "Levante": {"gf": 1.15, "gc": 1.50, "gf1t": 0.40, "corners": 4.2, "tarjetas": 2.6}
-    },
-    "🇺🇸 MLS (Estados Unidos 2026)": {
+       "🇺🇸 MLS (Estados Unidos 2026)": {
         "Vancouver Whitecaps": {"gf": 1.50, "gc": 1.35, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.1},
         "Los Angeles FC": {"gf": 1.90, "gc": 1.20, "gf1t": 0.85, "corners": 5.9, "tarjetas": 2.2},
         "San Jose Earthquakes": {"gf": 1.30, "gc": 1.60, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.3},
