@@ -30,7 +30,7 @@ BASE_DATOS={
 "Leeds":{"gf":1.30,"gc":1.50,"gf1t":0.50,"corners":4.6,"tarjetas":2.5},
 "Nottingham":{"gf":1.25,"gc":1.45,"gf1t":0.45,"corners":4.3,"tarjetas":2.5},
 "Brentford":{"gf":1.50,"gc":1.50,"gf1t":0.65,"corners":4.6,"tarjetas":2.0}
-},
+},},
 "🇩🇪Bundesliga(2026/27)":{
 "UnionBerlin":{"gf":1.25,"gc":1.30,"gf1t":0.45,"corners":4.2,"tarjetas":2.4},
 "EintrachtFrankfurt":{"gf":1.75,"gc":1.35,"gf1t":0.75,"corners":5.0,"tarjetas":2.2},
