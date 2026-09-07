@@ -284,7 +284,7 @@ BASE_DATOS = {
 "RealMadrid":{"gf":2.48,"gc":0.78,"gf1t":1.15,"gc1t":0.28,"corners":6.5,"tarjetas":1.7,"rojas":0.04},
 "Villarreal":{"gf":1.82,"gc":1.15,"gf1t":0.78,"gc1t":0.48,"corners":5.4,"tarjetas":2.2,"rojas":0.08},
 "FCBarcelona":{"gf":2.58,"gc":0.88,"gf1t":1.20,"gc1t":0.35,"corners":6.7,"tarjetas":1.9,"rojas":0.06},
-"AtléticodeMadrid":{"gf":1.88,"gc":0.82,"gf1t":0.88,"gc1t":0.32,"corners":5.4,"tarjetas":2.3,"rojas"0.090},
+"AtléticodeMadrid":{"gf":1.88,"gc":0.82,"gf1t":0.88,"gc1t":0.32,"corners":5.4,"tarjetas":2.3,"rojas"0.09},
 "RealBetis":{"gf":1.72,"gc":1.02,"gf1t":0.72,"gc1t":0.40,"corners":5.5,"tarjetas":2.2,"rojas":0.07},
 "FCPorto":{"gf":2.10,"gc":0.85,"gf1t":0.98,"gc1t":0.32,"corners":6.1,"tarjetas":2.1,"rojas":0.07},
 "VfBStuttgart":{"gf":1.90,"gc":1.28,"gf1t":0.82,"gc1t":0.52,"corners":5.6,"tarjetas":1.9,"rojas":0.06
