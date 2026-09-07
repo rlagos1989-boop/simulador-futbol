@@ -467,16 +467,12 @@ eq_local_nombre=st.selectbox("Local:",equipos_liga,index=0)
 
 withcol_inputs2:
 st.subheader("✈️EquipoVisitante")
-idx_vis=1iflen(equipos_liga)>1else0
 eq_visita_nombre=st.selectbox("Visitante:",equipos_liga,index=idx_vis)
-
 data_loc=BASE_DATOS[liga_sel][eq_local_nombre]
 data_vis=BASE_DATOS[liga_sel][eq_visita_nombre]
-
 else:
 st.subheader("✍️IngresoManualconAuto-CargadeDatos")
 st.info("Escribeelnombredecualquierequipo.Siestáenlabasededatos,susestadísticassecargaránautomáticamente.")
-
 col_m1,col_m2=st.columns(2)
 
 withcol_m1:
