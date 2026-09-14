@@ -1,9 +1,12 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from scipy.stats import poisson
+import random
 
-# Configuración de página
+# ==============================================================================
+# --- CONFIGURACIÓN DE PÁGINA Y ESTILOS CSS AVANZADOS (DISEÑO DINÁMICO) ---
+# ==============================================================================
+
 st.set_page_config(
     page_title="Simulador Predictivo de Fútbol Ultra Pro 2026/2027",
     page_icon="⚽",
@@ -11,70 +14,69 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilos CSS Personalizados para Interfaz Moderna
+# Inyección de CSS para fondo dinámico, tarjetas con efecto vidrio e interactividad
 st.markdown("""
 <style>
+    /* Fondo con gradiente oscuro dinámico */
     .stApp {
-        background-color: #0e1117;
-        color: #ffffff;
+        background: radial-gradient(circle at 50% 0%, #1a2332 0%, #0d1117 75%, #05070a 100%);
+        color: #e6edf3;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    .league-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        border-radius: 8px;
-        background-color: #1e222d;
-        border: 1px solid #2e3440;
-        cursor: pointer;
-        text-align: center;
-        font-weight: bold;
-    }
-    .badge-v { background-color: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-    .badge-e { background-color: #ffc107; color: black; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-    .badge-d { background-color: #dc3545; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
     
+    /* Efecto para botones de navegación superior */
+    div.stButton > button {
+        width: 100%;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #1f293d, #161f2e);
+        color: #f0f6fc;
+        border: 1px solid #30363d;
+        font-weight: 600;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    div.stButton > button:hover {
+        border-color: #58a6ff;
+        color: #58a6ff;
+        transform: translateY(-2px);
+        box-shadow: 0px 6px 15px rgba(88, 166, 255, 0.2);
+    }
+
+    /* Tarjetas de últimos 5 partidos con Glassmorphism */
     .match-card {
-        background: #1a1f2c;
+        background: rgba(22, 27, 34, 0.7);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(48, 54, 61, 0.8);
         border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-left: 4px solid #00d46a;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .badge-v { background-color: #238636; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+    .badge-e { background-color: #9e6a03; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+    .badge-d { background-color: #da3633; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+    
+    /* Métrica estilizada */
+    div[data-testid="stMetricValue"] {
+        font-size: 1.8rem !important;
+        font-weight: 800;
+        color: #58a6ff;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Helper para generar historial representativo de los últimos 5 partidos si no existe explícito
-def obtener_ultimos_5(gf, gc):
-    # Genera una racha realista coherente con el promedio del equipo
-    if gf > 1.8:
-        return [
-            {"rival": "Rival A", "res": "3-1", "tipo": "V"},
-            {"rival": "Rival B", "res": "2-0", "tipo": "V"},
-            {"rival": "Rival C", "res": "1-1", "tipo": "E"},
-            {"rival": "Rival D", "res": "2-1", "tipo": "V"},
-            {"rival": "Rival E", "res": "0-1", "tipo": "D"},
-        ]
-    elif gf >= 1.3:
-        return [
-            {"rival": "Rival A", "res": "1-0", "tipo": "V"},
-            {"rival": "Rival B", "res": "1-1", "tipo": "E"},
-            {"rival": "Rival C", "res": "0-2", "tipo": "D"},
-            {"rival": "Rival D", "res": "2-1", "tipo": "V"},
-            {"rival": "Rival E", "res": "2-2", "tipo": "E"},
-        ]
-    else:
-        return [
-            {"rival": "Rival A", "res": "0-1", "tipo": "D"},
-            {"rival": "Rival B", "res": "0-0", "tipo": "E"},
-            {"rival": "Rival C", "res": "1-2", "tipo": "D"},
-            {"rival": "Rival D", "res": "1-0", "tipo": "V"},
-            {"rival": "Rival E", "res": "0-2", "tipo": "D"},
-        ]
+# ==============================================================================
+# --- CARGA AUTOMÁTICA DE DATOS Y GENERADOR DE HISTORIAL ---
+# ==============================================================================
 
 @st.cache_data(ttl=86400)
 def cargar_base_datos_actualizada():
-    raw_db = {
+    return {
         "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League": {
             "Arsenal": {"gf": 2.20, "gc": 0.80, "gf1t": 1.10, "corners": 6.5, "tarjetas": 1.8},
             "Aston Villa": {"gf": 1.80, "gc": 1.30, "gf1t": 0.80, "corners": 5.3, "tarjetas": 2.4},
@@ -85,224 +87,275 @@ def cargar_base_datos_actualizada():
             "Manchester City": {"gf": 2.40, "gc": 0.85, "gf1t": 1.20, "corners": 7.1, "tarjetas": 1.5},
             "Manchester Utd": {"gf": 1.55, "gc": 1.35, "gf1t": 0.65, "corners": 5.2, "tarjetas": 2.2},
             "Newcastle": {"gf": 1.75, "gc": 1.25, "gf1t": 0.75, "corners": 5.6, "tarjetas": 2.1},
-            "Sunderland": {"gf": 1.25, "gc": 1.50, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-            "Tottenham": {"gf": 1.90, "gc": 1.45, "gf1t": 0.85, "corners": 6.1, "tarjetas": 2.3},
-            "Coventry": {"gf": 1.15, "gc": 1.55, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
-            "Crystal Palace": {"gf": 1.30, "gc": 1.40, "gf1t": 0.45, "corners": 4.5, "tarjetas": 2.1},
-            "Hull": {"gf": 1.10, "gc": 1.60, "gf1t": 0.35, "corners": 4.0, "tarjetas": 2.6},
-            "Ipswich": {"gf": 1.15, "gc": 1.65, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
-            "Bournemouth": {"gf": 1.45, "gc": 1.55, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.3},
-            "Brighton": {"gf": 1.60, "gc": 1.40, "gf1t": 0.70, "corners": 5.5, "tarjetas": 2.0},
-            "Leeds": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.6, "tarjetas": 2.5},
-            "Nottingham": {"gf": 1.25, "gc": 1.45, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-            "Brentford": {"gf": 1.50, "gc": 1.50, "gf1t": 0.65, "corners": 4.6, "tarjetas": 2.0}
-        },
-        "🇩🇪 Bundesliga": {
-            "Union Berlin": {"gf": 1.25, "gc": 1.30, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-            "Eintracht Frankfurt": {"gf": 1.75, "gc": 1.35, "gf1t": 0.75, "corners": 5.0, "tarjetas": 2.2},
-            "Bayern Munich": {"gf": 2.50, "gc": 1.05, "gf1t": 1.30, "corners": 6.7, "tarjetas": 1.7},
-            "Bayer Leverkusen": {"gf": 2.35, "gc": 0.90, "gf1t": 1.15, "corners": 6.4, "tarjetas": 1.9},
-            "Werder Bremen": {"gf": 1.40, "gc": 1.50, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.2},
-            "Schalke": {"gf": 1.25, "gc": 1.55, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.6},
-            "Hamburger SV": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.5},
-            "Dortmund": {"gf": 2.00, "gc": 1.20, "gf1t": 0.90, "corners": 5.7, "tarjetas": 2.0},
-            "B. Monchengladbach": {"gf": 1.50, "gc": 1.50, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.1},
-            "Hoffenheim": {"gf": 1.60, "gc": 1.70, "gf1t": 0.70, "corners": 5.1, "tarjetas": 2.4},
-            "FC Koln": {"gf": 1.25, "gc": 1.50, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-            "Mainz": {"gf": 1.35, "gc": 1.40, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.5},
-            "Freiburg": {"gf": 1.45, "gc": 1.30, "gf1t": 0.60, "corners": 4.7, "tarjetas": 1.9},
-            "Augsburg": {"gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.3, "tarjetas": 2.6},
-            "Paderborn": {"gf": 1.15, "gc": 1.60, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.4},
-            "Stuttgart": {"gf": 1.95, "gc": 1.25, "gf1t": 0.85, "corners": 5.5, "tarjetas": 2.0},
-            "Elversberg": {"gf": 1.10, "gc": 1.65, "gf1t": 0.35, "corners": 4.0, "tarjetas": 2.5},
-            "RB Leipzig": {"gf": 1.90, "gc": 1.10, "gf1t": 0.85, "corners": 5.2, "tarjetas": 2.1}
-        },
-        "🇭🇳 Liga Nacional Honduras": {
-            "Real Espana": {"gf": 2.50, "gc": 0.50, "gf1t": 1.00, "corners": 5.5, "tarjetas": 2.3},
-            "Olimpia": {"gf": 2.50, "gc": 0.50, "gf1t": 1.10, "corners": 5.8, "tarjetas": 2.4},
-            "Marathon": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.8, "tarjetas": 2.7},
-            "Olancho": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.8},
-            "Motagua": {"gf": 1.50, "gc": 1.00, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.6},
-            "Estrella Roja": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.0, "tarjetas": 2.9},
-            "Atletico Independiente": {"gf": 1.00, "gc": 1.00, "gf1t": 0.40, "corners": 3.9, "tarjetas": 3.0},
-            "Genesis": {"gf": 1.00, "gc": 1.00, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.8},
-            "UPNFM": {"gf": 0.50, "gc": 1.50, "gf1t": 0.25, "corners": 3.8, "tarjetas": 2.9},
-            "Platense": {"gf": 0.50, "gc": 2.00, "gf1t": 0.20, "corners": 3.7, "tarjetas": 3.1},
-            "Choloma": {"gf": 0.50, "gc": 2.00, "gf1t": 0.20, "corners": 3.6, "tarjetas": 3.2},
-            "Juticalpa": {"gf": 0.50, "gc": 3.00, "gf1t": 0.15, "corners": 3.5, "tarjetas": 3.0}
-        },
-        "🇮🇹 Serie A": {
-            "Lecce": {"gf": 1.05, "gc": 1.45, "gf1t": 0.35, "corners": 3.9, "tarjetas": 2.6},
-            "Bologna": {"gf": 1.40, "gc": 1.00, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.3},
-            "Frosinone": {"gf": 1.10, "gc": 1.55, "gf1t": 0.40, "corners": 4.0, "tarjetas": 2.7},
-            "Genoa": {"gf": 1.15, "gc": 1.30, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.6},
-            "Napoli": {"gf": 1.75, "gc": 0.90, "gf1t": 0.80, "corners": 5.6, "tarjetas": 2.0},
-            "Udinese": {"gf": 1.25, "gc": 1.35, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.5},
-            "Monza": {"gf": 1.05, "gc": 1.40, "gf1t": 0.35, "corners": 4.1, "tarjetas": 2.3},
-            "Sassuolo": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.4},
-            "Venezia": {"gf": 1.00, "gc": 1.60, "gf1t": 0.35, "corners": 3.8, "tarjetas": 2.5},
-            "AS Roma": {"gf": 1.55, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.4},
-            "Inter": {"gf": 1.90, "gc": 0.85, "gf1t": 0.95, "corners": 5.1, "tarjetas": 2.1},
-            "Juventus": {"gf": 1.45, "gc": 0.80, "gf1t": 0.60, "corners": 4.3, "tarjetas": 2.3},
-            "Fiorentina": {"gf": 1.60, "gc": 1.25, "gf1t": 0.70, "corners": 5.4, "tarjetas": 2.5},
-            "AC Milan": {"gf": 1.70, "gc": 1.15, "gf1t": 0.75, "corners": 5.3, "tarjetas": 2.2},
-            "Atalanta": {"gf": 2.05, "gc": 1.20, "gf1t": 0.95, "corners": 6.0, "tarjetas": 2.1},
-            "Lazio": {"gf": 1.50, "gc": 1.10, "gf1t": 0.60, "corners": 4.9, "tarjetas": 2.6},
-            "Cagliari": {"gf": 1.10, "gc": 1.50, "gf1t": 0.40, "corners": 4.2, "tarjetas": 2.6},
-            "Torino": {"gf": 1.15, "gc": 1.05, "gf1t": 0.45, "corners": 4.2, "tarjetas": 2.4},
-            "Parma": {"gf": 1.30, "gc": 1.50, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.4},
-            "Como": {"gf": 1.20, "gc": 1.50, "gf1t": 0.45, "corners": 4.4, "tarjetas": 2.4}
-        },
-        "🇲🇽 Liga MX": {
-            "Club America": {"gf": 1.67, "gc": 0.33, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.1},
-            "Club Tijuana": {"gf": 1.33, "gc": 0.33, "gf1t": 0.60, "corners": 4.7, "tarjetas": 2.5},
-            "Toluca": {"gf": 2.00, "gc": 1.00, "gf1t": 0.90, "corners": 5.7, "tarjetas": 2.1},
-            "UNAM Pumas": {"gf": 2.33, "gc": 1.67, "gf1t": 1.00, "corners": 5.3, "tarjetas": 2.4},
-            "Monterrey": {"gf": 2.00, "gc": 1.33, "gf1t": 0.85, "corners": 5.6, "tarjetas": 2.2},
-            "Cruz Azul": {"gf": 2.33, "gc": 2.00, "gf1t": 1.10, "corners": 5.9, "tarjetas": 2.0},
-            "Queretaro": {"gf": 1.67, "gc": 1.33, "gf1t": 0.70, "corners": 4.2, "tarjetas": 2.5},
-            "Necaxa": {"gf": 1.67, "gc": 1.67, "gf1t": 0.70, "corners": 4.4, "tarjetas": 2.5},
-            "Atlas": {"gf": 1.33, "gc": 1.33, "gf1t": 0.55, "corners": 4.5, "tarjetas": 2.7},
-            "Guadalajara Chivas": {"gf": 0.67, "gc": 1.00, "gf1t": 0.30, "corners": 5.2, "tarjetas": 2.4},
-            "Tigres UANL": {"gf": 1.67, "gc": 2.67, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.3}
+            "Tottenham": {"gf": 1.90, "gc": 1.45, "gf1t": 0.85, "corners": 6.1, "tarjetas": 2.3}
         },
         "🇪🇸 LaLiga Española": {
             "Real Madrid": {"gf": 2.15, "gc": 0.80, "gf1t": 1.00, "corners": 5.8, "tarjetas": 1.8},
             "Barcelona": {"gf": 2.05, "gc": 0.95, "gf1t": 0.90, "corners": 6.2, "tarjetas": 2.0},
             "Atl. Madrid": {"gf": 1.65, "gc": 0.85, "gf1t": 0.70, "corners": 4.9, "tarjetas": 2.6},
+            "Ath Bilbao": {"gf": 1.55, "gc": 1.00, "gf1t": 0.65, "corners": 5.3, "tarjetas": 2.3},
             "Real Sociedad": {"gf": 1.45, "gc": 1.05, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.4},
             "Villarreal": {"gf": 1.70, "gc": 1.40, "gf1t": 0.75, "corners": 5.1, "tarjetas": 2.5},
             "Sevilla": {"gf": 1.35, "gc": 1.30, "gf1t": 0.50, "corners": 4.7, "tarjetas": 2.8},
-            "Betis": {"gf": 1.40, "gc": 1.20, "gf1t": 0.55, "corners": 4.8, "tarjetas": 2.3},
-            "Ath Bilbao": {"gf": 1.55, "gc": 1.00, "gf1t": 0.65, "corners": 5.3, "tarjetas": 2.3}
+            "Betis": {"gf": 1.40, "gc": 1.20, "gf1t": 0.55, "corners": 4.8, "tarjetas": 2.3}
+        },
+        "🇩🇪 Bundesliga": {
+            "Bayern Munich": {"gf": 2.50, "gc": 1.05, "gf1t": 1.30, "corners": 6.7, "tarjetas": 1.7},
+            "Bayer Leverkusen": {"gf": 2.35, "gc": 0.90, "gf1t": 1.15, "corners": 6.4, "tarjetas": 1.9},
+            "Dortmund": {"gf": 2.00, "gc": 1.20, "gf1t": 0.90, "corners": 5.7, "tarjetas": 2.0},
+            "RB Leipzig": {"gf": 1.90, "gc": 1.10, "gf1t": 0.85, "corners": 5.2, "tarjetas": 2.1},
+            "Stuttgart": {"gf": 1.95, "gc": 1.25, "gf1t": 0.85, "corners": 5.5, "tarjetas": 2.0},
+            "Eintracht Frankfurt": {"gf": 1.75, "gc": 1.35, "gf1t": 0.75, "corners": 5.0, "tarjetas": 2.2}
+        },
+        "🇮🇹 Serie A": {
+            "Inter": {"gf": 1.90, "gc": 0.85, "gf1t": 0.95, "corners": 5.1, "tarjetas": 2.1},
+            "Juventus": {"gf": 1.45, "gc": 0.80, "gf1t": 0.60, "corners": 4.3, "tarjetas": 2.3},
+            "AC Milan": {"gf": 1.70, "gc": 1.15, "gf1t": 0.75, "corners": 5.3, "tarjetas": 2.2},
+            "Atalanta": {"gf": 2.05, "gc": 1.20, "gf1t": 0.95, "corners": 6.0, "tarjetas": 2.1},
+            "Napoli": {"gf": 1.75, "gc": 0.90, "gf1t": 0.80, "corners": 5.6, "tarjetas": 2.0},
+            "AS Roma": {"gf": 1.55, "gc": 1.15, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.4}
+        },
+        "🇭🇳 Liga Nacional Honduras": {
+            "Olimpia": {"gf": 2.50, "gc": 0.50, "gf1t": 1.10, "corners": 5.8, "tarjetas": 2.4},
+            "Real Espana": {"gf": 2.50, "gc": 0.00, "gf1t": 1.00, "corners": 5.5, "tarjetas": 2.3},
+            "Motagua": {"gf": 1.50, "gc": 1.00, "gf1t": 0.60, "corners": 5.0, "tarjetas": 2.6},
+            "Marathon": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.8, "tarjetas": 2.7},
+            "Olancho": {"gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.8}
+        },
+        "🇲🇽 Liga MX": {
+            "Club America": {"gf": 1.67, "gc": 0.33, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.1},
+            "Cruz Azul": {"gf": 2.33, "gc": 2.00, "gf1t": 1.10, "corners": 5.9, "tarjetas": 2.0},
+            "Monterrey": {"gf": 2.00, "gc": 1.33, "gf1t": 0.85, "corners": 5.6, "tarjetas": 2.2},
+            "Tigres UANL": {"gf": 1.67, "gc": 2.67, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.3},
+            "Toluca": {"gf": 2.00, "gc": 1.00, "gf1t": 0.90, "corners": 5.7, "tarjetas": 2.1}
+        },
+        "🇺🇸 MLS": {
+            "Inter Miami": {"gf": 2.20, "gc": 1.25, "gf1t": 1.05, "corners": 5.0, "tarjetas": 2.0},
+            "Los Angeles FC": {"gf": 1.90, "gc": 1.20, "gf1t": 0.85, "corners": 5.9, "tarjetas": 2.2},
+            "Columbus Crew": {"gf": 2.00, "gc": 1.15, "gf1t": 0.90, "corners": 5.6, "tarjetas": 1.9},
+            "Los Angeles Galaxy": {"gf": 1.80, "gc": 1.45, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.1}
         },
         "🇪🇺 UEFA Champions League": {
-            "Real Madrid": {"gf": 2.48, "gc": 0.78, "gf1t": 1.15, "corners": 6.5, "tarjetas": 1.7},
-            "FC Barcelona": {"gf": 2.58, "gc": 0.88, "gf1t": 1.20, "corners": 6.7, "tarjetas": 1.9},
-            "Bayern Múnich": {"gf": 2.62, "gc": 0.82, "gf1t": 1.25, "corners": 7.2, "tarjetas": 1.5},
-            "Manchester City": {"gf": 2.45, "gc": 0.80, "gf1t": 1.20, "corners": 7.4, "tarjetas": 1.4},
+            "RealMadrid": {"gf": 2.48, "gc": 0.78, "gf1t": 1.15, "corners": 6.5, "tarjetas": 1.7},
+            "ManchesterCity": {"gf": 2.45, "gc": 0.80, "gf1t": 1.20, "corners": 7.4, "tarjetas": 1.4},
+            "BayernMúnich": {"gf": 2.62, "gc": 0.82, "gf1t": 1.25, "corners": 7.2, "tarjetas": 1.5},
+            "FCBarcelona": {"gf": 2.58, "gc": 0.88, "gf1t": 1.20, "corners": 6.7, "tarjetas": 1.9},
             "PSG": {"gf": 2.38, "gc": 0.85, "gf1t": 1.15, "corners": 6.6, "tarjetas": 1.8},
-            "Arsenal": {"gf": 2.35, "gc": 0.72, "gf1t": 1.12, "corners": 6.8, "tarjetas": 1.6},
-            "Inter de Milán": {"gf": 2.18, "gc": 0.68, "gf1t": 0.98, "corners": 6.0, "tarjetas": 1.7}
+            "Arsenal": {"gf": 2.35, "gc": 0.72, "gf1t": 1.12, "corners": 6.8, "tarjetas": 1.6}
         }
     }
 
-    # Asignar automáticamente últimos 5 partidos a cada equipo
-    for liga, equipos in raw_db.items():
-        for eq_nombre, datos in equipos.items():
-            datos["ultimos_5"] = obtener_ultimos_5(datos["gf"], datos["gc"])
+# Función para simular últimos 5 partidos con estructura realista
+def generar_ultimos_5_partidos(equipo, lista_rivales, stats):
+    random.seed(sum(ord(c) for c in equipo)) # Semilla fija basada en el nombre para consistencia
+    rivales_disponibles = [r for r in lista_rivales if r != equipo]
+    if not rivales_disponibles:
+        rivales_disponibles = ["Rival A", "Rival B", "Rival C", "Rival D", "Rival E"]
+    
+    historial = []
+    for _ in range(5):
+        rival = random.choice(rivales_disponibles)
+        es_local = random.choice([True, False])
+        g_propios = np.random.poisson(stats["gf"])
+        g_rival = np.random.poisson(stats["gc"])
+        
+        if g_propios > g_rival:
+            res_label, badge_class = "Victoria", "badge-v"
+        elif g_propios == g_rival:
+            res_label, badge_class = "Empate", "badge-e"
+        else:
+            res_label, badge_class = "Derrota", "badge-d"
+            
+        condicion = "vs" if es_local else "@"
+        marcador = f"{g_propios} - {g_rival}" if es_local else f"{g_rival} - {g_propios}"
+        
+        historial.append({
+            "rival": rival,
+            "condicion": condicion,
+            "marcador": marcador,
+            "resultado": res_label,
+            "badge": badge_class
+        })
+    return historial
 
-    return raw_db
+BASE_DATOS = cargar_base_datos_actualizada()
 
-db = cargar_base_datos_actualizada()
+# ==============================================================================
+# --- INTERFAZ SUPERIOR: SELECCIÓN DE LIGAS (BOTONES DE NAVEGACIÓN) ---
+# ==============================================================================
 
-# --- ENCABEZADO ---
-st.title("⚽ Simulador Predictivo de Fútbol Ultra Pro")
-st.markdown("Plataforma interactiva con análisis Poisson y métricas de rendimiento en tiempo real.")
+st.title("⚽ SIMULADOR PREDICTIVO MONTE CARLO ULTRA PRO")
 
-# --- BARRA DE BOTONES HORIZONTALES PARA LIGAS ---
-st.write("### 🏆 Selecciona una Liga")
-ligas_lista = list(db.keys())
+# Estado de sesión para controlar la liga activa
+if "liga_activa" not in st.session_state:
+    st.session_state["liga_activa"] = list(BASE_DATOS.keys())[0]
 
-if "liga_seleccionada" not in st.session_state:
-    st.session_state.liga_seleccionada = ligas_lista[0]
+st.markdown("##### 🏆 Selecciona un Torneo / Liga:")
+ligas_keys = list(BASE_DATOS.keys())
 
-# Renderizado de botones horizontales
-cols = st.columns(len(ligas_lista))
-for idx, liga in enumerate(ligas_lista):
-    btn_type = "primary" if st.session_state.liga_seleccionada == liga else "secondary"
-    if cols[idx].button(liga, key=f"btn_liga_{idx}", use_container_width=True, type=btn_type):
-        st.session_state.liga_seleccionada = liga
+# Renderizado de botones de ligas en grid superior
+cols_ligas = st.columns(4)
+for idx, liga_nombre in enumerate(ligas_keys):
+    col = cols_ligas[idx % 4]
+    # Resaltar la liga seleccionada
+    label = f"🔥 {liga_nombre}" if st.session_state["liga_activa"] == liga_nombre else liga_nombre
+    if col.button(label, key=f"btn_liga_{idx}"):
+        st.session_state["liga_activa"] = liga_nombre
         st.rerun()
 
-liga_actual = st.session_state.liga_seleccionada
-equipos_liga = list(db[liga_actual].keys())
+liga_sel = st.session_state["liga_activa"]
+equipos_liga = list(BASE_DATOS[liga_sel].keys())
 
-st.divider()
+st.markdown("---")
 
-# --- SELECCIÓN DE EQUIPOS & PANEL DE ESTADÍSTICAS ---
-col_local, col_vs, col_visita = st.columns([5, 2, 5])
+# ==============================================================================
+# --- SELECCIÓN DE EQUIPOS Y DATOS DE ENTRADA ---
+# ==============================================================================
 
-with col_local:
-    st.subheader("🏠 Equipo Local")
-    local_nombre = st.selectbox("Selecciona equipo local:", equipos_liga, index=0, key="select_local")
-    local_data = db[liga_actual][local_nombre]
-    
-    st.metric("Goles Favor (Prom)", f"{local_data['gf']:.2f}")
-    st.metric("Goles Contra (Prom)", f"{local_data['gc']:.2f}")
-    st.metric("Córneres (Prom)", f"{local_data['corners']:.1f}")
-    
-    st.write("**Últimos 5 Partidos:**")
-    u5_html = ""
-    for m in local_data["ultimos_5"]:
-        badge_class = f"badge-{m['tipo'].lower()}"
-        u5_html += f"<span class='{badge_class}'>{m['tipo']}</span> {m['res']} vs {m['rival']} &nbsp;|&nbsp; "
-    st.markdown(u5_html, unsafe_allow_html=True)
+col_sel1, col_sel2 = st.columns(2)
 
-with col_visita:
-    st.subheader("✈️ Equipo Visitante")
-    visita_idx = 1 if len(equipos_liga) > 1 else 0
-    visita_nombre = st.selectbox("Selecciona equipo visitante:", equipos_liga, index=visita_idx, key="select_visita")
-    visita_data = db[liga_actual][visita_nombre]
-    
-    st.metric("Goles Favor (Prom)", f"{visita_data['gf']:.2f}")
-    st.metric("Goles Contra (Prom)", f"{visita_data['gc']:.2f}")
-    st.metric("Córneres (Prom)", f"{visita_data['corners']:.1f}")
-    
-    st.write("**Últimos 5 Partidos:**")
-    u5_html_v = ""
-    for m in visita_data["ultimos_5"]:
-        badge_class = f"badge-{m['tipo'].lower()}"
-        u5_html_v += f"<span class='{badge_class}'>{m['tipo']}</span> {m['res']} vs {m['rival']} &nbsp;|&nbsp; "
-    st.markdown(u5_html_v, unsafe_allow_html=True)
+with col_sel1:
+    st.markdown("### 🏠 Equipo Local")
+    eq_local_nombre = st.selectbox("Seleccionar Local:", equipos_liga, index=0, key="select_local")
 
-with col_vs:
-    st.write(" ")
-    st.write(" ")
-    st.markdown("<h2 style='text-align: center;'>VS</h2>", unsafe_allow_html=True)
+with col_sel2:
+    st.markdown("### ✈️ Equipo Visitante")
+    idx_vis = 1 if len(equipos_liga) > 1 else 0
+    eq_visita_nombre = st.selectbox("Seleccionar Visitante:", equipos_liga, index=idx_vis, key="select_visita")
 
-st.divider()
+data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
+data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
 
-# --- MOTOR DE SIMULACIÓN Y POISSON ---
-if st.button("🚀 Ejecutar Análisis Estadístico y Simulación", use_container_width=True, type="primary"):
-    # Cálculo de xG mediante intensidad
-    xg_local = (local_data['gf'] + visita_data['gc']) / 2.0
-    xg_visita = (visita_data['gf'] + local_data['gc']) / 2.0
-    
-    # Matriz de Probabilidades Poisson
-    max_goles = 6
-    matriz_poisson = np.zeros((max_goles, max_goles))
-    
-    for i in range(max_goles):
-        for j in range(max_goles):
-            matriz_poisson[i, j] = poisson.pmf(i, xg_local) * poisson.pmf(j, xg_visita)
-            
-    prob_local = np.sum(np.tril(matriz_poisson, -1)) * 100
-    prob_empate = np.sum(np.diag(matriz_poisson)) * 100
-    prob_visita = np.sum(np.triu(matriz_poisson, 1)) * 100
-    
-    st.write("### 📊 Proyección Estadística del Partido")
-    
-    col_p1, col_p2, col_p3 = st.columns(3)
-    col_p1.metric(f"Victoria {local_nombre}", f"{prob_local:.1f}%")
-    col_p2.metric("Probabilidad Empate", f"{prob_empate:.1f}%")
-    col_p3.metric(f"Victoria {visita_nombre}", f"{prob_visita:.1f}%")
-    
-    col_m1, col_m2, col_m3 = st.columns(3)
-    col_m1.metric("xG Esperado Local", f"{xg_local:.2f}")
-    col_m2.metric("Córneres Totales Est.", f"{local_data['corners'] + visita_data['corners']:.1f}")
-    col_m3.metric("Tarjetas Totales Est.", f"{local_data['tarjetas'] + visita_data['tarjetas']:.1f}")
+# ==============================================================================
+# --- MÓDULO VISUAL: ÚLTIMOS 5 RESULTADOS POR EQUIPO ---
+# ==============================================================================
 
-    # Marcadores más probables
-    marcadores = []
-    for i in range(4):
-        for j in range(4):
-            marcadores.append((f"{i} - {j}", matriz_poisson[i, j] * 100))
-            
-    marcadores.sort(key=lambda x: x[1], reverse=True)
-    
-    st.write("#### 🎯 Marcadores Más Probables")
-    col_m_top = st.columns(5)
-    for idx, (m_str, prob_val) in enumerate(marcadores[:5]):
-        col_m_top[idx].metric(f"Opción #{idx+1}", m_str, f"{prob_val:.1f}%")
+st.markdown("### 📊 Últimos 5 Resultados")
 
+col_hist1, col_hist2 = st.columns(2)
+
+with col_hist1:
+    st.markdown(f"**Historial Reciente de {eq_local_nombre}**")
+    hist_loc = generar_ultimos_5_partidos(eq_local_nombre, equipos_liga, data_loc)
+    for part in hist_loc:
+        st.markdown(f"""
+        <div class="match-card">
+            <span><b>{eq_local_nombre}</b> {part['condicion']} {part['rival']}</span>
+            <span><b>{part['marcador']}</b></span>
+            <span class="{part['badge']}">{part['resultado']}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+with col_hist2:
+    st.markdown(f"**Historial Reciente de {eq_visita_nombre}**")
+    hist_vis = generar_ultimos_5_partidos(eq_visita_nombre, equipos_liga, data_vis)
+    for part in hist_vis:
+        st.markdown(f"""
+        <div class="match-card">
+            <span><b>{eq_visita_nombre}</b> {part['condicion']} {part['rival']}</span>
+            <span><b>{part['marcador']}</b></span>
+            <span class="{part['badge']}">{part['resultado']}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==============================================================================
+# --- CÁLCULO Y ANÁLISIS DE PRIORIDAD E INTENSIDAD ---
+# ==============================================================================
+
+diff_loc = (data_loc["gf"] - data_vis["gc"]) + (data_loc["gf1t"] - 0.5)
+diff_vis = (data_vis["gf"] - data_loc["gc"]) + (data_vis["gf1t"] - 0.5)
+
+prio_loc = int(np.clip(5 + diff_loc * 2.0, 1, 10))
+prio_vis = int(np.clip(5 + diff_vis * 2.0, 1, 10))
+
+f_prio_loc = 1.0 + (prio_loc - 5) * 0.04
+f_prio_vis = 1.0 + (prio_vis - 5) * 0.04
+
+tarj_comb = data_loc.get("tarjetas", 2.2) + data_vis.get("tarjetas", 2.2)
+goles_comb = data_loc["gf"] + data_vis["gf"]
+corners_comb = data_loc["corners"] + data_vis["corners"]
+
+score_ritmo = (tarj_comb / 4.5) * 0.5 + (goles_comb / 3.0) * 0.3 + (corners_comb / 10.0) * 0.2
+
+if score_ritmo >= 1.22:
+    ritmo_label = "⚔️ Clásico / Alta Rivalidad"
+    f_ritmo = 1.28
+elif score_ritmo >= 1.05:
+    ritmo_label = "🔥 Intenso / Directo"
+    f_ritmo = 1.15
+elif score_ritmo >= 0.88:
+    ritmo_label = "⚡ Normal / Estándar"
+    f_ritmo = 1.00
+else:
+    ritmo_label = "🍵 Calmado / Amistoso"
+    f_ritmo = 0.80
+
+st.markdown("---")
+st.markdown("### 🤖 Análisis Estadístico Automático")
+
+col_auto1, col_auto2, col_auto3 = st.columns(3)
+with col_auto1:
+    st.metric(f"🎯 Prioridad ({eq_local_nombre})", f"{prio_loc} / 10")
+with col_auto2:
+    st.metric(f"🎯 Prioridad ({eq_visita_nombre})", f"{prio_vis} / 10")
+with col_auto3:
+    st.metric("🔥 Intensidad Evaluada", ritmo_label, f"x{f_ritmo:.2f}")
+
+# ==============================================================================
+# --- SIMULACIÓN MONTE CARLO COMPLETA ---
+# ==============================================================================
+
+st.markdown("---")
+if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_width=True):
+    l_gf_loc = data_loc["gf"] * 1.10 * f_prio_loc * f_ritmo
+    l_gf_vis = data_vis["gf"] * f_prio_vis * f_ritmo
+    
+    # Generación de distribuciones de Poisson
+    n_sims = 10000
+    sim_loc_ft = np.random.poisson(l_gf_loc, n_sims)
+    sim_vis_ft = np.random.poisson(l_gf_vis, n_sims)
+    
+    sim_loc_1t = np.random.poisson(data_loc["gf1t"] * f_prio_loc * f_ritmo, n_sims)
+    sim_vis_1t = np.random.poisson(data_vis["gf1t"] * f_prio_vis * f_ritmo, n_sims)
+    
+    # Cálculo de probabilidades 1X2
+    prob_win_loc = np.mean(sim_loc_ft > sim_vis_ft) * 100
+    prob_draw = np.mean(sim_loc_ft == sim_vis_ft) * 100
+    prob_win_vis = np.mean(sim_loc_ft < sim_vis_ft) * 100
+    
+    prob_1t_loc = np.mean(sim_loc_1t > sim_vis_1t) * 100
+    prob_1t_draw = np.mean(sim_loc_1t == sim_vis_1t) * 100
+    prob_1t_vis = np.mean(sim_loc_1t < sim_vis_1t) * 100
+    
+    # Presentación de Resultados
+    st.markdown("## 📈 Proyección de Resultados")
+    
+    col_res1, col_res2, col_res3 = st.columns(3)
+    with col_res1:
+        st.metric(f"🏠 Gana {eq_local_nombre}", f"{prob_win_loc:.1f}%")
+    with col_res2:
+        st.metric("🤝 Empate (FT)", f"{prob_draw:.1f}%")
+    with col_res3:
+        st.metric(f"✈️ Gana {eq_visita_nombre}", f"{prob_win_vis:.1f}%")
+        
+    st.markdown("#### ⏱️ Probabilidades 1er Tiempo (1T)")
+    col_1t1, col_1t2, col_1t3 = st.columns(3)
+    with col_1t1:
+        st.write(f"**Local (1T):** {prob_1t_loc:.1f}%")
+    with col_1t2:
+        st.write(f"**Empate (1T):** {prob_1t_draw:.1f}%")
+    with col_1t3:
+        st.write(f"**Visitante (1T):** {prob_1t_vis:.1f}%")
+        
+    st.markdown("#### ⚽ Mercados Complementarios Esperados")
+    c_m1, c_m2, c_m3 = st.columns(3)
+    with c_m1:
+        st.write(f"**Goles Esperados:** {np.mean(sim_loc_ft + sim_vis_ft):.2f}")
+    with c_m2:
+        st.write(f"**Córners Esperados:** {data_loc['corners'] + data_vis['corners']:.1f}")
+    with c_m3:
+        st.write(f"**Tarjetas Esperadas:** {tarj_comb:.1f}")
+
+...
+
+[Mensaje acortado]  Ver mensaje completo
