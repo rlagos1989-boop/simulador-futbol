@@ -150,7 +150,7 @@ LIGAS_ESTATICAS = {
         "Como1907": {"gf": 1.48, "gc": 1.35, "gf1t": 0.62, "corners": 4.8, "tarjetas": 2.2},
         "RBLeipzig": {"gf": 2.00, "gc": 1.08, "gf1t": 0.90, "corners": 5.8, "tarjetas": 1.9},
         "SabahBakú": {"gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.2, "tarjetas": 2.6}
-        ,}       
+    },       
     "🇪🇺 UEFA Europa League (2026/27 - 36 Equipos)": {
 "HapoelBeerSheva": {"gf": 1.42, "gc": 1.30, "gf1t": 0.58, "corners": 4.5, "tarjetas": 2.5},
             "Sunderland": {"gf": 1.55, "gc": 1.25, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.1},
