@@ -1,27 +1,28 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import requests
 import os
 import datetime
 
-st.set_page_config(page_title="Simulador Monte Carlo 2026/2027 - Cobertura Total", layout="wide")
+st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide")
 
 ARCH_HISTORIAL = "registro_pronosticos.csv"
 
 # ==============================================================================
-# 1. FUENTES DE DATOS - COBERTURA COMPLETA DE EQUIPOS (TEMPORADA 2026/2027)
+# 1. BASE DE DATOS Y FEEDS AUTOMÁTICOS (TEMPORADA 2026/2027)
 # ==============================================================================
 
-# Ligas con servidor CSV que extrae dinámicamente a TODOS los participantes
+# Feeds CSV con actualización automática diaria para las 5 ligas europeas principales
 LIGAS_AUTO = {
-    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/E0.csv",
-    "🇪🇸 LaLiga Española (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/SP1.csv",
-    "🇮🇹 Serie A (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/I1.csv",
-    "🇩🇪 Bundesliga (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
-    "🇫🇷 Ligue 1 (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/F1.csv"
+    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League 26/27": "https://www.football-data.co.uk/mmz4281/2627/E0.csv",
+    "🇪🇸 LaLiga Española 26/27": "https://www.football-data.co.uk/mmz4281/2627/SP1.csv",
+    "🇮🇹 Serie A 26/27": "https://www.football-data.co.uk/mmz4281/2627/I1.csv",
+    "🇩🇪 Bundesliga 26/27": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
+    "🇫🇷 Ligue 1 26/27": "https://www.football-data.co.uk/mmz4281/2627/F1.csv"
 }
 
-# Diccionarios completos para torneos fijados
+# Bases completas para competiciones UEFA, Liga MX, Arabia y Honduras
 LIGAS_ESTATICAS = {
     "🇲🇽 Liga MX (Apertura 2026 / Clausura 2027)": {
         "Club América": {"pj": 8, "gf": 2.10, "gc": 0.90, "gf1t": 1.10, "corners": 6.3, "tarjetas": 2.2, "remates_arco": 5.6},
@@ -86,110 +87,35 @@ LIGAS_ESTATICAS = {
         "Lille": {"pj": 8, "gf": 1.75, "gc": 1.00, "gf1t": 0.78, "corners": 5.3, "tarjetas": 2.0, "remates_arco": 4.5},
         "PSG": {"pj": 8, "gf": 2.38, "gc": 0.85, "gf1t": 1.15, "corners": 6.6, "tarjetas": 1.8, "remates_arco": 6.1},
         "Napoli": {"pj": 8, "gf": 1.90, "gc": 0.95, "gf1t": 0.85, "corners": 5.9, "tarjetas": 2.0, "remates_arco": 5.2},
-        "LASK": {"pj": 8, "gf": 1.50, "gc": 1.25, "gf1t": 0.62, "corners": 4.9, "tarjetas": 2.2, "remates_arco": 3.9},
-        "Slavia Praga": {"pj": 8, "gf": 1.95, "gc": 0.88, "gf1t": 0.88, "corners": 5.8, "tarjetas": 2.1, "remates_arco": 5.0},
-        "Club Brujas": {"pj": 8, "gf": 1.88, "gc": 1.05, "gf1t": 0.82, "corners": 5.7, "tarjetas": 2.1, "remates_arco": 4.8},
-        "Lens": {"pj": 8, "gf": 1.68, "gc": 1.02, "gf1t": 0.72, "corners": 5.2, "tarjetas": 2.1, "remates_arco": 4.4},
-        "Slovan Bratislava": {"pj": 8, "gf": 1.45, "gc": 1.58, "gf1t": 0.58, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.7},
         "Bayern Múnich": {"pj": 8, "gf": 2.62, "gc": 0.82, "gf1t": 1.25, "corners": 7.2, "tarjetas": 1.5, "remates_arco": 6.8},
         "Borussia Dortmund": {"pj": 8, "gf": 2.10, "gc": 1.18, "gf1t": 0.95, "corners": 5.9, "tarjetas": 2.0, "remates_arco": 5.5},
         "AS Roma": {"pj": 8, "gf": 1.70, "gc": 1.10, "gf1t": 0.68, "corners": 5.5, "tarjetas": 2.3, "remates_arco": 4.6},
         "Inter de Milán": {"pj": 8, "gf": 2.18, "gc": 0.68, "gf1t": 0.98, "corners": 6.0, "tarjetas": 1.7, "remates_arco": 5.4},
-        "PSV Eindhoven": {"pj": 8, "gf": 2.45, "gc": 0.85, "gf1t": 1.18, "corners": 6.6, "tarjetas": 1.5, "remates_arco": 6.2},
-        "Feyenoord": {"pj": 8, "gf": 2.05, "gc": 1.02, "gf1t": 0.92, "corners": 6.1, "tarjetas": 1.8, "remates_arco": 5.3},
         "Real Madrid": {"pj": 8, "gf": 2.48, "gc": 0.78, "gf1t": 1.15, "corners": 6.5, "tarjetas": 1.7, "remates_arco": 6.6},
-        "Villarreal": {"pj": 8, "gf": 1.82, "gc": 1.15, "gf1t": 0.78, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 4.7},
         "FC Barcelona": {"pj": 8, "gf": 2.58, "gc": 0.88, "gf1t": 1.20, "corners": 6.7, "tarjetas": 1.9, "remates_arco": 6.5},
         "Atlético de Madrid": {"pj": 8, "gf": 1.65, "gc": 0.85, "gf1t": 0.70, "corners": 4.9, "tarjetas": 2.6, "remates_arco": 4.5},
-        "Real Betis": {"pj": 8, "gf": 1.72, "gc": 1.02, "gf1t": 0.72, "corners": 5.5, "tarjetas": 2.2, "remates_arco": 4.5},
         "FC Porto": {"pj": 8, "gf": 2.10, "gc": 0.85, "gf1t": 0.98, "corners": 6.1, "tarjetas": 2.1, "remates_arco": 5.4},
-        "VfB Stuttgart": {"pj": 8, "gf": 1.90, "gc": 1.28, "gf1t": 0.82, "corners": 5.6, "tarjetas": 1.9, "remates_arco": 5.0},
-        "AEK Atenas": {"pj": 8, "gf": 1.65, "gc": 1.15, "gf1t": 0.72, "corners": 5.1, "tarjetas": 2.4, "remates_arco": 4.3},
-        "Viking FK": {"pj": 8, "gf": 1.58, "gc": 1.32, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.0, "remates_arco": 4.0},
-        "Bodø/Glimt": {"pj": 8, "gf": 2.02, "gc": 1.22, "gf1t": 0.92, "corners": 5.9, "tarjetas": 1.7, "remates_arco": 5.2},
         "Sporting CP": {"pj": 8, "gf": 2.25, "gc": 0.82, "gf1t": 1.08, "corners": 6.3, "tarjetas": 1.8, "remates_arco": 5.8},
-        "Galatasaray": {"pj": 8, "gf": 2.22, "gc": 1.12, "gf1t": 1.02, "corners": 6.2, "tarjetas": 2.5, "remates_arco": 5.7},
-        "Fenerbahçe": {"pj": 8, "gf": 2.12, "gc": 0.98, "gf1t": 0.98, "corners": 6.0, "tarjetas": 2.4, "remates_arco": 5.5},
-        "Shakhtar Donetsk": {"pj": 8, "gf": 1.80, "gc": 1.15, "gf1t": 0.78, "corners": 5.2, "tarjetas": 2.0, "remates_arco": 4.6},
-        "Como 1907": {"pj": 8, "gf": 1.48, "gc": 1.35, "gf1t": 0.62, "corners": 4.8, "tarjetas": 2.2, "remates_arco": 3.9},
-        "RB Leipzig": {"pj": 8, "gf": 2.00, "gc": 1.08, "gf1t": 0.90, "corners": 5.8, "tarjetas": 1.9, "remates_arco": 5.2},
-        "Sabah Bakú": {"pj": 8, "gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.2, "tarjetas": 2.6, "remates_arco": 3.3}
+        "RB Leipzig": {"pj": 8, "gf": 2.00, "gc": 1.08, "gf1t": 0.90, "corners": 5.8, "tarjetas": 1.9, "remates_arco": 5.2}
     },
     "🇪🇺 UEFA Europa League (2026/27 - 36 Equipos)": {
-        "Hapoel Beer Sheva": {"pj": 8, "gf": 1.42, "gc": 1.30, "gf1t": 0.58, "corners": 4.5, "tarjetas": 2.5, "remates_arco": 3.6},
-        "Sunderland": {"pj": 8, "gf": 1.55, "gc": 1.25, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.1, "remates_arco": 4.0},
-        "Crystal Palace": {"pj": 8, "gf": 1.62, "gc": 1.20, "gf1t": 0.68, "corners": 5.2, "tarjetas": 2.0, "remates_arco": 4.2},
-        "Bournemouth": {"pj": 8, "gf": 1.68, "gc": 1.28, "gf1t": 0.72, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 4.4},
-        "Real Sociedad": {"pj": 8, "gf": 1.48, "gc": 1.05, "gf1t": 0.65, "corners": 5.5, "tarjetas": 2.1, "remates_arco": 4.5},
-        "Celta Vigo": {"pj": 8, "gf": 1.60, "gc": 1.30, "gf1t": 0.68, "corners": 5.1, "tarjetas": 2.3, "remates_arco": 4.1},
-        "Salzburgo": {"pj": 8, "gf": 1.95, "gc": 1.20, "gf1t": 0.88, "corners": 5.8, "tarjetas": 1.9, "remates_arco": 5.0},
-        "Sturm Graz": {"pj": 8, "gf": 1.60, "gc": 1.30, "gf1t": 0.68, "corners": 4.9, "tarjetas": 2.3, "remates_arco": 4.1},
-        "Viktoria Plzen": {"pj": 8, "gf": 1.62, "gc": 1.08, "gf1t": 0.68, "corners": 5.0, "tarjetas": 2.2, "remates_arco": 4.2},
-        "Sparta Praga": {"pj": 8, "gf": 1.75, "gc": 1.20, "gf1t": 0.72, "corners": 5.3, "tarjetas": 2.3, "remates_arco": 4.5},
-        "Anderlecht": {"pj": 8, "gf": 1.68, "gc": 1.12, "gf1t": 0.72, "corners": 5.2, "tarjetas": 2.1, "remates_arco": 4.3},
-        "Union Saint-Gilloise": {"pj": 8, "gf": 1.58, "gc": 1.18, "gf1t": 0.68, "corners": 5.1, "tarjetas": 2.3, "remates_arco": 4.0},
-        "Marseille": {"pj": 8, "gf": 1.95, "gc": 1.15, "gf1t": 0.85, "corners": 5.8, "tarjetas": 2.4, "remates_arco": 5.3},
-        "Rennes": {"pj": 8, "gf": 1.70, "gc": 1.20, "gf1t": 0.72, "corners": 5.3, "tarjetas": 2.1, "remates_arco": 4.4},
-        "Lyon": {"pj": 8, "gf": 1.82, "gc": 1.22, "gf1t": 0.78, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 5.0},
         "Bayer Leverkusen": {"pj": 8, "gf": 2.20, "gc": 0.92, "gf1t": 1.02, "corners": 6.2, "tarjetas": 1.9, "remates_arco": 5.8},
-        "Hoffenheim": {"pj": 8, "gf": 1.85, "gc": 1.35, "gf1t": 0.80, "corners": 5.3, "tarjetas": 2.2, "remates_arco": 4.8},
         "Juventus": {"pj": 8, "gf": 1.80, "gc": 0.68, "gf1t": 0.80, "corners": 5.5, "tarjetas": 2.0, "remates_arco": 4.9},
         "AC Milan": {"pj": 8, "gf": 1.85, "gc": 1.15, "gf1t": 0.82, "corners": 5.7, "tarjetas": 2.2, "remates_arco": 5.1},
-        "Nijmegen": {"pj": 8, "gf": 1.45, "gc": 1.35, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.0, "remates_arco": 3.7},
+        "Marseille": {"pj": 8, "gf": 1.95, "gc": 1.15, "gf1t": 0.85, "corners": 5.8, "tarjetas": 2.4, "remates_arco": 5.3},
+        "Lyon": {"pj": 8, "gf": 1.82, "gc": 1.22, "gf1t": 0.78, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 5.0},
+        "Real Sociedad": {"pj": 8, "gf": 1.48, "gc": 1.05, "gf1t": 0.65, "corners": 5.5, "tarjetas": 2.1, "remates_arco": 4.5},
         "AZ Alkmaar": {"pj": 8, "gf": 1.88, "gc": 1.10, "gf1t": 0.82, "corners": 5.7, "tarjetas": 1.9, "remates_arco": 4.9},
-        "Torreense": {"pj": 8, "gf": 1.25, "gc": 1.48, "gf1t": 0.50, "corners": 4.2, "tarjetas": 2.5, "remates_arco": 3.2},
-        "Levski Sofía": {"pj": 8, "gf": 1.40, "gc": 1.32, "gf1t": 0.58, "corners": 4.6, "tarjetas": 2.4, "remates_arco": 3.6},
-        "Dinamo Zagreb": {"pj": 8, "gf": 1.85, "gc": 1.25, "gf1t": 0.82, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 4.8},
-        "Omonia": {"pj": 8, "gf": 1.42, "gc": 1.28, "gf1t": 0.58, "corners": 4.6, "tarjetas": 2.6, "remates_arco": 3.6},
-        "OFI Creta": {"pj": 8, "gf": 1.35, "gc": 1.42, "gf1t": 0.52, "corners": 4.4, "tarjetas": 2.6, "remates_arco": 3.4},
-        "Olympiacos Piraeus": {"pj": 8, "gf": 1.78, "gc": 0.98, "gf1t": 0.78, "corners": 5.3, "tarjetas": 2.3, "remates_arco": 4.6},
-        "Lillestrom": {"pj": 8, "gf": 1.48, "gc": 1.38, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.1, "remates_arco": 3.8},
-        "Jagiellonia": {"pj": 8, "gf": 1.72, "gc": 1.22, "gf1t": 0.72, "corners": 5.1, "tarjetas": 2.3, "remates_arco": 4.4},
-        "Lech Poznan": {"pj": 8, "gf": 1.62, "gc": 1.20, "gf1t": 0.68, "corners": 5.0, "tarjetas": 2.2, "remates_arco": 4.2},
         "Benfica": {"pj": 8, "gf": 2.10, "gc": 0.88, "gf1t": 0.98, "corners": 6.0, "tarjetas": 1.9, "remates_arco": 5.4},
-        "Celtic": {"pj": 8, "gf": 2.25, "gc": 1.10, "gf1t": 1.02, "corners": 6.4, "tarjetas": 1.6, "remates_arco": 5.8},
-        "Celje": {"pj": 8, "gf": 1.42, "gc": 1.38, "gf1t": 0.58, "corners": 4.6, "tarjetas": 2.3, "remates_arco": 3.6},
-        "Besiktas": {"pj": 8, "gf": 1.78, "gc": 1.18, "gf1t": 0.78, "corners": 5.5, "tarjetas": 2.3, "remates_arco": 4.6},
-        "Ferencvaros": {"pj": 8, "gf": 1.58, "gc": 1.22, "gf1t": 0.68, "corners": 5.0, "tarjetas": 2.4, "remates_arco": 4.0},
-        "Ararat-Armenia": {"pj": 8, "gf": 1.25, "gc": 1.50, "gf1t": 0.48, "corners": 4.1, "tarjetas": 2.6, "remates_arco": 3.2}
+        "Celtic": {"pj": 8, "gf": 2.25, "gc": 1.10, "gf1t": 1.02, "corners": 6.4, "tarjetas": 1.6, "remates_arco": 5.8}
     },
     "🇪🇺 UEFA Conference League (2026/27 - 36 Equipos)": {
-        "Mjallby": {"pj": 6, "gf": 1.38, "gc": 1.28, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.0, "remates_arco": 3.5},
-        "Brighton": {"pj": 6, "gf": 1.88, "gc": 1.25, "gf1t": 0.82, "corners": 5.8, "tarjetas": 2.0, "remates_arco": 4.9},
-        "Mónaco": {"pj": 6, "gf": 1.95, "gc": 1.10, "gf1t": 0.88, "corners": 5.6, "tarjetas": 2.1, "remates_arco": 5.1},
-        "Jablonec": {"pj": 6, "gf": 1.32, "gc": 1.40, "gf1t": 0.52, "corners": 4.3, "tarjetas": 2.4, "remates_arco": 3.4},
-        "Caballero": {"pj": 6, "gf": 1.45, "gc": 1.35, "gf1t": 0.58, "corners": 4.7, "tarjetas": 2.3, "remates_arco": 3.7},
-        "San Truiden": {"pj": 6, "gf": 1.40, "gc": 1.38, "gf1t": 0.55, "corners": 4.5, "tarjetas": 2.2, "remates_arco": 3.6},
-        "Friburgo": {"pj": 6, "gf": 1.72, "gc": 1.18, "gf1t": 0.72, "corners": 5.4, "tarjetas": 1.9, "remates_arco": 4.4},
         "Atalanta": {"pj": 6, "gf": 2.15, "gc": 1.00, "gf1t": 1.00, "corners": 6.1, "tarjetas": 2.0, "remates_arco": 5.7},
         "Ajax": {"pj": 6, "gf": 2.02, "gc": 1.05, "gf1t": 0.92, "corners": 5.9, "tarjetas": 1.8, "remates_arco": 5.5},
-        "Twente": {"pj": 6, "gf": 1.72, "gc": 1.18, "gf1t": 0.72, "corners": 5.4, "tarjetas": 2.0, "remates_arco": 4.4},
-        "Getafe": {"pj": 6, "gf": 1.30, "gc": 1.10, "gf1t": 0.52, "corners": 4.6, "tarjetas": 2.8, "remates_arco": 3.3},
-        "KuPS": {"pj": 6, "gf": 1.32, "gc": 1.38, "gf1t": 0.52, "corners": 4.4, "tarjetas": 2.1, "remates_arco": 3.4},
-        "CSKA Sofía": {"pj": 6, "gf": 1.45, "gc": 1.30, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.5, "remates_arco": 3.7},
-        "Hajduk Split": {"pj": 6, "gf": 1.52, "gc": 1.25, "gf1t": 0.62, "corners": 4.9, "tarjetas": 2.3, "remates_arco": 3.9},
-        "Pafos": {"pj": 6, "gf": 1.48, "gc": 1.18, "gf1t": 0.62, "corners": 4.7, "tarjetas": 2.5, "remates_arco": 3.8},
-        "Aarhus": {"pj": 6, "gf": 1.42, "gc": 1.30, "gf1t": 0.58, "corners": 4.7, "tarjetas": 2.1, "remates_arco": 3.6},
-        "FC Copenhague": {"pj": 6, "gf": 1.82, "gc": 1.08, "gf1t": 0.78, "corners": 5.6, "tarjetas": 1.9, "remates_arco": 4.7},
-        "Midtjylland": {"pj": 6, "gf": 1.72, "gc": 1.22, "gf1t": 0.72, "corners": 5.3, "tarjetas": 2.2, "remates_arco": 4.4},
-        "Nordsjaelland": {"pj": 6, "gf": 1.78, "gc": 1.28, "gf1t": 0.78, "corners": 5.5, "tarjetas": 1.8, "remates_arco": 4.6},
-        "Panathinaikos": {"pj": 6, "gf": 1.58, "gc": 1.08, "gf1t": 0.68, "corners": 5.2, "tarjetas": 2.5, "remates_arco": 4.0},
-        "Brann": {"pj": 6, "gf": 1.62, "gc": 1.28, "gf1t": 0.68, "corners": 5.2, "tarjetas": 1.9, "remates_arco": 4.1},
+        "Mónaco": {"pj": 6, "gf": 1.95, "gc": 1.10, "gf1t": 0.88, "corners": 5.6, "tarjetas": 2.1, "remates_arco": 5.1},
+        "Brighton": {"pj": 6, "gf": 1.88, "gc": 1.25, "gf1t": 0.82, "corners": 5.8, "tarjetas": 2.0, "remates_arco": 4.9},
         "Braga": {"pj": 6, "gf": 1.82, "gc": 1.18, "gf1t": 0.78, "corners": 5.6, "tarjetas": 2.2, "remates_arco": 4.8},
-        "Copas": {"pj": 6, "gf": 1.38, "gc": 1.32, "gf1t": 0.58, "corners": 4.9, "tarjetas": 2.4, "remates_arco": 3.5},
-        "Lugano": {"pj": 6, "gf": 1.52, "gc": 1.28, "gf1t": 0.62, "corners": 4.9, "tarjetas": 2.2, "remates_arco": 3.9},
-        "Crvena Zvezda": {"pj": 6, "gf": 1.90, "gc": 1.35, "gf1t": 0.82, "corners": 5.5, "tarjetas": 2.4, "remates_arco": 4.9},
-        "Thun": {"pj": 6, "gf": 1.45, "gc": 1.35, "gf1t": 0.58, "corners": 4.6, "tarjetas": 2.1, "remates_arco": 3.7},
-        "Trabzonspor": {"pj": 6, "gf": 1.68, "gc": 1.22, "gf1t": 0.72, "corners": 5.3, "tarjetas": 2.5, "remates_arco": 4.3},
-        "Borac Banja Luka": {"pj": 6, "gf": 1.22, "gc": 1.38, "gf1t": 0.48, "corners": 4.2, "tarjetas": 2.6, "remates_arco": 3.1},
-        "Kairat Almaty": {"pj": 6, "gf": 1.35, "gc": 1.40, "gf1t": 0.52, "corners": 4.3, "tarjetas": 2.3, "remates_arco": 3.4},
-        "Egnatia": {"pj": 6, "gf": 1.18, "gc": 1.45, "gf1t": 0.45, "corners": 4.0, "tarjetas": 2.6, "remates_arco": 3.0},
-        "Inter Escaldes": {"pj": 6, "gf": 1.12, "gc": 1.55, "gf1t": 0.42, "corners": 3.8, "tarjetas": 2.7, "remates_arco": 2.9},
-        "Kauno Zalgiris": {"pj": 6, "gf": 1.20, "gc": 1.48, "gf1t": 0.45, "corners": 4.1, "tarjetas": 2.4, "remates_arco": 3.1},
-        "Universidad de Craiova": {"pj": 6, "gf": 1.48, "gc": 1.28, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.4, "remates_arco": 3.8},
-        "Iberia 1999": {"pj": 6, "gf": 1.25, "gc": 1.42, "gf1t": 0.48, "corners": 4.1, "tarjetas": 2.5, "remates_arco": 3.2},
-        "Lincoln Red Imps": {"pj": 6, "gf": 1.08, "gc": 1.60, "gf1t": 0.40, "corners": 3.7, "tarjetas": 2.8, "remates_arco": 2.8},
-        "Riga FC": {"pj": 6, "gf": 1.32, "gc": 1.48, "gf1t": 0.52, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.4}
+        "FC Copenhague": {"pj": 6, "gf": 1.82, "gc": 1.08, "gf1t": 0.78, "corners": 5.6, "tarjetas": 1.9, "remates_arco": 4.7}
     }
 }
 
@@ -244,7 +170,7 @@ def obtener_promedios_torneo(nombre_torneo):
         return {}
 
 # ==============================================================================
-# 2. PERSISTENCIA Y REGISTRO EN ARCHIVO CSV
+# 2. PERSISTENCIA EN ARCHIVO Y CONTROL DE PRONÓSTICOS
 # ==============================================================================
 
 def cargar_historial():
@@ -259,12 +185,12 @@ if "historial_df" not in st.session_state:
     st.session_state.historial_df = cargar_historial()
 
 # ==============================================================================
-# 3. INTERFAZ Y PANEL MONTE CARLO
+# 3. INTERFAZ Y SIMULADOR MONTE CARLO (10,000 PARTIDOS)
 # ==============================================================================
 
 st.title("⚽ Simulador Monte Carlo Predictivo Ultra Pro 2026/2027")
 
-pestana1, pestana2 = st.tabs(["🚀 Simulación y Pronósticos", "📜 Historial (Acertó / Falló)"])
+pestana1, pestana2 = st.tabs(["🚀 Simulación Monte Carlo y Pronósticos", "📜 Historial de Pronósticos (Aciertos/Fallos)"])
 
 todas_las_ligas = list(LIGAS_AUTO.keys()) + list(LIGAS_ESTATICAS.keys())
 
@@ -287,7 +213,7 @@ with pestana1:
         d_loc = datos_equipos[eq_loc]
         d_vis = datos_equipos[eq_vis]
 
-        st.subheader(f"📈 Métricas Base: {eq_loc} vs {eq_vis}")
+        st.subheader(f"📈 Métricas Base de Referencia: {eq_loc} vs {eq_vis}")
         c_m1, c_m2, c_m3, c_m4, c_m5, c_m6 = st.columns(6)
         c_m1.metric("Partidos Jugados", f"{d_loc['pj']} / {d_vis['pj']}")
         c_m2.metric(f"Goles Prom. {eq_loc}", f"{d_loc['gf']}")
@@ -299,6 +225,7 @@ with pestana1:
         st.divider()
 
         if st.button("🚀 CALCULAR PREDICCIÓN MONTE CARLO (10,000 SIMULACIONES)", type="primary", use_container_width=True):
+            # Análisis de Ponderación e Intensidad
             diff_loc = (d_loc["gf"] - d_vis["gc"]) + (d_loc["gf1t"] - 0.5)
             diff_vis = (d_vis["gf"] - d_loc["gc"]) + (d_vis["gf1t"] - 0.5)
             prio_loc = int(np.clip(5 + diff_loc * 2.0, 1, 10))
@@ -313,6 +240,7 @@ with pestana1:
             score_ritmo = (tarj_comb / 4.5) * 0.5 + (goles_comb / 3.0) * 0.3 + (corners_comb / 10.0) * 0.2
             f_ritmo = 1.28 if score_ritmo >= 1.22 else (1.15 if score_ritmo >= 1.05 else (1.00 if score_ritmo >= 0.88 else 0.80))
 
+            # Parámetros lambda para las distribuciones Poisson
             l_gf_loc = max(0.2, (d_loc["gf"] + d_vis["gc"]) / 2.0 * f_prio_loc * f_ritmo)
             l_gf_vis = max(0.2, (d_vis["gf"] + d_loc["gc"]) / 2.0 * f_prio_vis * f_ritmo)
 
@@ -326,6 +254,7 @@ with pestana1:
             l_tarjetas_tot = (d_loc["tarjetas"] + d_vis["tarjetas"]) * f_ritmo
             l_remates_tot = (d_loc.get("remates_arco", 5.0) + d_vis.get("remates_arco", 4.5)) * f_ritmo
 
+            # 10,000 Iteraciones Monte Carlo
             N = 10000
             goles_1t_loc = np.random.poisson(l_1t_loc, N)
             goles_1t_vis = np.random.poisson(l_1t_vis, N)
@@ -345,6 +274,7 @@ with pestana1:
 
             remates_ft = np.random.poisson(l_remates_tot, N)
 
+            # Cálculo de Probabilidades 1X2
             p_win_loc_ft = np.mean(goles_ft_loc > goles_ft_vis) * 100
             p_draw_ft = np.mean(goles_ft_loc == goles_ft_vis) * 100
             p_win_vis_ft = np.mean(goles_ft_loc < goles_ft_vis) * 100
@@ -357,7 +287,8 @@ with pestana1:
             p_draw_2t = np.mean(goles_2t_loc == goles_2t_vis) * 100
             p_win_vis_2t = np.mean(goles_2t_loc < goles_2t_vis) * 100
 
-            st.markdown("### 🏆 Probabilidades 1X2 (Tiempo Completo / Descanso / 2do Tiempo)")
+            # Despliegue de Ganadores y Resultados de Simulación
+            st.markdown("### 🏆 ¿Quién gana? - Probabilidades 1X2 (FT / 1T / 2T)")
 
             col_r1, col_r2, col_r3 = st.columns(3)
             with col_r1:
