@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 
 st.set_page_config(
-    title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide"
+    page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide"
 )
 
 ARCH_HISTORIAL = "registro_pronosticos.csv"
