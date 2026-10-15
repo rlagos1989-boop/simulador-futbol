@@ -622,36 +622,3 @@ if st.button("🚀 Simular Partido Completo (Aplicando Táctica y Bajas)", type=
     col_m1.metric("Poder Local Ajustado", f"{int(f_rend_l*100)}%", f"Esquema: {formacion_local}")
     col_m2.metric("Poder Visitante Ajustado", f"{int(f_rend_v*100)}%", f"Esquema: {formacion_vis}")
     col_m3.metric("Expectativa de Goles (xG)", f"{round(xg_l_final, 2)} - {round(xg_v_final, 2)}")
-
-    # =========================================================
-    # GENERACIÓN DEL MAPA TÁCTICO EN CANCHA CON LOS DATOS AJUSTADOS
-    # =========================================================
-    st.markdown("### 🗺️ Mapeo Táctico y de Ocasiones en Cancha")
-    
-    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0e1117')
-    fig.patch.set_facecolor('#0e1117')
-    
-    # Crear la cancha usando mplsoccer (con coordenadas estándar 0-100 y 0-80)
-    pitch = Pitch(pitch_type='custom', pitch_length=100, pitch_width=80,
-                  axis=True, label=True, pitch_color='#1e222a', line_color='white')
-    pitch.draw(ax=ax)
-    
-    # Distribuir visualmente los tiros en base al volumen ingresado
-    # Tiros Local (Atacan hacia la derecha, x > 50)
-    x_l = np.random.uniform(55, 95, int(tiros_l_base))
-    y_l = np.random.uniform(15, 65, int(tiros_l_base))
-    
-    # Tiros Visitante (Atacan hacia la izquierda, x < 50)
-    x_v = np.random.uniform(5, 45, int(tiros_v_base))
-    y_v = np.random.uniform(15, 65, int(tiros_v_base))
-    
-    # Dibujar los puntos en el mapa táctico
-    ax.scatter(x_l, y_l, s=xg_l_final * 120, color='#ff4b4b', alpha=0.8, label=f'Local ({formacion_local})')
-    ax.scatter(x_v, y_v, s=xg_v_final * 120, color='#00d4ff', alpha=0.8, label=f'Visitante ({formacion_vis})')
-    
-    ax.set_title(f"Mapa Táctico de Ocasiones (Efecto de Bajas Incluido)", color='white', fontsize=14, pad=15)
-    ax.legend(facecolor='#0e1117', labelcolor='white', loc='upper center')
-    
-    st.pyplot(fig)
-
-
