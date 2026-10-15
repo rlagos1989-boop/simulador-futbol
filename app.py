@@ -410,6 +410,20 @@ eq_local_nombre, eq_visita_nombre = "Local", "Visitante"
 if modo == "📋 Elegir de la Lista de Ligas":
     liga_sel = st.sidebar.selectbox("Seleccionar Torneo / Liga:", list(BASE_DATOS.keys()))
     equipos_liga = list(BASE_DATOS[liga_sel].keys())
+    col_inputs1, col_inputs2 = st.columns(2)
+    with col_inputs1:
+        st.subheader("🏠 Equipo Local")
+        eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
+        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_1")
+
+    with col_inputs2:
+        st.subheader("✈️ Equipo Visitante")
+        idx_vis = 1 if len(equipos_liga) > 1 else 0
+        eq_visita_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
+        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_1")
+
+    data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
+    data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
 # =========================================================
 # CÁLCULO AUTOMÁTICO DE INTENSIDAD Y RITMO TÁCTICO
 # =========================================================
@@ -455,23 +469,6 @@ if 'liga_sel' in locals() and 'equipo_local' in locals() and 'equipo_visitante' 
             st.metric(f"Prioridad Auto ({equipo_visitante})", f"{prio_v} / 10")
         with c3:
             st.metric("Ritmo e Intensidad Auto", ritmo_auto, delta=f"Multiplicador x{multiplicador}")
-
-
-    col_inputs1, col_inputs2 = st.columns(2)
-    with col_inputs1:
-        st.subheader("🏠 Equipo Local")
-        eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
-        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_1")
-
-    with col_inputs2:
-        st.subheader("✈️ Equipo Visitante")
-        idx_vis = 1 if len(equipos_liga) > 1 else 0
-        eq_visita_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
-        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_1")
-
-    data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
-    data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
-
 else:
     st.subheader("✍️ Ingreso Manual y Ajuste Estadístico de Equipos")
     col_m1, col_m2 = st.columns(2)
