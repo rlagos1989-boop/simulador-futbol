@@ -654,64 +654,99 @@ with tab_tabla:
         csv_data = df_historial.to_csv(index=False).encode('utf-8')
         st.download_button("📥 Descargar Historial CSV", data=csv_data, file_name="historial_futbol.csv", mime="text/csv")
 # =========================================================
-# MÓDULO DE PREDICCIÓN EN VIVO DESDE EL MEDIO TIEMPO (HT to FT AVANZADO)
+# MÓDULO UNIFICADO: TÁCTICA, BAJAS Y SIMULACIÓN CON GRÁFICA
 # =========================================================
 
 st.markdown("---")
-st.subheader("⏱️ Pronóstico Avanzado en Vivo (Medio Tiempo a Final)")
-st.write("Ingresa las estadísticas detalladas del 1er Tiempo para que el modelo proyecte el rendimiento y marcador final del partido.")
+st.subheader("⚽ Centro de Simulación Táctica y Predicción Avanzada")
 
-with st.expander("📊 Panel de Métricas Detalladas del 1er Tiempo", expanded=True):
-    col_ht_l, col_ht_v = st.columns(2)
+with st.expander("⚙️ 1. Configurar Alineaciones y Bajas (Factor Humano)", expanded=True):
+    col_t1, col_t2 = st.columns(2)
     
-    with col_ht_l:
-        st.markdown("#### 🏠 Equipo Local (1T)")
-        goles_local_ht = st.number_input("Goles (HT - Local)", 0, 10, 0, key="g_l_ht")
-        disparos_tot_l = st.number_input("Disparos Totales (1T)", 0, 30, 6, key="dt_l_ht")
-        disparos_puerta_l = st.number_input("Disparos a Puerta (1T)", 0, 15, 3, key="dp_l_ht")
-        pases_comp_l = st.number_input("Pases Completados (1T)", 0, 600, 220, key="pc_l_ht")
-        toques_area_l = st.number_input("Toques en Área Rival (1T)", 0, 100, 12, key="ta_l_ht")
-        grandes_op_l = st.number_input("Grandes Oportunidades (1T)", 0, 10, 1, key="go_l_ht")
+    with col_t1:
+        st.markdown("#### 🏠 Equipo Local")
+        formacion_local = st.selectbox("Formación (Local)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_loc_unif")
+        notas_local = st.text_area("Bajas / Notas (Local)", placeholder="Ej: No juega Vinicius Jr, baja por lesión", key="n_loc_unif")
+        
+    with col_t2:
+        st.markdown("#### ✈️ Equipo Visitante")
+        formacion_vis = st.selectbox("Formación (Visitante)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_vis_unif")
+        notas_vis = st.text_area("Bajas / Notas (Visitante)", placeholder="Ej: Sin portero titular", key="n_vis_unif")
+        
+    # Cálculo inteligente de factores de rendimiento basados en ausencias y esquemas
+    f_rend_l = 1.0
+    f_rend_v = 1.0
+    
+    palabras_alerta = ["no juega", "lesion", "lesionado", "baja", "suspendido", "ausente", "fuera", "operado"]
+    for palabra in palabras_alerta:
+        if palabra in notas_local.lower():
+            f_rend_l -= 0.15  # Penalización del 15% por baja sensible local
+        if palabra in notas_vis.lower():
+            f_rend_v -= 0.15  # Penalización del 15% por baja sensible visitante
 
-    with col_ht_v:
-        st.markdown("#### ✈️ Equipo Visitante (1T)")
-        goles_vis_ht = st.number_input("Goles (HT - Visitante)", 0, 10, 0, key="g_v_ht")
-        disparos_tot_v = st.number_input("Disparos Totales (1T)", 0, 30, 4, key="dt_v_ht")
-        disparos_puerta_v = st.number_input("Disparos a Puerta (1T)", 0, 15, 2, key="dp_v_ht")
-        pases_comp_v = st.number_input("Pases Completados (1T)", 0, 600, 180, key="pc_v_ht")
-        toques_area_v = st.number_input("Toques en Área Rival (1T)", 0, 100, 8, key="ta_v_ht")
-        grandes_op_v = st.number_input("Grandes Oportunidades (1T)", 0, 10, 0, key="go_v_ht")
-        
-    if st.button("🔮 Calcular Proyección Científica para el 2do Tiempo", type="primary"):
-        np.random.seed(42)
-        
-        # Fórmula ponderada avanzada que evalúa volumen de juego (pases), peligro (toques en área) y eficacia (tiros y grandes ocasiones)
-        peso_local = (disparos_puerta_l * 0.3) + (toques_area_l * 0.2) + (grandes_op_l * 0.4) + (pases_comp_l * 0.01)
-        peso_vis = (disparos_puerta_v * 0.3) + (toques_area_v * 0.2) + (grandes_op_v * 0.4) + (pases_comp_v * 0.01)
-        
-        # Tasa esperada de goles para los 45 min restantes del 2T
-        lambda_l_2t = max(0.25, peso_local * 0.12)
-        lambda_v_2t = max(0.20, peso_vis * 0.12)
-        
-        # Simulación de Poisson para el 2T
-        goles_l_2t_sim = np.random.poisson(lambda_l_2t)
-        goles_v_2t_sim = np.random.poisson(lambda_v_2t)
-        
-        # Marcador final proyectado
-        final_proyectado_l = goles_local_ht + goles_l_2t_sim
-        final_proyectado_v = goles_vis_ht + goles_v_2t_sim
-        
-        st.markdown("---")
-        st.success(f"🎯 **Marcador Proyectado al Final del Partido:** Local **{final_proyectado_l} - {final_proyectado_v}** Visitante")
-        
-        col_res1, col_res2 = st.columns(2)
-        col_res1.metric("Goles Estimados 2T (Local)", f"+{goles_l_2t_sim} goles", f"Ritmo ofensivo: {round(peso_local, 1)}")
-        col_res2.metric("Goles Estimados 2T (Visitante)", f"+{goles_v_2t_sim} goles", f"Ritmo ofensivo: {round(peso_vis, 1)}")
-        
-        if grandes_op_l > grandes_op_v and toques_area_l > toques_area_v:
-            st.info("💡 **Análisis Táctico:** El equipo local dominó territorialmente y generó mayor peligro en el área rival durante el primer tiempo; el modelo proyecta que mantendrá esa inercia o concretará más ocasiones si la visita no ajusta.")
-        elif grandes_op_v > grandes_op_l:
-            st.info("💡 **Análisis Táctico:** A pesar de la paridad, la visita demostró mayor colmillo y conversión en sus toques de área; peligro latente de contragolpe para el complemento.")
-        else:
-            st.info("💡 **Análisis Táctico:** Partido sumamente disputado en mediocampo con pocas diferencias en la construcción de pases; el segundo tiempo se define por detalles o errores tácticos.")
+    # Bonificación táctica de mediocampo
+    if formacion_local == "4-3-3" and formacion_vis == "4-4-2":
+        f_rend_l += 0.05
+    elif formacion_local == "4-4-2" and formacion_vis == "4-3-3":
+        f_rend_v += 0.05
+
+    if f_rend_l < 1.0 or f_rend_v < 1.0:
+        st.warning("⚠️ El modelo ha detectado ausencias y ha ajustado dinámicamente la fuerza ofensiva de los equipos.")
+
+with st.expander("📊 2. Estadísticas Base y Disparos para la Cancha", expanded=True):
+    col_s1, col_s2 = st.columns(2)
+    with col_s1:
+        tiros_l_base = st.number_input("Tiros Previstos / Totales (Local)", 1, 30, 12, key="t_l_base")
+        goles_esp_l = st.number_input("xG / Goles Esperados Base (Local)", 0.1, 5.0, 1.6, key="xg_l_base")
+    with col_s2:
+        tiros_v_base = st.number_input("Tiros Previstos / Totales (Visitante)", 1, 30, 9, key="t_v_base")
+        goles_esp_v = st.number_input("xG / Goles Esperados Base (Visitante)", 0.1, 5.0, 1.1, key="xg_v_base")
+
+if st.button("🚀 Simular Partido Completo (Aplicando Táctica y Bajas)", type="primary"):
+    # Aplicar los factores de rendimiento de las alineaciones y bajas a los goles esperados
+    xg_l_final = goles_esp_l * f_rend_l
+    xg_v_final = goles_esp_v * f_rend_v
+    
+    np.random.seed(42)
+    goles_sim_l = np.random.poisson(xg_l_final)
+    goles_sim_v = np.random.poisson(xg_v_final)
+    
+    st.markdown("---")
+    st.success(f"🎯 **Resultado Final Simulado:** Local **{goles_sim_l} - {goles_sim_v}** Visitante")
+    
+    col_m1, col_m2, col_m3 = st.columns(3)
+    col_m1.metric("Poder Local Ajustado", f"{int(f_rend_l*100)}%", f"Esquema: {formacion_local}")
+    col_m2.metric("Poder Visitante Ajustado", f"{int(f_rend_v*100)}%", f"Esquema: {formacion_vis}")
+    col_m3.metric("Expectativa de Goles (xG)", f"{round(xg_l_final, 2)} - {round(xg_v_final, 2)}")
+
+    # =========================================================
+    # GENERACIÓN DEL MAPA TÁCTICO EN CANCHA CON LOS DATOS AJUSTADOS
+    # =========================================================
+    st.markdown("### 🗺️ Mapeo Táctico y de Ocasiones en Cancha")
+    
+    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0e1117')
+    fig.patch.set_facecolor('#0e1117')
+    
+    # Crear la cancha usando mplsoccer (con coordenadas estándar 0-100 y 0-80)
+    pitch = Pitch(pitch_type='custom', pitch_length=100, pitch_width=80,
+                  axis=True, label=True, pitch_color='#1e222a', line_color='white')
+    pitch.draw(ax=ax)
+    
+    # Distribuir visualmente los tiros en base al volumen ingresado
+    # Tiros Local (Atacan hacia la derecha, x > 50)
+    x_l = np.random.uniform(55, 95, int(tiros_l_base))
+    y_l = np.random.uniform(15, 65, int(tiros_l_base))
+    
+    # Tiros Visitante (Atacan hacia la izquierda, x < 50)
+    x_v = np.random.uniform(5, 45, int(tiros_v_base))
+    y_v = np.random.uniform(15, 65, int(tiros_v_base))
+    
+    # Dibujar los puntos en el mapa táctico
+    ax.scatter(x_l, y_l, s=xg_l_final * 120, color='#ff4b4b', alpha=0.8, label=f'Local ({formacion_local})')
+    ax.scatter(x_v, y_v, s=xg_v_final * 120, color='#00d4ff', alpha=0.8, label=f'Visitante ({formacion_vis})')
+    
+    ax.set_title(f"Mapa Táctico de Ocasiones (Efecto de Bajas Incluido)", color='white', fontsize=14, pad=15)
+    ax.legend(facecolor='#0e1117', labelcolor='white', loc='upper center')
+    
+    st.pyplot(fig)
 
