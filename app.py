@@ -75,7 +75,7 @@ def cargar_base_datos_actualizada():
             "Choloma": {"gf": 0.50, "gc": 2.00, "gf1t": 0.20, "corners": 3.6, "tarjetas": 3.2},
             "Juticalpa": {"gf": 0.50, "gc": 3.00, "gf1t": 0.15, "corners": 3.5, "tarjetas": 3.0}
         },
-        "🇮🇹 Serie A (2026/27)": {
+        "🇮🇹 Serie A liga (2026/27)": {
             "Lecce": {"gf": 1.05, "gc": 1.45, "gf1t": 0.35, "corners": 3.9, "tarjetas": 2.6},
             "Bologna": {"gf": 1.40, "gc": 1.00, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.3},
             "Frosinone": {"gf": 1.10, "gc": 1.55, "gf1t": 0.40, "corners": 4.0, "tarjetas": 2.7},
@@ -307,7 +307,7 @@ def cargar_base_datos_actualizada():
             "RBLeipzig": {"gf": 2.00, "gc": 1.08, "gf1t": 0.90, "corners": 5.8, "tarjetas": 1.9},
             "SabahBakú": {"gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.2, "tarjetas": 2.6}
         },
-        "🇪🇺 UEFA Europa League (2026/27)": {
+        "🇪🇺 UEFA Europa League liga (2026/27)": {
             "HapoelBeerSheva": {"gf": 1.42, "gc": 1.30, "gf1t": 0.58, "corners": 4.5, "tarjetas": 2.5},
             "Sunderland": {"gf": 1.55, "gc": 1.25, "gf1t": 0.65, "corners": 5.0, "tarjetas": 2.1},
             "CrystalPalace": {"gf": 1.62, "gc": 1.20, "gf1t": 0.68, "corners": 5.2, "tarjetas": 2.0},
