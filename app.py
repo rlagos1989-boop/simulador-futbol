@@ -410,8 +410,8 @@ eq_local_nombre, eq_visita_nombre = "Local", "Visitante"
 if modo == "📋 Elegir de la Lista de Ligas":
     liga_sel = st.sidebar.selectbox("Seleccionar Torneo / Liga:", list(BASE_DATOS.keys()))
     equipos_liga = list(BASE_DATOS[liga_sel].keys())
+
     col_inputs1, col_inputs2 = st.columns(2)
-      col_inputs1, col_inputs2 = st.columns(2)
     with col_inputs1:
         st.subheader("🏠 Equipo Local")
         eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
