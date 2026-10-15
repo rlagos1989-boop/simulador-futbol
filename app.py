@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import time
+from mplsoccer import pitch import os
 
 st.set_page_config(
     page_title="Simulador Predictivo de Fútbol Ultra Pro 2026/2027",
@@ -557,4 +558,97 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
         st.markdown("### 🟨🟫 Tarjetas y Disciplina")
         st.write(f"🟨 **Total Tarjetas Amarillas (> 4.5):** **{p_tarj_45:.1f}%** (Promedio esperable: {np.mean(tarjetas_ft):.1f} tarjetas)")
         st.write(f"🟥 **Probabilidad de Tarjeta Roja en el Partido:** **{p_roja:.1f}%**")
+
+# =========================================================
+# MÓDULO DE MAPA TÁCTICO Y HISTORIAL DE PARTIDOS
+# =========================================================
+
+st.markdown("---")
+st.header("⚽ Mapeo Táctico e Historial de Partidos")
+
+DB_FILE = "historial_partidos.csv"
+
+def cargar_historial_partidos():
+    if os.path.exists(DB_FILE):
+        return pd.read_csv(DB_FILE)
+    else:
+        return pd.DataFrame(columns=[
+            "Liga", "Equipo_Local", "Equipo_Visitante", 
+            "Tiros_Local", "Tiros_Visitante", 
+            "Posesion_Local", "Posesion_Visitante", 
+            "Corners_Local", "Corners_Visitante", 
+            "Tarjetas_Local", "Tarjetas_Visitante"
+        ])
+
+df_historial = cargar_historial_partidos()
+
+with st.sidebar.form("form_registro_partido"):
+    st.subheader("📝 Registrar Datos del Partido")
+    liga_reg = st.selectbox("Competencia", [
+        "LaLiga", "Premier League", "Serie A", "Bundesliga", 
+        "Liga MX", "Liga Nacional (Honduras)", "MLS", "Champions League"
+    ])
+    
+    col_l, col_v = st.columns(2)
+    with col_l:
+        eq_l = st.text_input("Local", "Equipo A")
+        t_l = st.number_input("Tiros Local", 0, 30, 5)
+        p_l = st.slider("Posesión Local %", 0, 100, 55)
+        c_l = st.number_input("Córners Local", 0, 20, 4)
+        tar_l = st.number_input("Tarjetas Local", 0, 10, 1)
+        
+    with col_v:
+        eq_v = st.text_input("Visitante", "Equipo B")
+        t_v = st.number_input("Tiros Visitante", 0, 30, 3)
+        p_v = 100 - p_l
+        c_v = st.number_input("Córners Visitante", 0, 20, 2)
+        tar_v = st.number_input("Tarjetas Visitante", 0, 10, 2)
+        
+    guardar_partido_btn = st.form_submit_button("💾 Guardar y Procesar Mapa")
+
+if guardar_partido_btn:
+    nuevo_reg = pd.DataFrame({
+        "Liga": [liga_reg], "Equipo_Local": [eq_l], "Equipo_Visitante": [eq_v],
+        "Tiros_Local": [t_l], "Tiros_Visitante": [t_v],
+        "Posesion_Local": [p_l], "Posesion_Visitante": [p_v],
+        "Corners_Local": [c_l], "Corners_Visitante": [c_v],
+        "Tarjetas_Local": [tar_l], "Tarjetas_Visitante": [tar_v]
+    })
+    df_historial = pd.concat([df_historial, nuevo_reg], ignore_index=True)
+    df_historial.to_csv(DB_FILE, index=False)
+    st.success(f"¡Partido {eq_l} vs {eq_v} registrado con éxito!")
+
+tab_mapa, tab_tabla = st.tabs(["🗺️ Mapa Táctico en Cancha", "📁 Base de Datos Histórica"])
+
+with tab_mapa:
+    if len(df_historial) > 0:
+        ult = df_historial.iloc[-1]
+        st.subheader(f"Encuentro: {ult['Equipo_Local']} vs {ult['Equipo_Visitante']} ({ult['Liga']})")
+        
+        fig, ax = plt.subplots(figsize=(10, 6), facecolor='#0e1117')
+        pitch = Pitch(pitch_type='custom', pitch_length=100, pitch_width=80,
+                      pitch_color='#131722', line_color='#2a2e39', linewidth=2)
+        pitch.draw(ax=ax)
+
+        np.random.seed(42)
+        if ult['Tiros_Local'] > 0:
+            xl = np.random.normal(loc=85, scale=6, size=int(ult['Tiros_Local']))
+            yl = np.random.normal(loc=40, scale=18, size=int(ult['Tiros_Local']))
+            pitch.scatter(xl, yl, s=350, color='#00f2fe', edgecolors='white', alpha=0.8, ax=ax, label=f"Tiros {ult['Equipo_Local']}")
+
+        if ult['Tiros_Visitante'] > 0:
+            xv = 100 - np.random.normal(loc=85, scale=6, size=int(ult['Tiros_Visitante']))
+            yv = np.random.normal(loc=40, scale=18, size=int(ult['Tiros_Visitante']))
+            pitch.scatter(xv, yv, s=350, color='#ff0055', edgecolors='white', alpha=0.8, ax=ax, label=f"Tiros {ult['Equipo_Visitante']}")
+
+        ax.legend(facecolor='#131722', labelcolor='white', loc='upper center')
+        st.pyplot(fig)
+    else:
+        st.info("Registra un partido en el menú lateral para ver su representación gráfica en la cancha.")
+
+with tab_tabla:
+    st.dataframe(df_historial, use_container_width=True)
+    if len(df_historial) > 0:
+        csv_data = df_historial.to_csv(index=False).encode('utf-8')
+        st.download_button("📥 Descargar Historial CSV", data=csv_data, file_name="historial_futbol.csv", mime="text/csv")
 
