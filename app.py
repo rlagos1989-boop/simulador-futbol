@@ -411,19 +411,48 @@ if modo == "📋 Elegir de la Lista de Ligas":
     liga_sel = st.sidebar.selectbox("Seleccionar Torneo / Liga:", list(BASE_DATOS.keys()))
     equipos_liga = list(BASE_DATOS[liga_sel].keys())
     col_inputs1, col_inputs2 = st.columns(2)
+      col_inputs1, col_inputs2 = st.columns(2)
     with col_inputs1:
         st.subheader("🏠 Equipo Local")
         eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
-        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_1")
-
+        
     with col_inputs2:
         st.subheader("✈️ Equipo Visitante")
         idx_vis = 1 if len(equipos_liga) > 1 else 0
-        eq_visita_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
-        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_1")
+        eq_vis_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
 
+    # Extracción automática de la Base de Datos
     data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
-    data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
+    data_vis = BASE_DATOS[liga_sel][eq_vis_nombre]
+
+    # =========================================================
+    # CÁLCULO 100% AUTOMÁTICO (Necesidad de Ganar, Ritmo e Intensidad)
+    # =========================================================
+    # 1. Necesidad de ganar calculada automáticamente por su poder goleador (gf) y defensivo (gc)
+    prio_loc = min(10, max(1, int((data_loc.get("gf", 1.5) / max(0.5, data_loc.get("gc", 1.0))) * 5)))
+    prio_vis = min(10, max(1, int((data_vis.get("gf", 1.5) / max(0.5, data_vis.get("gc", 1.0))) * 5)))
+
+    # 2. Ritmo e Intensidad automática basada en córners y tarjetas de la base de datos
+    corners_tot = data_loc.get("corners", 4.5) + data_vis.get("corners", 4.5)
+    tarjetas_tot = data_loc.get("tarjetas", 2.0) + data_vis.get("tarjetas", 2.0)
+    score_intensidad = (corners_tot * 0.35) + (tarjetas_tot * 0.65)
+
+    if score_intensidad >= 6.5:
+        ritmo_auto = "🔥 Intenso / Directo"
+        multiplicador = 1.15
+    elif score_intensidad >= 5.0:
+        ritmo_auto = "⚖️ Equilibrado / Transición"
+        multiplicador = 1.00
+    else:
+        ritmo_auto = "🧠 Control / Posesión Parsimoniosa"
+        multiplicador = 0.90
+
+    # Mostrar las métricas automáticas en pantalla limpiamente
+    st.markdown("### ⚡ Análisis Estadístico Automático")
+    m1, m2, m3 = st.columns(3)
+    m1.metric(f"Prioridad Auto ({eq_local_nombre})", f"{prio_loc} / 10")
+    m2.metric(f"Prioridad Auto ({eq_vis_nombre})", f"{prio_vis} / 10")
+    m3.metric("Ritmo e Intensidad", ritmo_auto, delta=f"Mult. x{multiplicador}")
 # =========================================================
 # CÁLCULO AUTOMÁTICO DE INTENSIDAD Y RITMO TÁCTICO
 # =========================================================
