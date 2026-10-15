@@ -520,30 +520,6 @@ else:
         tarj_vis = st.number_input("Tarjetas Promedio por Partido (Visitante):", 0.0, 8.0, 2.5, step=0.1)
         data_vis = {"gf": gf_vis, "gc": gc_vis, "gf1t": gf1t_vis, "corners": corn_vis, "tarjetas": tarj_vis}
 
-# --- NUEVA INTERFAZ MODERNA Y LIMPIA PARA RITMO / INTENSIDAD ---
-st.markdown("### 🔥 Ritmo e Intensidad del Partido")
-
-# Opciones con tarjetas estilizadas horizontales
-opciones_ritmo = {
-    "🍵 Calmado / Amistoso": 0.80,
-    "⚡ Normal / Estándar": 1.00,
-    "🔥 Intenso / Directo": 1.15,
-    "⚔️ Clásico / Alta Rivalidad": 1.28
-}
-
-ritmo_sel = st.radio(
-    label="Selecciona la intensidad de juego:",
-    options=list(opciones_ritmo.keys()),
-    index=2,
-    horizontal=True,
-    label_visibility="collapsed"
-)
-
-f_ritmo = opciones_ritmo[ritmo_sel]
-
-f_prio_loc = 1.0 + (prio_loc - 5) * 0.04
-f_prio_vis = 1.0 + (prio_vis - 5) * 0.04
-
 if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_width=True):
     l_gf_loc = data_loc["gf"] * 1.10 * f_prio_loc * f_ritmo
     l_gf_vis = data_vis["gf"] * f_prio_vis * f_ritmo
