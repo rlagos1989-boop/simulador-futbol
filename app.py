@@ -557,4 +557,101 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
         st.markdown("### 🟨🟫 Tarjetas y Disciplina")
         st.write(f"🟨 **Total Tarjetas Amarillas (> 4.5):** **{p_tarj_45:.1f}%** (Promedio esperable: {np.mean(tarjetas_ft):.1f} tarjetas)")
         st.write(f"🟥 **Probabilidad de Tarjeta Roja en el Partido:** **{p_roja:.1f}%**")
+# =========================================================
+# MÓDULO UNIFICADO: TÁCTICA, BAJAS Y SIMULACIÓN CON GRÁFICA
+# =========================================================
+
+st.markdown("---")
+st.subheader("⚽ Centro de Simulación Táctica y Predicción Avanzada")
+
+with st.expander("⚙️ 1. Configurar Alineaciones y Bajas (Factor Humano)", expanded=True):
+    col_t1, col_t2 = st.columns(2)
+    
+    with col_t1:
+        st.markdown("#### 🏠 Equipo Local")
+        formacion_local = st.selectbox("Formación (Local)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_loc_unif")
+        notas_local = st.text_area("Bajas / Notas (Local)", placeholder="Ej: No juega Vinicius Jr, baja por lesión", key="n_loc_unif")
+        
+    with col_t2:
+        st.markdown("#### ✈️ Equipo Visitante")
+        formacion_vis = st.selectbox("Formación (Visitante)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_vis_unif")
+        notas_vis = st.text_area("Bajas / Notas (Visitante)", placeholder="Ej: Sin portero titular", key="n_vis_unif")
+        
+    # Cálculo inteligente de factores de rendimiento basados en ausencias y esquemas
+    f_rend_l = 1.0
+    f_rend_v = 1.0
+    
+    palabras_alerta = ["no juega", "lesion", "lesionado", "baja", "suspendido", "ausente", "fuera", "operado"]
+    for palabra in palabras_alerta:
+        if palabra in notas_local.lower():
+            f_rend_l -= 0.15  # Penalización del 15% por baja sensible local
+        if palabra in notas_vis.lower():
+            f_rend_v -= 0.15  # Penalización del 15% por baja sensible visitante
+
+    # Bonificación táctica de mediocampo
+    if formacion_local == "4-3-3" and formacion_vis == "4-4-2":
+        f_rend_l += 0.05
+    elif formacion_local == "4-4-2" and formacion_vis == "4-3-3":
+        f_rend_v += 0.05
+
+    if f_rend_l < 1.0 or f_rend_v < 1.0:
+        st.warning("⚠️ El modelo ha detectado ausencias y ha ajustado dinámicamente la fuerza ofensiva de los equipos.")
+
+with st.expander("📊 2. Estadísticas Base y Disparos para la Cancha", expanded=True):
+    col_s1, col_s2 = st.columns(2)
+    with col_s1:
+        tiros_l_base = st.number_input("Tiros Previstos / Totales (Local)", 1, 30, 12, key="t_l_base")
+        goles_esp_l = st.number_input("xG / Goles Esperados Base (Local)", 0.1, 5.0, 1.6, key="xg_l_base")
+    with col_s2:
+        tiros_v_base = st.number_input("Tiros Previstos / Totales (Visitante)", 1, 30, 9, key="t_v_base")
+        goles_esp_v = st.number_input("xG / Goles Esperados Base (Visitante)", 0.1, 5.0, 1.1, key="xg_v_base")
+
+if st.button("🚀 Simular Partido Completo (Aplicando Táctica y Bajas)", type="primary"):
+    # Aplicar los factores de rendimiento de las alineaciones y bajas a los goles esperados
+    xg_l_final = goles_esp_l * f_rend_l
+    xg_v_final = goles_esp_v * f_rend_v
+    
+    np.random.seed(42)
+    goles_sim_l = np.random.poisson(xg_l_final)
+    goles_sim_v = np.random.poisson(xg_v_final)
+    
+    st.markdown("---")
+    st.success(f"🎯 **Resultado Final Simulado:** Local **{goles_sim_l} - {goles_sim_v}** Visitante")
+    
+    col_m1, col_m2, col_m3 = st.columns(3)
+    col_m1.metric("Poder Local Ajustado", f"{int(f_rend_l*100)}%", f"Esquema: {formacion_local}")
+    col_m2.metric("Poder Visitante Ajustado", f"{int(f_rend_v*100)}%", f"Esquema: {formacion_vis}")
+    col_m3.metric("Expectativa de Goles (xG)", f"{round(xg_l_final, 2)} - {round(xg_v_final, 2)}")
+
+    # =========================================================
+    # GENERACIÓN DEL MAPA TÁCTICO EN CANCHA CON LOS DATOS AJUSTADOS
+    # =========================================================
+    st.markdown("### 🗺️ Mapeo Táctico y de Ocasiones en Cancha")
+    
+    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0e1117')
+    fig.patch.set_facecolor('#0e1117')
+    
+    # Crear la cancha usando mplsoccer (con coordenadas estándar 0-100 y 0-80)
+    pitch = Pitch(pitch_type='custom', pitch_length=100, pitch_width=80,
+                  axis=True, label=True, pitch_color='#1e222a', line_color='white')
+    pitch.draw(ax=ax)
+    
+    # Distribuir visualmente los tiros en base al volumen ingresado
+    # Tiros Local (Atacan hacia la derecha, x > 50)
+    x_l = np.random.uniform(55, 95, int(tiros_l_base))
+    y_l = np.random.uniform(15, 65, int(tiros_l_base))
+    
+    # Tiros Visitante (Atacan hacia la izquierda, x < 50)
+    x_v = np.random.uniform(5, 45, int(tiros_v_base))
+    y_v = np.random.uniform(15, 65, int(tiros_v_base))
+    
+    # Dibujar los puntos en el mapa táctico
+    ax.scatter(x_l, y_l, s=xg_l_final * 120, color='#ff4b4b', alpha=0.8, label=f'Local ({formacion_local})')
+    ax.scatter(x_v, y_v, s=xg_v_final * 120, color='#00d4ff', alpha=0.8, label=f'Visitante ({formacion_vis})')
+    
+    ax.set_title(f"Mapa Táctico de Ocasiones (Efecto de Bajas Incluido)", color='white', fontsize=14, pad=15)
+    ax.legend(facecolor='#0e1117', labelcolor='white', loc='upper center')
+    
+    st.pyplot(fig)
+
 
