@@ -22,7 +22,7 @@ LIGAS_AUTO = {
 }
 
 # Base estática completa restaurada al 100%
-LIGAS_ESTATICAS ={
+LIGAS_ESTATICAS = {
         "🇭🇳 Liga Nacional (Honduras 2026/27)": {
             "Real Espana": {"gf": 2.50, "gc": 0.00, "gf1t": 1.00, "corners": 5.5, "tarjetas": 2.3},
             "Olimpia": {"gf": 2.50, "gc": 0.50, "gf1t": 1.10, "corners": 5.8, "tarjetas": 2.4},
@@ -37,6 +37,7 @@ LIGAS_ESTATICAS ={
             "Choloma": {"gf": 0.50, "gc": 2.00, "gf1t": 0.20, "corners": 3.6, "tarjetas": 3.2},
             "Juticalpa": {"gf": 0.50, "gc": 3.00, "gf1t": 0.15, "corners": 3.5, "tarjetas": 3.0}
         },
+       
         "🇲🇽 Liga MX (2026/27)": {
             "Club America": {"gf": 1.67, "gc": 0.33, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.1},
             "Club Tijuana": {"gf": 1.33, "gc": 0.33, "gf1t": 0.60, "corners": 4.7, "tarjetas": 2.5},
@@ -97,6 +98,7 @@ LIGAS_ESTATICAS ={
             "Al Fayha": {"gf": 1.15, "gc": 1.45, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
             "Al Kholood": {"gf": 1.05, "gc": 1.60, "gf1t": 0.35, "corners": 3.8, "tarjetas": 2.7}
         },
+       
         "🇺🇸 MLS (Estados Unidos 2026)": {
             "Vancouver Whitecaps": {"gf": 1.50, "gc": 1.35, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.1},
             "Los Angeles FC": {"gf": 1.90, "gc": 1.20, "gf1t": 0.85, "corners": 5.9, "tarjetas": 2.2},
@@ -129,7 +131,7 @@ LIGAS_ESTATICAS ={
             "CF Montreal": {"gf": 1.30, "gc": 1.55, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.2},
             "Atlanta Utd": {"gf": 1.50, "gc": 1.45, "gf1t": 0.65, "corners": 5.2, "tarjetas": 2.0}
         },
-        "🏆 Leagues Cup (2026)": {
+       "🏆 Leagues Cup (2026)": {
             "Austin FC": {"gf": 1.30, "gc": 1.45, "gf1t": 0.50, "corners": 4.4, "tarjetas": 2.1},
             "Charlotte": {"gf": 1.30, "gc": 1.35, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.2},
             "Chicago Fire": {"gf": 1.35, "gc": 1.55, "gf1t": 0.55, "corners": 4.5, "tarjetas": 2.3},
