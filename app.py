@@ -653,4 +653,38 @@ with tab_tabla:
     if len(df_historial) > 0:
         csv_data = df_historial.to_csv(index=False).encode('utf-8')
         st.download_button("📥 Descargar Historial CSV", data=csv_data, file_name="historial_futbol.csv", mime="text/csv")
+# =========================================================
+# MÓDULO DE PREDICCIÓN EN VIVO DESDE EL MEDIO TIEMPO (HT to FT)
+# =========================================================
+
+st.markdown("---")
+st.subheader("⏱️ Pronóstico del Partido (Basado en el Medio Tiempo)")
+
+with st.expander("📊 Ingresar datos del 1er Tiempo para proyectar el Final"):
+    col_ht1, col_ht2 = st.columns(2)
+    with col_ht1:
+        goles_local_ht = st.number_input("Goles Local (Medio Tiempo)", 0, 10, 0)
+        tiros_local_ht = st.number_input("Tiros Local (1er Tiempo)", 0, 20, 4)
+    with col_ht2:
+        goles_vis_ht = st.number_input("Goles Visitante (Medio Tiempo)", 0, 10, 0)
+        tiros_vis_ht = st.number_input("Tiros Visitante (1er Tiempo)", 0, 20, 2)
+        
+    if st.button("🔮 Calcular Proyección para el 2do Tiempo"):
+        # Lógica de proyección: estimar goles para los 45 min restantes basándose en el ritmo del 1T
+        np.random.seed(42)
+        # Tasa esperada de gol para el 2T basada proporcionalmente en los tiros del 1T
+        lambda_l_2t = max(0.4, (tiros_local_ht / 2) * 0.35)
+        lambda_v_2t = max(0.3, (tiros_vis_ht / 2) * 0.35)
+        
+        # Simulación de goles para el segundo tiempo (Distribución de Poisson)
+        goles_l_2t_sim = np.random.poisson(lambda_l_2t)
+        goles_v_2t_sim = np.random.poisson(lambda_v_2t)
+        
+        # Resultado final proyectado (Medio tiempo + Simulación del 2do tiempo)
+        final_proyectado_l = goles_local_ht + goles_l_2t_sim
+        final_proyectado_v = goles_vis_ht + goles_v_2t_sim
+        
+        st.success(f"🎯 **Marcador Proyectado al Final:** Local {final_proyectado_l} - {final_proyectado_v} Visitante")
+        st.info(f"💡 **Lectura del Modelo:** En el segundo tiempo se esperan aproximadamente {goles_l_2t_sim} gol(es) más para el local y {goles_v_2t_sim} para la visita, tomando en cuenta la intensidad mostrada en la primera mitad.")
+
 
