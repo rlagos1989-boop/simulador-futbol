@@ -639,39 +639,49 @@ if st.button("🚀 Simular Partido Completo (Aplicando Táctica y Bajas)", type=
     col_m2.metric("Poder Visitante Ajustado", f"{int(f_rend_v*100)}%", f"Esquema: {formacion_vis}")
     col_m3.metric("Expectativa de Goles (xG)", f"{round(xg_l_final, 2)} - {round(xg_v_final, 2)}")
 
- # =========================================================
-# MÓDULO DE PREDICCIÓN EN VIVO DESDE EL MEDIO TIEMPO (HT to FT)
 # =========================================================
- 
-st.markdown("---")
-st.subheader("⏱️ Pronóstico del Partido (Basado en el Medio Tiempo)")
- 
-with st.expander("📊 Ingresar datos del 1er Tiempo para proyectar el Final"):
-    col_ht1, col_ht2 = st.columns(2)
-    with col_ht1:
-        goles_local_ht = st.number_input("Goles Local (Medio Tiempo)", 0, 10, 0)
-        tiros_local_ht = st.number_input("Tiros Local (1er Tiempo)", 0, 20, 4)
-    with col_ht2:
-        goles_vis_ht = st.number_input("Goles Visitante (Medio Tiempo)", 0, 10, 0)
-        tiros_vis_ht = st.number_input("Tiros Visitante (1er Tiempo)", 0, 20, 2)
+# CÁLCULO AUTOMÁTICO DE INTENSIDAD Y RITMO TÁCTICO
+# =========================================================
+
+def calcular_ritmo_intensidad_auto(eq_local_data, eq_vis_data):
+    # Ponderación basada en métricas actualizadas automáticamente por tu script de la madrugada
+    corners_tot = eq_local_data.get("corners", 4.5) + eq_vis_data.get("corners", 4.5)
+    tarjetas_tot = eq_local_data.get("tarjetas", 2.0) + eq_vis_data.get("tarjetas", 2.0)
+    
+    # Índice numérico de intensidad
+    score_intensidad = (corners_tot * 0.35) + (tarjetas_tot * 0.65)
+    
+    if score_intensidad >= 6.5:
+        etiqueta_ritmo = "🔥 Intenso / Directo"
+        mult_intensidad = 1.15
+    elif score_intensidad >= 5.0:
+        etiqueta_ritmo = "⚖️ Equilibrado / Transición"
+        mult_intensidad = 1.00
+    else:
+        etiqueta_ritmo = "🧠 Control / Posesión Parsimoniosa"
+        mult_intensidad = 0.90
         
-    if st.button("🔮 Calcular Proyección para el 2do Tiempo"):
-        # Lógica de proyección: estimar goles para los 45 min restantes basándose en el ritmo del 1T
-        np.random.seed(42)
-        # Tasa esperada de gol para el 2T basada proporcionalmente en los tiros del 1T
-        lambda_l_2t = max(0.4, (tiros_local_ht / 2) * 0.35)
-        lambda_v_2t = max(0.3, (tiros_vis_ht / 2) * 0.35)
+    # Prioridad de victoria sugerida basada en el poder de gol (gf)
+    prio_local = min(10, max(1, int(eq_local_data.get("gf", 1.5) * 4)))
+    prio_vis = min(10, max(1, int(eq_vis_data.get("gf", 1.5) * 4)))
+    
+    return etiqueta_ritmo, mult_intensidad, prio_local, prio_vis
+
+# Extraer métricas de la base de datos de los equipos seleccionados
+if 'liga_sel' in locals() and 'equipo_local' in locals() and 'equipo_visitante' in locals():
+    datos_loc = BASE_DATOS.get(liga_sel, {}).get(equipo_local, {})
+    datos_vis = BASE_DATOS.get(liga_sel, {}).get(equipo_visitante, {})
+    
+    if datos_loc and datos_vis:
+        ritmo_auto, multiplicador, prio_l, prio_v = calcular_ritmo_intensidad_auto(datos_loc, datos_vis)
         
-        # Simulación de goles para el segundo tiempo (Distribución de Poisson)
-        goles_l_2t_sim = np.random.poisson(lambda_l_2t)
-        goles_v_2t_sim = np.random.poisson(lambda_v_2t)
+        st.markdown("### ⚡ Análisis Estadístico Automático")
+        c1, c2, c3 = st.columns(3)
         
-        # Resultado final proyectado (Medio tiempo + Simulación del 2do tiempo)
-        final_proyectado_l = goles_local_ht + goles_l_2t_sim
-        final_proyectado_v = goles_vis_ht + goles_v_2t_sim
-        
-        st.success(f"🎯 **Marcador Proyectado al Final:** Local {final_proyectado_l} - {final_proyectado_v} Visitante")
-        st.info(f"💡 **Lectura del Modelo:** En el segundo tiempo se esperan aproximadamente {goles_l_2t_sim} gol(es) más para el local y {goles_v_2t_sim} para la visita, tomando en cuenta la intensidad mostrada en la primera mitad.")
- 
- 
+        with c1:
+            st.metric(f"Prioridad Auto ({equipo_local})", f"{prio_l} / 10")
+        with c2:
+            st.metric(f"Prioridad Auto ({equipo_visitante})", f"{prio_v} / 10")
+        with c3:
+            st.metric("Ritmo e Intensidad Auto", ritmo_auto, delta=f"Multiplicador x{multiplicador}")
 
