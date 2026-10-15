@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import time
 from mplsoccer import Pitch 
+import matplotlib.pyplot as plt
 import os
 
 st.set_page_config(
