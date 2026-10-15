@@ -727,3 +727,67 @@ if 'liga_sel' in locals() and 'equipo_local' in locals() and 'equipo_visitante' 
         with c3:
             st.metric("Ritmo e Intensidad Auto", ritmo_auto, delta=f"Multiplicador x{multiplicador}")
 
+# =========================================================
+# MÓDULO DE PREDICCIÓN EN VIVO DESDE EL MEDIO TIEMPO (HT to FT AVANZADO)
+# =========================================================
+
+st.markdown("---")
+st.subheader("⏱️ Pronóstico Avanzado en Vivo (Medio Tiempo a Final)")
+st.write("Ingresa las estadísticas detalladas del 1er Tiempo para que el modelo proyecte el rendimiento y marcador final del partido.")
+
+with st.expander("📊 Panel de Métricas Detalladas del 1er Tiempo", expanded=True):
+    col_ht_l, col_ht_v = st.columns(2)
+    
+    with col_ht_l:
+        st.markdown("#### 🏠 Equipo Local (1T)")
+        goles_local_ht = st.number_input("Goles (HT - Local)", 0, 10, 0, key="g_l_ht")
+        disparos_tot_l = st.number_input("Disparos Totales (1T)", 0, 30, 6, key="dt_l_ht")
+        disparos_puerta_l = st.number_input("Disparos a Puerta (1T)", 0, 15, 3, key="dp_l_ht")
+        pases_comp_l = st.number_input("Pases Completados (1T)", 0, 600, 220, key="pc_l_ht")
+        toques_area_l = st.number_input("Toques en Área Rival (1T)", 0, 100, 12, key="ta_l_ht")
+        grandes_op_l = st.number_input("Grandes Oportunidades (1T)", 0, 10, 1, key="go_l_ht")
+
+    with col_ht_v:
+        st.markdown("#### ✈️ Equipo Visitante (1T)")
+        goles_vis_ht = st.number_input("Goles (HT - Visitante)", 0, 10, 0, key="g_v_ht")
+        disparos_tot_v = st.number_input("Disparos Totales (1T)", 0, 30, 4, key="dt_v_ht")
+        disparos_puerta_v = st.number_input("Disparos a Puerta (1T)", 0, 15, 2, key="dp_v_ht")
+        pases_comp_v = st.number_input("Pases Completados (1T)", 0, 600, 180, key="pc_v_ht")
+        toques_area_v = st.number_input("Toques en Área Rival (1T)", 0, 100, 8, key="ta_v_ht")
+        grandes_op_v = st.number_input("Grandes Oportunidades (1T)", 0, 10, 0, key="go_v_ht")
+        
+    if st.button("🔮 Calcular Proyección Científica para el 2do Tiempo", type="primary"):
+        np.random.seed(42)
+        
+        # Fórmula ponderada avanzada que evalúa volumen de juego (pases), peligro (toques en área) y eficacia (tiros y grandes ocasiones)
+        peso_local = (disparos_puerta_l * 0.3) + (toques_area_l * 0.2) + (grandes_op_l * 0.4) + (pases_comp_l * 0.01)
+        peso_vis = (disparos_puerta_v * 0.3) + (toques_area_v * 0.2) + (grandes_op_v * 0.4) + (pases_comp_v * 0.01)
+        
+        # Tasa esperada de goles para los 45 min restantes del 2T
+        lambda_l_2t = max(0.25, peso_local * 0.12)
+        lambda_v_2t = max(0.20, peso_vis * 0.12)
+        
+        # Simulación de Poisson para el 2T
+        goles_l_2t_sim = np.random.poisson(lambda_l_2t)
+        goles_v_2t_sim = np.random.poisson(lambda_v_2t)
+        
+        # Marcador final proyectado
+        final_proyectado_l = goles_local_ht + goles_l_2t_sim
+        final_proyectado_v = goles_vis_ht + goles_v_2t_sim
+        
+        st.markdown("---")
+        st.success(f"🎯 **Marcador Proyectado al Final del Partido:** Local **{final_proyectado_l} - {final_proyectado_v}** Visitante")
+        
+        col_res1, col_res2 = st.columns(2)
+        col_res1.metric("Goles Estimados 2T (Local)", f"+{goles_l_2t_sim} goles", f"Ritmo ofensivo: {round(peso_local, 1)}")
+        col_res2.metric("Goles Estimados 2T (Visitante)", f"+{goles_v_2t_sim} goles", f"Ritmo ofensivo: {round(peso_vis, 1)}")
+        
+        if grandes_op_l > grandes_op_v and toques_area_l > toques_area_v:
+            st.info("💡 **Análisis Táctico:** El equipo local dominó territorialmente y generó mayor peligro en el área rival durante el primer tiempo; el modelo proyecta que mantendrá esa inercia o concretará más ocasiones si la visita no ajusta.")
+        elif grandes_op_v > grandes_op_l:
+            st.info("💡 **Análisis Táctico:** A pesar de la paridad, la visita demostró mayor colmillo y conversión en sus toques de área; peligro latente de contragolpe para el complemento.")
+        else:
+            st.info("💡 **Análisis Táctico:** Partido sumamente disputado en mediocampo con pocas diferencias en la construcción de pases; el segundo tiempo se define por detalles o errores tácticos.")
+
+
+
