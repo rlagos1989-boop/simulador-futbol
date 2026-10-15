@@ -415,89 +415,17 @@ if modo == "📋 Elegir de la Lista de Ligas":
     with col_inputs1:
         st.subheader("🏠 Equipo Local")
         eq_local_nombre = st.selectbox("Local:", equipos_liga, index=0)
-        
+        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_1")
+
     with col_inputs2:
         st.subheader("✈️ Equipo Visitante")
         idx_vis = 1 if len(equipos_liga) > 1 else 0
-        eq_vis_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
+        eq_visita_nombre = st.selectbox("Visitante:", equipos_liga, index=idx_vis)
+        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_1")
 
-    # Extracción automática de la Base de Datos
     data_loc = BASE_DATOS[liga_sel][eq_local_nombre]
-    data_vis = BASE_DATOS[liga_sel][eq_vis_nombre]
+    data_vis = BASE_DATOS[liga_sel][eq_visita_nombre]
 
-    # =========================================================
-    # CÁLCULO 100% AUTOMÁTICO (Necesidad de Ganar, Ritmo e Intensidad)
-    # =========================================================
-    # 1. Necesidad de ganar calculada automáticamente por su poder goleador (gf) y defensivo (gc)
-    prio_loc = min(10, max(1, int((data_loc.get("gf", 1.5) / max(0.5, data_loc.get("gc", 1.0))) * 5)))
-    prio_vis = min(10, max(1, int((data_vis.get("gf", 1.5) / max(0.5, data_vis.get("gc", 1.0))) * 5)))
-
-    # 2. Ritmo e Intensidad automática basada en córners y tarjetas de la base de datos
-    corners_tot = data_loc.get("corners", 4.5) + data_vis.get("corners", 4.5)
-    tarjetas_tot = data_loc.get("tarjetas", 2.0) + data_vis.get("tarjetas", 2.0)
-    score_intensidad = (corners_tot * 0.35) + (tarjetas_tot * 0.65)
-
-    if score_intensidad >= 6.5:
-        ritmo_auto = "🔥 Intenso / Directo"
-        multiplicador = 1.15
-    elif score_intensidad >= 5.0:
-        ritmo_auto = "⚖️ Equilibrado / Transición"
-        multiplicador = 1.00
-    else:
-        ritmo_auto = "🧠 Control / Posesión Parsimoniosa"
-        multiplicador = 0.90
-
-    # Mostrar las métricas automáticas en pantalla limpiamente
-    st.markdown("### ⚡ Análisis Estadístico Automático")
-    m1, m2, m3 = st.columns(3)
-    m1.metric(f"Prioridad Auto ({eq_local_nombre})", f"{prio_loc} / 10")
-    m2.metric(f"Prioridad Auto ({eq_vis_nombre})", f"{prio_vis} / 10")
-    m3.metric("Ritmo e Intensidad", ritmo_auto, delta=f"Mult. x{multiplicador}")
-# =========================================================
-# CÁLCULO AUTOMÁTICO DE INTENSIDAD Y RITMO TÁCTICO
-# =========================================================
-
-def calcular_ritmo_intensidad_auto(eq_local_data, eq_vis_data):
-    # Ponderación basada en métricas actualizadas automáticamente por tu script de la madrugada
-    corners_tot = eq_local_data.get("corners", 4.5) + eq_vis_data.get("corners", 4.5)
-    tarjetas_tot = eq_local_data.get("tarjetas", 2.0) + eq_vis_data.get("tarjetas", 2.0)
-    
-    # Índice numérico de intensidad
-    score_intensidad = (corners_tot * 0.35) + (tarjetas_tot * 0.65)
-    
-    if score_intensidad >= 6.5:
-        etiqueta_ritmo = "🔥 Intenso / Directo"
-        mult_intensidad = 1.15
-    elif score_intensidad >= 5.0:
-        etiqueta_ritmo = "⚖️ Equilibrado / Transición"
-        mult_intensidad = 1.00
-    else:
-        etiqueta_ritmo = "🧠 Control / Posesión Parsimoniosa"
-        mult_intensidad = 0.90
-        
-    # Prioridad de victoria sugerida basada en el poder de gol (gf)
-    prio_local = min(10, max(1, int(eq_local_data.get("gf", 1.5) * 4)))
-    prio_vis = min(10, max(1, int(eq_vis_data.get("gf", 1.5) * 4)))
-    
-    return etiqueta_ritmo, mult_intensidad, prio_local, prio_vis
-
-# Extraer métricas de la base de datos de los equipos seleccionados
-if 'liga_sel' in locals() and 'equipo_local' in locals() and 'equipo_visitante' in locals():
-    datos_loc = BASE_DATOS.get(liga_sel, {}).get(equipo_local, {})
-    datos_vis = BASE_DATOS.get(liga_sel, {}).get(equipo_visitante, {})
-    
-    if datos_loc and datos_vis:
-        ritmo_auto, multiplicador, prio_l, prio_v = calcular_ritmo_intensidad_auto(datos_loc, datos_vis)
-        
-        st.markdown("### ⚡ Análisis Estadístico Automático")
-        c1, c2, c3 = st.columns(3)
-        
-        with c1:
-            st.metric(f"Prioridad Auto ({equipo_local})", f"{prio_l} / 10")
-        with c2:
-            st.metric(f"Prioridad Auto ({equipo_visitante})", f"{prio_v} / 10")
-        with c3:
-            st.metric("Ritmo e Intensidad Auto", ritmo_auto, delta=f"Multiplicador x{multiplicador}")
 else:
     st.subheader("✍️ Ingreso Manual y Ajuste Estadístico de Equipos")
     col_m1, col_m2 = st.columns(2)
@@ -509,6 +437,7 @@ else:
         gf1t_loc = st.number_input("Goles Promedio 1er Tiempo (Local):", 0.0, 3.0, 0.8, step=0.1)
         corn_loc = st.number_input("Córners Promedio por Partido (Local):", 0.0, 12.0, 5.2, step=0.1)
         tarj_loc = st.number_input("Tarjetas Promedio por Partido (Local):", 0.0, 8.0, 2.3, step=0.1)
+        prio_loc = st.slider("Necesidad de Ganar (Local):", 1, 10, 8, key="p_loc_2")
         data_loc = {"gf": gf_loc, "gc": gc_loc, "gf1t": gf1t_loc, "corners": corn_loc, "tarjetas": tarj_loc}
 
     with col_m2:
@@ -518,7 +447,32 @@ else:
         gf1t_vis = st.number_input("Goles Promedio 1er Tiempo (Visitante):", 0.0, 3.0, 0.5, step=0.1)
         corn_vis = st.number_input("Córners Promedio por Partido (Visitante):", 0.0, 12.0, 4.4, step=0.1)
         tarj_vis = st.number_input("Tarjetas Promedio por Partido (Visitante):", 0.0, 8.0, 2.5, step=0.1)
+        prio_vis = st.slider("Necesidad de Ganar (Visitante):", 1, 10, 7, key="p_vis_2")
         data_vis = {"gf": gf_vis, "gc": gc_vis, "gf1t": gf1t_vis, "corners": corn_vis, "tarjetas": tarj_vis}
+
+# --- NUEVA INTERFAZ MODERNA Y LIMPIA PARA RITMO / INTENSIDAD ---
+st.markdown("### 🔥 Ritmo e Intensidad del Partido")
+
+# Opciones con tarjetas estilizadas horizontales
+opciones_ritmo = {
+    "🍵 Calmado / Amistoso": 0.80,
+    "⚡ Normal / Estándar": 1.00,
+    "🔥 Intenso / Directo": 1.15,
+    "⚔️ Clásico / Alta Rivalidad": 1.28
+}
+
+ritmo_sel = st.radio(
+    label="Selecciona la intensidad de juego:",
+    options=list(opciones_ritmo.keys()),
+    index=2,
+    horizontal=True,
+    label_visibility="collapsed"
+)
+
+f_ritmo = opciones_ritmo[ritmo_sel]
+
+f_prio_loc = 1.0 + (prio_loc - 5) * 0.04
+f_prio_vis = 1.0 + (prio_vis - 5) * 0.04
 
 if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_width=True):
     l_gf_loc = data_loc["gf"] * 1.10 * f_prio_loc * f_ritmo
@@ -591,133 +545,3 @@ if st.button("🚀 CALCULAR PREDICCIÓN (10,000 SIMULACIONES)", use_container_wi
         st.markdown("### 🟨🟫 Tarjetas y Disciplina")
         st.write(f"🟨 **Total Tarjetas Amarillas (> 4.5):** **{p_tarj_45:.1f}%** (Promedio esperable: {np.mean(tarjetas_ft):.1f} tarjetas)")
         st.write(f"🟥 **Probabilidad de Tarjeta Roja en el Partido:** **{p_roja:.1f}%**")
-# =========================================================
-# MÓDULO UNIFICADO: TÁCTICA, BAJAS Y SIMULACIÓN CON GRÁFICA
-# =========================================================
-
-st.markdown("---")
-st.subheader("⚽ Centro de Simulación Táctica y Predicción Avanzada")
-
-with st.expander("⚙️ 1. Configurar Alineaciones y Bajas (Factor Humano)", expanded=True):
-    col_t1, col_t2 = st.columns(2)
-    
-    with col_t1:
-        st.markdown("#### 🏠 Equipo Local")
-        formacion_local = st.selectbox("Formación (Local)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_loc_unif")
-        notas_local = st.text_area("Bajas / Notas (Local)", placeholder="Ej: No juega Vinicius Jr, baja por lesión", key="n_loc_unif")
-        
-    with col_t2:
-        st.markdown("#### ✈️ Equipo Visitante")
-        formacion_vis = st.selectbox("Formación (Visitante)", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], key="f_vis_unif")
-        notas_vis = st.text_area("Bajas / Notas (Visitante)", placeholder="Ej: Sin portero titular", key="n_vis_unif")
-        
-    # Cálculo inteligente de factores de rendimiento basados en ausencias y esquemas
-    f_rend_l = 1.0
-    f_rend_v = 1.0
-    
-    palabras_alerta = ["no juega", "lesion", "lesionado", "baja", "suspendido", "ausente", "fuera", "operado"]
-    for palabra in palabras_alerta:
-        if palabra in notas_local.lower():
-            f_rend_l -= 0.15  # Penalización del 15% por baja sensible local
-        if palabra in notas_vis.lower():
-            f_rend_v -= 0.15  # Penalización del 15% por baja sensible visitante
-
-    # Bonificación táctica de mediocampo
-    if formacion_local == "4-3-3" and formacion_vis == "4-4-2":
-        f_rend_l += 0.05
-    elif formacion_local == "4-4-2" and formacion_vis == "4-3-3":
-        f_rend_v += 0.05
-
-    if f_rend_l < 1.0 or f_rend_v < 1.0:
-        st.warning("⚠️ El modelo ha detectado ausencias y ha ajustado dinámicamente la fuerza ofensiva de los equipos.")
-
-with st.expander("📊 2. Estadísticas Base y Disparos para la Cancha", expanded=True):
-    col_s1, col_s2 = st.columns(2)
-    with col_s1:
-        tiros_l_base = st.number_input("Tiros Previstos / Totales (Local)", 1, 30, 12, key="t_l_base")
-        goles_esp_l = st.number_input("xG / Goles Esperados Base (Local)", 0.1, 5.0, 1.6, key="xg_l_base")
-    with col_s2:
-        tiros_v_base = st.number_input("Tiros Previstos / Totales (Visitante)", 1, 30, 9, key="t_v_base")
-        goles_esp_v = st.number_input("xG / Goles Esperados Base (Visitante)", 0.1, 5.0, 1.1, key="xg_v_base")
-
-if st.button("🚀 Simular Partido Completo (Aplicando Táctica y Bajas)", type="primary"):
-    # Aplicar los factores de rendimiento de las alineaciones y bajas a los goles esperados
-    xg_l_final = goles_esp_l * f_rend_l
-    xg_v_final = goles_esp_v * f_rend_v
-    
-    np.random.seed(42)
-    goles_sim_l = np.random.poisson(xg_l_final)
-    goles_sim_v = np.random.poisson(xg_v_final)
-    
-    st.markdown("---")
-    st.success(f"🎯 **Resultado Final Simulado:** Local **{goles_sim_l} - {goles_sim_v}** Visitante")
-    
-    col_m1, col_m2, col_m3 = st.columns(3)
-    col_m1.metric("Poder Local Ajustado", f"{int(f_rend_l*100)}%", f"Esquema: {formacion_local}")
-    col_m2.metric("Poder Visitante Ajustado", f"{int(f_rend_v*100)}%", f"Esquema: {formacion_vis}")
-    col_m3.metric("Expectativa de Goles (xG)", f"{round(xg_l_final, 2)} - {round(xg_v_final, 2)}")
-
-    # =========================================================
-    # GENERACIÓN DEL MAPA TÁCTICO EN CANCHA CON LOS DATOS AJUSTADOS
-    # =========================================================
-    st.markdown("### 🗺️ Mapeo Táctico y de Ocasiones en Cancha")
-    
-    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0e1117')
-    fig.patch.set_facecolor('#0e1117')
-    
-    # Crear la cancha usando mplsoccer (con coordenadas estándar 0-100 y 0-80)
-    pitch = Pitch(pitch_type='custom', pitch_length=100, pitch_width=80,
-                  axis=True, label=True, pitch_color='#1e222a', line_color='white')
-    pitch.draw(ax=ax)
-    
-    # Distribuir visualmente los tiros en base al volumen ingresado
-    # Tiros Local (Atacan hacia la derecha, x > 50)
-    x_l = np.random.uniform(55, 95, int(tiros_l_base))
-    y_l = np.random.uniform(15, 65, int(tiros_l_base))
-    
-    # Tiros Visitante (Atacan hacia la izquierda, x < 50)
-    x_v = np.random.uniform(5, 45, int(tiros_v_base))
-    y_v = np.random.uniform(15, 65, int(tiros_v_base))
-    
-    # Dibujar los puntos en el mapa táctico
-    ax.scatter(x_l, y_l, s=xg_l_final * 120, color='#ff4b4b', alpha=0.8, label=f'Local ({formacion_local})')
-    ax.scatter(x_v, y_v, s=xg_v_final * 120, color='#00d4ff', alpha=0.8, label=f'Visitante ({formacion_vis})')
-    
-    ax.set_title(f"Mapa Táctico de Ocasiones (Efecto de Bajas Incluido)", color='white', fontsize=14, pad=15)
-    ax.legend(facecolor='#0e1117', labelcolor='white', loc='upper center')
-    
-    st.pyplot(fig)
-
-# =========================================================
-# MÓDULO DE PREDICCIÓN EN VIVO DESDE EL MEDIO TIEMPO (HT to FT)
-# =========================================================
-
-st.markdown("---")
-st.subheader("⏱️ Pronóstico del Partido (Basado en el Medio Tiempo)")
-
-with st.expander("📊 Ingresar datos del 1er Tiempo para proyectar el Final"):
-    col_ht1, col_ht2 = st.columns(2)
-    with col_ht1:
-        goles_local_ht = st.number_input("Goles Local (Medio Tiempo)", 0, 10, 0)
-        tiros_local_ht = st.number_input("Tiros Local (1er Tiempo)", 0, 20, 4)
-    with col_ht2:
-        goles_vis_ht = st.number_input("Goles Visitante (Medio Tiempo)", 0, 10, 0)
-        tiros_vis_ht = st.number_input("Tiros Visitante (1er Tiempo)", 0, 20, 2)
-        
-    if st.button("🔮 Calcular Proyección para el 2do Tiempo"):
-        # Lógica de proyección: estimar goles para los 45 min restantes basándose en el ritmo del 1T
-        np.random.seed(42)
-        # Tasa esperada de gol para el 2T basada proporcionalmente en los tiros del 1T
-        lambda_l_2t = max(0.4, (tiros_local_ht / 2) * 0.35)
-        lambda_v_2t = max(0.3, (tiros_vis_ht / 2) * 0.35)
-        
-        # Simulación de goles para el segundo tiempo (Distribución de Poisson)
-        goles_l_2t_sim = np.random.poisson(lambda_l_2t)
-        goles_v_2t_sim = np.random.poisson(lambda_v_2t)
-        
-        # Resultado final proyectado (Medio tiempo + Simulación del 2do tiempo)
-        final_proyectado_l = goles_local_ht + goles_l_2t_sim
-        final_proyectado_v = goles_vis_ht + goles_v_2t_sim
-        
-        st.success(f"🎯 **Marcador Proyectado al Final:** Local {final_proyectado_l} - {final_proyectado_v} Visitante")
-        st.info(f"💡 **Lectura del Modelo:** En el segundo tiempo se esperan aproximadamente {goles_l_2t_sim} gol(es) más para el local y {goles_v_2t_sim} para la visita, tomando en cuenta la intensidad mostrada en la primera mitad.")
