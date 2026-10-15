@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import time
-from mplsoccer import pitch 
+from mplsoccer import Pitch 
 import os
 
 st.set_page_config(
