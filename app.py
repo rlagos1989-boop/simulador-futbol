@@ -550,3 +550,85 @@ with pestana2:
     else:
         st.info("Aún no tienes pronósticos registrados en la base de datos.")
 
+import matplotlib.pyplot as plt
+from mplsoccer import Pitch
+
+# ==============================================================================
+# --- MÓDULO VISUAL: ESTILO ESTADIO, MARCADOR LED Y CANCHA TÁCTICA (MPLSOCCER) ---
+# ==============================================================================
+
+# Generador automático de URL de escudos/logos basados en el nombre del equipo
+def obtener_logo_equipo(nombre_equipo):
+    # Diccionario de respaldo para logos principales o formato automático vía API pública
+    logos_especiales = {
+        "Real Madrid": "https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
+        "Barcelona": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
+        "Manchester City": "https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
+        "Arsenal": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
+        "Inter Miami": "https://a.espncdn.com/i/teamlogos/soccer/500/18275.png",
+        "Olimpia": "https://a.espncdn.com/i/teamlogos/soccer/500/2361.png",
+        "Motagua": "https://a.espncdn.com/i/teamlogos/soccer/500/2362.png",
+        "PSG": "https://a.espncdn.com/i/teamlogos/soccer/500/160.png",
+        "Bayern Múnich": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png"
+    }
+    # Si no está en el diccionario especial, busca un placeholder dinámico limpio con las iniciales
+    if nombre_equipo in logos_especiales:
+        return logos_especiales[nombre_equipo]
+    return f"https://images.fotmob.com/image_resources/logo/teamlogo/{nombre_equipo.lower().replace(' ', '')}.png"
+
+if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
+    st.divider()
+    
+    # --- 1. MARCADOR LED ESTILO ESTADIO ---
+    logo_loc_url = obtener_logo_equipo(eq_loc)
+    logo_vis_url = obtener_logo_equipo(eq_vis)
+    
+    media_l_estadio = round(np.mean(goles_ft_loc), 1)
+    media_v_estadio = round(np.mean(goles_ft_vis), 1)
+    
+    st.markdown(f"""
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 25px; border-radius: 16px; border: 2px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 3px; color: #38bdf8; font-weight: 700; margin-bottom: 15px;">🏟️ Gran Pantalla del Estadio - Simulación Oficial</div>
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div style="width: 30%; text-align: center;">
+                    <img src="{logo_loc_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                    <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_loc}</h3>
+                </div>
+                <div style="width: 40%; text-align: center;">
+                    <div style="background: #020617; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid #0ea5e9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);">
+                        <span style="font-size: 38px; font-weight: 900; color: #f8fafc; font-family: monospace;">{media_l_estadio} - {media_v_estadio}</span>
+                    </div>
+                    <div style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Expectativa de Goles (xG)</div>
+                </div>
+                <div style="width: 30%; text-align: center;">
+                    <img src="{logo_vis_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                    <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_vis}</h3>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- 2. CANCHA DE FÚTBOL TÁCTICA (MPLSOCCER) ---
+    st.markdown("### 🗺️ Búnker Táctico: Posicionamiento en Cancha")
+    
+    # Coordenadas base simplificadas según formaciones elegidas
+    # Creamos la cancha con mplsoccer
+    pitch = Pitch(pitch_type='statsbomb', pitch_color='#1b4d3e', line_color='#ffffff', stripe=True)
+    fig, ax = pitch.draw(figsize=(10, 6))
+    
+    # Dibujar jugadores locales (Azul eléctrico) y visitantes (Rojo neón) en formaciones aproximadas
+    # Local (Izquierda a Derecha)
+    pitch.scatter(15, 40, s=300, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
+    pitch.scatter(35, [20, 35, 50, 65], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
+    pitch.scatter(60, [30, 50], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
+    pitch.scatter(85, [25, 50, 75], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
+
+    # Visitante (Derecha a Izquierda)
+    pitch.scatter(105, 40, s=300, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
+    pitch.scatter(85, [20, 35, 50, 65], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
+    pitch.scatter(60, [25, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
+    pitch.scatter(35, [25, 50, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
+
+    ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
+    st.pyplot(fig)
+
