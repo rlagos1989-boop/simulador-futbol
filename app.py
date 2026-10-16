@@ -693,8 +693,10 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
             </div>
         </div>
     """, unsafe_allow_html=True)
-
-       # 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE
+# ==============================================================================
+# --- 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE (ESTÉTICA MEJORADA) ---
+# ==============================================================================
+if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
     st.markdown("### 🏆 Análisis Definitivo del Resultado y Marcador Más Probable")
     
     marcadores_sim = [f"{l}-{v}" for l, v in zip(goles_ft_loc, goles_ft_vis)]
@@ -713,23 +715,88 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
         veredicto_ganador = "🤝 **Pronóstico:** Alta probabilidad de Empate técnico"
 
     col_an1, col_an2 = st.columns([1.5, 1])
+    
     with col_an1:
         st.markdown(f"""
-            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); text-align: center;">
                 <h4 style="color: #38bdf8; margin-top: 0; font-size: 18px;">🎯 Veredicto de la IA (Monte Carlo)</h4>
-                <p style="font-size: 16px; margin-bottom: 8px; color: #f8fafc;">Marcador más probable: <b style="color: #38bdf8; font-size: 20px;">{eq_loc} {top_marcador} {eq_vis}</b></p>
-                <p style="font-size: 14px; color: #cbd5e1;">Probabilidad estadística: <b style="color: #f8fafc;">{prob_marcador:.1f}%</b></p>
+                <p style="font-size: 16px; margin-bottom: 8px; color: #f8fafc;">Marcador más probable:</p>
+                <div style="font-size: 28px; font-weight: 900; color: #38bdf8; background: rgba(2, 6, 23, 0.6); padding: 10px; border-radius: 10px; border: 1px solid #0ea5e9; margin: 10px 0;">
+                    {eq_loc} {top_marcador} {eq_vis}
+                </div>
+                <p style="font-size: 14px; color: #cbd5e1;">Probabilidad estadística: <b style="color: #34d399; font-size: 16px;">{prob_marcador:.1f}%</b></p>
                 <hr style="border-color: #334155; margin: 12px 0;">
                 <p style="font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 0;">{veredicto_ganador}</p>
             </div>
         """, unsafe_allow_html=True)
         
     with col_an2:
-        st.markdown("""
-            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+        st.markdown(f"""
+            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); text-align: center;">
                 <h4 style="color: #f8fafc; margin-top: 0; font-size: 16px;">📋 Top 3 Marcadores</h4>
-            </div>
         """, unsafe_allow_html=True)
         for m, p in df_marcadores.head(3).items():
-            st.markdown(f"• <b style='color:#f8fafc;'>{m}</b>: <code style='color:#38bdf8;'>{p:.1f}%</code>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style="background: rgba(30, 41, 59, 0.5); padding: 6px; border-radius: 8px; margin-bottom: 6px; border: 1px solid #334155;">
+                    <b style='color:#f8fafc; font-size: 15px;'>{m}</b> ➔ <span style='color:#38bdf8; font-weight: bold;'>{p:.1f}%</span>
+                </div>
+            """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
+
+# ==============================================================================
+# --- 3. PANEL EN VIVO / MEDIO TIEMPO (ESTADÍSTICAS MANUALES COMPLETAS) ---
+# ==============================================================================
+st.divider()
+with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real (Medio Tiempo)", expanded=False):
+    st.markdown("Introduce las estadísticas reales del partido tal como van al descanso para recalcular la proyección científica del 2do tiempo:")
+    
+    col_live_a, col_live_b = st.columns(2)
+    
+    with col_live_a:
+        st.markdown(f"#### 🏠 {eq_loc} (1er Tiempo)")
+        g_ht_l = st.number_input(f"Goles actuales ({eq_loc}):", 0, 10, 0, key="gh_l_v")
+        xg_ht_l = st.number_input(f"xG / Goles Esperados ({eq_loc}):", 0.0, 10.0, 0.75, key="xg_l_v")
+        pos_ht_l = st.slider(f"Posesión de Balón % ({eq_loc}):", 0, 100, 50, key="pos_l_v")
+        pases_ht_l = st.number_input(f"Pases Completados ({eq_loc}):", 0, 1000, 180, key="pas_l_v")
+        grandes_ht_l = st.number_input(f"Grandes Jugadas de Gol ({eq_loc}):", 0, 20, 1, key="gra_l_v")
+        corners_ht_l = st.number_input(f"Tiros de Esquina ({eq_loc}):", 0, 20, 3, key="cor_l_v")
+        tiros_tot_l = st.number_input(f"Tiros Totales ({eq_loc}):", 0, 30, 6, key="tot_l_v")
+        tiros_puerta_l = st.number_input(f"Tiros a Puerta ({eq_loc}):", 0, 20, 2, key="puerta_l_v")
+
+    with col_live_b:
+        st.markdown(f"#### ✈️ {eq_vis} (1er Tiempo)")
+        g_ht_v = st.number_input(f"Goles actuales ({eq_vis}):", 0, 10, 0, key="gh_v_v")
+        xg_ht_v = st.number_input(f"xG / Goles Esperados ({eq_vis}):", 0.0, 10.0, 0.65, key="xg_v_v")
+        pos_ht_v = st.slider(f"Posesión de Balón % ({eq_vis}):", 0, 100, 50, key="pos_v_v")
+        pases_ht_v = st.number_input(f"Pases Completados ({eq_vis}):", 0, 1000, 160, key="pas_v_v")
+        grandes_ht_v = st.number_input(f"Grandes Jugadas de Gol ({eq_vis}):", 0, 20, 1, key="gra_v_v")
+        corners_ht_v = st.number_input(f"Tiros de Esquina ({eq_vis}):", 0, 20, 2, key="cor_v_v")
+        tiros_tot_v = st.number_input(f"Tiros Totales ({eq_vis}):", 0, 30, 5, key="tot_v_v")
+        tiros_puerta_v = st.number_input(f"Tiros a Puerta ({eq_vis}):", 0, 20, 2, key="puerta_v_v")
+
+    if st.button("⚡ Ejecutar Proyección Científica en Vivo (2do Tiempo)", use_container_width=True):
+        factor_dinamico_l = 1.0 + ((tiros_puerta_l - tiros_puerta_v) * 0.04) + ((xg_ht_l - xg_ht_v) * 0.05)
+        factor_dinamico_v = 1.0 + ((tiros_puerta_v - tiros_puerta_l) * 0.04) + ((xg_ht_v - xg_ht_l) * 0.05)
+        
+        sims_vivos = 10000
+        goles_2t_l = np.random.poisson(max(0.1, 1.1 * max(0.5, factor_dinamico_l)), sims_vivos)
+        goles_2t_v = np.random.poisson(max(0.1, 0.9 * max(0.5, factor_dinamico_v)), sims_vivos)
+        
+        goles_totales_final_l = g_ht_l + goles_2t_l
+        goles_totales_final_v = g_ht_v + goles_2t_v
+        
+        p_l_live = np.mean(goles_totales_final_l > goles_totales_final_v) * 100
+        p_v_live = np.mean(goles_totales_final_l < goles_totales_final_v) * 100
+        p_e_live = np.mean(goles_totales_final_l == goles_totales_final_v) * 100
+        
+        st.markdown("---")
+        st.markdown("### 📊 Resultado Proyectado en Tiempo Real (Final del Partido)")
+        
+        col_res_l1, col_res_l2, col_res_l3 = st.columns(3)
+        col_res_l1.metric(f"Victoria {eq_loc}", f"{p_l_live:.1f}%", f"Prom: {np.mean(goles_totales_final_l):.1f} goles")
+        col_res_l2.metric("Empate Final", f"{p_e_live:.1f}%")
+        col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {np.mean(goles_totales_final_v):.1f} goles")
+
+
+     
