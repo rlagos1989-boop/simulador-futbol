@@ -629,4 +629,112 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
 
     ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
     st.pyplot(fig)
+# ==============================================================================
+# --- MÓDULO EN VIVO / MEDIO TIEMPO (ESTADÍSTICAS MANUALES) ---
+# ==============================================================================
+
+st.divider()
+with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real (Medio Tiempo)", expanded=True):
+    st.markdown("Introduce las estadísticas reales del partido tal como van al descanso para recalcular la proyección científica del 2do tiempo:")
+    
+    col_live_a, col_live_b = st.columns(2)
+    
+    with col_live_a:
+        st.markdown(f"#### 🏠 {eq_loc} (1er Tiempo)")
+        g_ht_l = st.number_input(f"Goles actuales ({eq_loc}):", 0, 10, 0, key="gh_l_v")
+        xg_ht_l = st.number_input(f"xG / Goles Esperados ({eq_loc}):", 0.0, 10.0, 0.75, key="xg_l_v")
+        pos_ht_l = st.slider(f"Posesión de Balón % ({eq_loc}):", 0, 100, 50, key="pos_l_v")
+        pases_ht_l = st.number_input(f"Pases Completados ({eq_loc}):", 0, 1000, 180, key="pas_l_v")
+        grandes_ht_l = st.number_input(f"Grandes Jugadas de Gol ({eq_loc}):", 0, 20, 1, key="gra_l_v")
+        corners_ht_l = st.number_input(f"Tiros de Esquina ({eq_loc}):", 0, 20, 3, key="cor_l_v")
+        tiros_tot_l = st.number_input(f"Tiros Totales ({eq_loc}):", 0, 30, 6, key="tot_l_v")
+        tiros_puerta_l = st.number_input(f"Tiros a Puerta ({eq_loc}):", 0, 20, 2, key="puerta_l_v")
+
+    with col_live_b:
+        st.markdown(f"#### ✈️ {eq_vis} (1er Tiempo)")
+        g_ht_v = st.number_input(f"Goles actuales ({eq_vis}):", 0, 10, 0, key="gh_v_v")
+        xg_ht_v = st.number_input(f"xG / Goles Esperados ({eq_vis}):", 0.0, 10.0, 0.65, key="xg_v_v")
+        pos_ht_v = st.slider(f"Posesión de Balón % ({eq_vis}):", 0, 100, 50, key="pos_v_v")
+        pases_ht_v = st.number_input(f"Pases Completados ({eq_vis}):", 0, 1000, 160, key="pas_v_v")
+        grandes_ht_v = st.number_input(f"Grandes Jugadas de Gol ({eq_vis}):", 0, 20, 1, key="gra_v_v")
+        corners_ht_v = st.number_input(f"Tiros de Esquina ({eq_vis}):", 0, 20, 2, key="cor_v_v")
+        tiros_tot_v = st.number_input(f"Tiros Totales ({eq_vis}):", 0, 30, 5, key="tot_v_v")
+        tiros_puerta_v = st.number_input(f"Tiros a Puerta ({eq_vis}):", 0, 20, 2, key="puerta_v_v")
+
+    if st.button("⚡ Ejecutar Proyección Científica en Vivo (2do Tiempo)", use_container_width=True):
+        # Factores dinámicos basados en lo ingresado en el medio tiempo
+        factor_dinamico_l = 1.0 + ((tiros_puerta_l - tiros_puerta_v) * 0.04) + ((xg_ht_l - xg_ht_v) * 0.05)
+        factor_dinamico_v = 1.0 + ((tiros_puerta_v - tiros_puerta_l) * 0.04) + ((xg_ht_v - xg_ht_l) * 0.05)
+        
+        sims_vivos = 10000
+        goles_2t_l = np.random.poisson(max(0.1, 1.1 * max(0.5, factor_dinamico_l)), sims_vivos)
+        goles_2t_v = np.random.poisson(max(0.1, 0.9 * max(0.5, factor_dinamico_v)), sims_vivos)
+        
+        goles_totales_final_l = g_ht_l + goles_2t_l
+        goles_totales_final_v = g_ht_v + goles_2t_v
+        
+        p_l_live = np.mean(goles_totales_final_l > goles_totales_final_v) * 100
+        p_v_live = np.mean(goles_totales_final_l < goles_totales_final_v) * 100
+        p_e_live = np.mean(goles_totales_final_l == goles_totales_final_v) * 100
+        
+        st.markdown("---")
+        st.markdown("### 📊 Resultado Proyectado en Tiempo Real (Final del Partido)")
+        
+        col_res_l1, col_res_l2, col_res_l3 = st.columns(3)
+        col_res_l1.metric(f"Victoria {eq_loc}", f"{p_l_live:.1f}%", f"Prom: {np.mean(goles_totales_final_l):.1f} goles")
+        col_res_l2.metric("Empate Final", f"{p_e_live:.1f}%")
+        col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {np.mean(goles_totales_final_v):.1f} goles")
+# ==============================================================================
+# --- ESTILOS VISUALES AVANZADOS (ESTADIO, NEÓN Y GLASSMORPHISM) ---
+# ==============================================================================
+st.markdown("""
+    <style>
+    /* Fondo general con estética de estadio nocturno */
+    .stApp {
+        background: linear-gradient(rgba(15, 23, 42, 0.90), rgba(2, 6, 23, 0.95)), 
+                    url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+        background-size: cover;
+        color: #f8fafc;
+    }
+    
+    /* Botones personalizados estilo neón */
+    .stButton>button {
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    .stButton>button:hover {
+        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+        box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+        transform: translateY(-2px);
+    }
+
+    /* Tarjetas de métricas y contenedores con efecto cristal */
+    div[data-testid="stMetric"] {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(51, 65, 85, 0.8);
+        padding: 15px;
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    /* Expander con diseño moderno */
+    .streamlit-expanderHeader {
+        background: rgba(30, 41, 59, 0.8) !important;
+        border-radius: 10px;
+        border: 1px solid #334155;
+        color: #38bdf8 !important;
+        font-weight: bold;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 
