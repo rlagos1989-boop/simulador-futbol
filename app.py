@@ -630,8 +630,8 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
     ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
     st.pyplot(fig)
             # --- 1. MARCADOR LED ESTILO ESTADIO ---
-        logo_loc_url = obtener_logo_equipo(eq_loc)
-        logo_vis_url = obtener_logo_equipo(eq_vis)
+    logo_loc_url = obtener_logo_equipo(eq_loc)
+    logo_vis_url = obtener_logo_equipo(eq_vis)
         
         media_l_estadio = round(np.mean(goles_ft_loc), 1)
         media_v_estadio = round(np.mean(goles_ft_vis), 1)
