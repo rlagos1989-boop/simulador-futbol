@@ -629,112 +629,90 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
 
     ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
     st.pyplot(fig)
-# ==============================================================================
-# --- MÓDULO EN VIVO / MEDIO TIEMPO (ESTADÍSTICAS MANUALES) ---
-# ==============================================================================
+            # --- 1. MARCADOR LED ESTILO ESTADIO ---
+        logo_loc_url = obtener_logo_equipo(eq_loc)
+        logo_vis_url = obtener_logo_equipo(eq_vis)
+        
+        media_l_estadio = round(np.mean(goles_ft_loc), 1)
+        media_v_estadio = round(np.mean(goles_ft_vis), 1)
+        
+        st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 25px; border-radius: 16px; border: 2px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 3px; color: #38bdf8; font-weight: 700; margin-bottom: 15px;">🏟️ Gran Pantalla del Estadio - Simulación Oficial</div>
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <div style="width: 30%; text-align: center;">
+                        <img src="{logo_loc_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                        <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_loc}</h3>
+                    </div>
+                    <div style="width: 40%; text-align: center;">
+                        <div style="background: #020617; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid #0ea5e9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);">
+                            <span style="font-size: 38px; font-weight: 900; color: #f8fafc; font-family: monospace;">{media_l_estadio} - {media_v_estadio}</span>
+                        </div>
+                        <div style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Expectativa de Goles (xG)</div>
+                    </div>
+                    <div style="width: 30%; text-align: center;">
+                        <img src="{logo_vis_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                        <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_vis}</h3>
+                    </div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
-st.divider()
-with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real (Medio Tiempo)", expanded=True):
-    st.markdown("Introduce las estadísticas reales del partido tal como van al descanso para recalcular la proyección científica del 2do tiempo:")
-    
-    col_live_a, col_live_b = st.columns(2)
-    
-    with col_live_a:
-        st.markdown(f"#### 🏠 {eq_loc} (1er Tiempo)")
-        g_ht_l = st.number_input(f"Goles actuales ({eq_loc}):", 0, 10, 0, key="gh_l_v")
-        xg_ht_l = st.number_input(f"xG / Goles Esperados ({eq_loc}):", 0.0, 10.0, 0.75, key="xg_l_v")
-        pos_ht_l = st.slider(f"Posesión de Balón % ({eq_loc}):", 0, 100, 50, key="pos_l_v")
-        pases_ht_l = st.number_input(f"Pases Completados ({eq_loc}):", 0, 1000, 180, key="pas_l_v")
-        grandes_ht_l = st.number_input(f"Grandes Jugadas de Gol ({eq_loc}):", 0, 20, 1, key="gra_l_v")
-        corners_ht_l = st.number_input(f"Tiros de Esquina ({eq_loc}):", 0, 20, 3, key="cor_l_v")
-        tiros_tot_l = st.number_input(f"Tiros Totales ({eq_loc}):", 0, 30, 6, key="tot_l_v")
-        tiros_puerta_l = st.number_input(f"Tiros a Puerta ({eq_loc}):", 0, 20, 2, key="puerta_l_v")
+        # --- 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE ---
+        st.markdown("### 🏆 Análisis Definitivo del Resultado y Marcador Más Probable")
+        
+        marcadores_sim = [f"{l}-{v}" for l, v in zip(goles_ft_loc, goles_ft_vis)]
+        df_marcadores = pd.Series(marcadores_sim).value_counts(normalize=True) * 100
+        top_marcador = df_marcadores.index[0]
+        prob_marcador = df_marcadores.iloc[0]
+        
+        media_l = np.mean(goles_ft_loc)
+        media_v = np.mean(goles_ft_vis)
+        
+        if media_l > media_v:
+            veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_loc} (Local)"
+        elif media_v > media_l:
+            veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_vis} (Visitante)"
+        else:
+            veredicto_ganador = "🤝 **Pronóstico:** Alta probabilidad de Empate técnico"
 
-    with col_live_b:
-        st.markdown(f"#### ✈️ {eq_vis} (1er Tiempo)")
-        g_ht_v = st.number_input(f"Goles actuales ({eq_vis}):", 0, 10, 0, key="gh_v_v")
-        xg_ht_v = st.number_input(f"xG / Goles Esperados ({eq_vis}):", 0.0, 10.0, 0.65, key="xg_v_v")
-        pos_ht_v = st.slider(f"Posesión de Balón % ({eq_vis}):", 0, 100, 50, key="pos_v_v")
-        pases_ht_v = st.number_input(f"Pases Completados ({eq_vis}):", 0, 1000, 160, key="pas_v_v")
-        grandes_ht_v = st.number_input(f"Grandes Jugadas de Gol ({eq_vis}):", 0, 20, 1, key="gra_v_v")
-        corners_ht_v = st.number_input(f"Tiros de Esquina ({eq_vis}):", 0, 20, 2, key="cor_v_v")
-        tiros_tot_v = st.number_input(f"Tiros Totales ({eq_vis}):", 0, 30, 5, key="tot_v_v")
-        tiros_puerta_v = st.number_input(f"Tiros a Puerta ({eq_vis}):", 0, 20, 2, key="puerta_v_v")
+        col_an1, col_an2 = st.columns([1.5, 1])
+        with col_an1:
+            st.markdown(f"""
+                <div style="background: rgba(30, 41, 59, 0.75); padding: 20px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+                    <h4 style="color: #38bdf8; margin-top: 0; font-size: 18px;">🎯 Veredicto de la IA (Monte Carlo)</h4>
+                    <p style="font-size: 16px; margin-bottom: 8px;">Marcador más probable: <b style="color: #f8fafc; font-size: 18px;">{eq_loc} {top_marcador} {eq_vis}</b></p>
+                    <p style="font-size: 14px; color: #94a3b8;">Probabilidad estadística: <b>{prob_marcador:.1f}%</b></p>
+                    <hr style="border-color: #334155; margin: 12px 0;">
+                    <p style="font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 0;">{veredicto_ganador}</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col_an2:
+            st.markdown(f"""
+                <div style="background: rgba(30, 41, 59, 0.75); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+                    <h4 style="color: #f8fafc; margin-top: 0; font-size: 16px;">📋 Top 3 Marcadores</h4>
+            """, unsafe_allow_html=True)
+            for m, p in df_marcadores.head(3).items():
+                st.markdown(f"• **{m}**: `{p:.1f}%`")
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    if st.button("⚡ Ejecutar Proyección Científica en Vivo (2do Tiempo)", use_container_width=True):
-        # Factores dinámicos basados en lo ingresado en el medio tiempo
-        factor_dinamico_l = 1.0 + ((tiros_puerta_l - tiros_puerta_v) * 0.04) + ((xg_ht_l - xg_ht_v) * 0.05)
-        factor_dinamico_v = 1.0 + ((tiros_puerta_v - tiros_puerta_l) * 0.04) + ((xg_ht_v - xg_ht_l) * 0.05)
+        # --- 3. CANCHA TÁCTICA (MPLSOCCER) ---
+        st.markdown("### 🗺️ Búnker Táctico: Posicionamiento en Cancha")
+        pitch = Pitch(pitch_type='statsbomb', pitch_color='#1b4d3e', line_color='#ffffff', stripe=True)
+        fig, ax = pitch.draw(figsize=(10, 6))
         
-        sims_vivos = 10000
-        goles_2t_l = np.random.poisson(max(0.1, 1.1 * max(0.5, factor_dinamico_l)), sims_vivos)
-        goles_2t_v = np.random.poisson(max(0.1, 0.9 * max(0.5, factor_dinamico_v)), sims_vivos)
-        
-        goles_totales_final_l = g_ht_l + goles_2t_l
-        goles_totales_final_v = g_ht_v + goles_2t_v
-        
-        p_l_live = np.mean(goles_totales_final_l > goles_totales_final_v) * 100
-        p_v_live = np.mean(goles_totales_final_l < goles_totales_final_v) * 100
-        p_e_live = np.mean(goles_totales_final_l == goles_totales_final_v) * 100
-        
-        st.markdown("---")
-        st.markdown("### 📊 Resultado Proyectado en Tiempo Real (Final del Partido)")
-        
-        col_res_l1, col_res_l2, col_res_l3 = st.columns(3)
-        col_res_l1.metric(f"Victoria {eq_loc}", f"{p_l_live:.1f}%", f"Prom: {np.mean(goles_totales_final_l):.1f} goles")
-        col_res_l2.metric("Empate Final", f"{p_e_live:.1f}%")
-        col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {np.mean(goles_totales_final_v):.1f} goles")
-# ==============================================================================
-# --- ESTILOS VISUALES AVANZADOS (ESTADIO, NEÓN Y GLASSMORPHISM) ---
-# ==============================================================================
-st.markdown("""
-    <style>
-    /* Fondo general con estética de estadio nocturno */
-    .stApp {
-        background: linear-gradient(rgba(15, 23, 42, 0.90), rgba(2, 6, 23, 0.95)), 
-                    url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-        background-size: cover;
-        color: #f8fafc;
-    }
-    
-    /* Botones personalizados estilo neón */
-    .stButton>button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
-        box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
-        transform: translateY(-2px);
-    }
+        pitch.scatter([15], [40], s=300, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([35, 35, 35, 35], [20, 35, 50, 65], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([60, 60], [30, 50], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([85, 85, 85], [25, 50, 75], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
 
-    /* Tarjetas de métricas y contenedores con efecto cristal */
-    div[data-testid="stMetric"] {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(51, 65, 85, 0.8);
-        padding: 15px;
-        border-radius: 14px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-    
-    /* Expander con diseño moderno */
-    .streamlit-expanderHeader {
-        background: rgba(30, 41, 59, 0.8) !important;
-        border-radius: 10px;
-        border: 1px solid #334155;
-        color: #38bdf8 !important;
-        font-weight: bold;
-    }
-    </style>
-""", unsafe_allow_html=True)
+        pitch.scatter([105], [40], s=300, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([85, 85, 85, 85], [20, 35, 50, 65], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([60, 60], [25, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+        pitch.scatter([35, 35, 35], [25, 50, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
+
+        ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
+        st.pyplot(fig)
 
 
