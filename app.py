@@ -694,7 +694,7 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
         </div>
     """, unsafe_allow_html=True)
 
-    # 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE
+       # 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE
     st.markdown("### 🏆 Análisis Definitivo del Resultado y Marcador Más Probable")
     
     marcadores_sim = [f"{l}-{v}" for l, v in zip(goles_ft_loc, goles_ft_vis)]
@@ -726,7 +726,10 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
         
     with col_an2:
         st.markdown("""
-            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px
+            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+                <h4 style="color: #f8fafc; margin-top: 0; font-size: 16px;">📋 Top 3 Marcadores</h4>
+            </div>
+        """, unsafe_allow_html=True)
+        for m, p in df_marcadores.head(3).items():
+            st.markdown(f"• <b style='color:#f8fafc;'>{m}</b>: <code style='color:#38bdf8;'>{p:.1f}%</code>", unsafe_allow_html=True)
 
-
-          
