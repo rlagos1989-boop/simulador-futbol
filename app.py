@@ -745,16 +745,26 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
 
 
 # ==============================================================================
-# --- 3. PANEL EN VIVO / MEDIO TIEMPO (ESTADÍSTICAS MANUALES COMPLETAS) ---
+# --- 3. PANEL EN VIVO / MEDIO TIEMPO (CON FORMACIONES Y ESTADÍSTICAS MANUALES) ---
 # ==============================================================================
 st.divider()
-with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real (Medio Tiempo)", expanded=False):
-    st.markdown("Introduce las estadísticas reales del partido tal como van al descanso para recalcular la proyección científica del 2do tiempo:")
+st.markdown("### 🔴 Panel En Vivo / Análisis de Medio Tiempo")
+
+with st.container():
+    st.markdown("Introduce las formaciones tácticas actuales, los goles y las estadísticas registradas al finalizar el **primer tiempo** para recalcular el resultado final:")
     
+    # Selectores manuales de formación dentro del panel en vivo
+    col_form1, col_form2 = st.columns(2)
+    with col_form1:
+        formacion_viva_l = st.selectbox(f"Formación Táctica Actual ({eq_loc}):", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], index=0, key="form_l_vivo")
+    with col_form2:
+        formacion_viva_v = st.selectbox(f"Formación Táctica Actual ({eq_vis}):", ["4-3-3", "4-4-2", "3-5-2", "4-2-3-1", "5-3-2", "4-1-4-1"], index=0, key="form_v_vivo")
+
+    st.markdown("---")
     col_live_a, col_live_b = st.columns(2)
     
     with col_live_a:
-        st.markdown(f"#### 🏠 {eq_loc} (1er Tiempo)")
+        st.markdown(f"#### 🏠 {eq_loc} ({form_l_vivo if 'form_l_vivo' in locals() else '4-3-3'})")
         g_ht_l = st.number_input(f"Goles actuales ({eq_loc}):", 0, 10, 0, key="gh_l_v")
         xg_ht_l = st.number_input(f"xG / Goles Esperados ({eq_loc}):", 0.0, 10.0, 0.75, key="xg_l_v")
         pos_ht_l = st.slider(f"Posesión de Balón % ({eq_loc}):", 0, 100, 50, key="pos_l_v")
@@ -765,7 +775,7 @@ with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real 
         tiros_puerta_l = st.number_input(f"Tiros a Puerta ({eq_loc}):", 0, 20, 2, key="puerta_l_v")
 
     with col_live_b:
-        st.markdown(f"#### ✈️ {eq_vis} (1er Tiempo)")
+        st.markdown(f"#### ✈️ {eq_vis} ({form_v_vivo if 'form_v_vivo' in locals() else '4-4-2'})")
         g_ht_v = st.number_input(f"Goles actuales ({eq_vis}):", 0, 10, 0, key="gh_v_v")
         xg_ht_v = st.number_input(f"xG / Goles Esperados ({eq_vis}):", 0.0, 10.0, 0.65, key="xg_v_v")
         pos_ht_v = st.slider(f"Posesión de Balón % ({eq_vis}):", 0, 100, 50, key="pos_v_v")
@@ -790,13 +800,14 @@ with st.expander("🔴 Panel En Vivo / Estadísticas del Partido en Tiempo Real 
         p_v_live = np.mean(goles_totales_final_l < goles_totales_final_v) * 100
         p_e_live = np.mean(goles_totales_final_l == goles_totales_final_v) * 100
         
+        media_fin_l = np.mean(goles_totales_final_l)
+        media_fin_v = np.mean(goles_totales_final_v)
+        
         st.markdown("---")
         st.markdown("### 📊 Resultado Proyectado en Tiempo Real (Final del Partido)")
         
         col_res_l1, col_res_l2, col_res_l3 = st.columns(3)
-        col_res_l1.metric(f"Victoria {eq_loc}", f"{p_l_live:.1f}%", f"Prom: {np.mean(goles_totales_final_l):.1f} goles")
+        col_res_l1.metric(f"Victoria {eq_loc}", f"{p_l_live:.1f}%", f"Prom: {media_fin_l:.1f} goles")
         col_res_l2.metric("Empate Final", f"{p_e_live:.1f}%")
-        col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {np.mean(goles_totales_final_v):.1f} goles")
+        col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {media_fin_v:.1f} goles")
 
-
-     
