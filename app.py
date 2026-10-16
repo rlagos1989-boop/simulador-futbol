@@ -608,26 +608,24 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
         </div>
     """, unsafe_allow_html=True)
 
-    # --- 2. CANCHA DE FÚTBOL TÁCTICA (MPLSOCCER) ---
+      # --- 2. CANCHA DE FÚTBOL TÁCTICA (MPLSOCCER - CORREGIDO) ---
     st.markdown("### 🗺️ Búnker Táctico: Posicionamiento en Cancha")
     
-    # Coordenadas base simplificadas según formaciones elegidas
-    # Creamos la cancha con mplsoccer
     pitch = Pitch(pitch_type='statsbomb', pitch_color='#1b4d3e', line_color='#ffffff', stripe=True)
     fig, ax = pitch.draw(figsize=(10, 6))
     
-    # Dibujar jugadores locales (Azul eléctrico) y visitantes (Rojo neón) en formaciones aproximadas
+    # Coordenadas exactas con listas de igual tamaño para Local y Visitante
     # Local (Izquierda a Derecha)
-    pitch.scatter(15, 40, s=300, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
-    pitch.scatter(35, [20, 35, 50, 65], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
-    pitch.scatter(60, [30, 50], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
-    pitch.scatter(85, [25, 50, 75], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
+    pitch.scatter([15], [40], s=300, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
+    pitch.scatter([35, 35, 35, 35], [20, 35, 50, 65], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
+    pitch.scatter([60, 60], [30, 50], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
+    pitch.scatter([85, 85, 85], [25, 50, 75], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
 
     # Visitante (Derecha a Izquierda)
-    pitch.scatter(105, 40, s=300, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
-    pitch.scatter(85, [20, 35, 50, 65], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
-    pitch.scatter(60, [25, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
-    pitch.scatter(35, [25, 50, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
+    pitch.scatter([105], [40], s=300, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Portero
+    pitch.scatter([85, 85, 85, 85], [20, 35, 50, 65], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Defensas
+    pitch.scatter([60, 60], [25, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Mediocampistas
+    pitch.scatter([35, 35, 35], [25, 50, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax) # Delanteros
 
     ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
     st.pyplot(fig)
