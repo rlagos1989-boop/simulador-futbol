@@ -629,90 +629,104 @@ if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
 
     ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
     st.pyplot(fig)
-            # --- 1. MARCADOR LED ESTILO ESTADIO ---
+# ==============================================================================
+# --- ESTILOS CSS PARA MEJORAR CONTRASTE Y LEGIBILIDAD DE MÉTRICAS ---
+# ==============================================================================
+st.markdown("""
+    <style>
+    /* Forzar texto claro e iluminado en todas las métricas de Streamlit */
+    div[data-testid="stMetricValue"] {
+        color: #38bdf8 !important;
+        font-weight: 800 !important;
+        font-size: 28px !important;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #f8fafc !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    div[data-testid="stMetricDelta"] {
+        color: #34d399 !important;
+    }
+    /* Contenedor de métricas estilo cristal translúcido iluminado */
+    div[data-testid="stMetric"] {
+        background: rgba(15, 23, 42, 0.85) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- DESPLIEGUE DE RESULTADOS (SIN ERRORES DE SANGRÍA / INDENTACIÓN) ---
+# ==============================================================================
+if 'goles_ft_loc' in locals() and 'goles_ft_vis' in locals():
+    
+    # 1. MARCADOR LED ESTILO ESTADIO
     logo_loc_url = obtener_logo_equipo(eq_loc)
     logo_vis_url = obtener_logo_equipo(eq_vis)
-        
-        media_l_estadio = round(np.mean(goles_ft_loc), 1)
-        media_v_estadio = round(np.mean(goles_ft_vis), 1)
-        
-        st.markdown(f"""
-            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 25px; border-radius: 16px; border: 2px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); text-align: center; margin-bottom: 25px;">
-                <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 3px; color: #38bdf8; font-weight: 700; margin-bottom: 15px;">🏟️ Gran Pantalla del Estadio - Simulación Oficial</div>
-                <div style="display: flex; justify-content: space-around; align-items: center;">
-                    <div style="width: 30%; text-align: center;">
-                        <img src="{logo_loc_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
-                        <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_loc}</h3>
+    
+    media_l_estadio = round(np.mean(goles_ft_loc), 1)
+    media_v_estadio = round(np.mean(goles_ft_vis), 1)
+    
+    st.markdown(f"""
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 25px; border-radius: 16px; border: 2px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 3px; color: #38bdf8; font-weight: 700; margin-bottom: 15px;">🏟️ Gran Pantalla del Estadio - Simulación Oficial</div>
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div style="width: 30%; text-align: center;">
+                    <img src="{logo_loc_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                    <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_loc}</h3>
+                </div>
+                <div style="width: 40%; text-align: center;">
+                    <div style="background: #020617; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid #0ea5e9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);">
+                        <span style="font-size: 38px; font-weight: 900; color: #f8fafc; font-family: monospace;">{media_l_estadio} - {media_v_estadio}</span>
                     </div>
-                    <div style="width: 40%; text-align: center;">
-                        <div style="background: #020617; display: inline-block; padding: 10px 30px; border-radius: 12px; border: 2px solid #0ea5e9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);">
-                            <span style="font-size: 38px; font-weight: 900; color: #f8fafc; font-family: monospace;">{media_l_estadio} - {media_v_estadio}</span>
-                        </div>
-                        <div style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Expectativa de Goles (xG)</div>
-                    </div>
-                    <div style="width: 30%; text-align: center;">
-                        <img src="{logo_vis_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
-                        <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_vis}</h3>
-                    </div>
+                    <div style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Expectativa de Goles (xG)</div>
+                </div>
+                <div style="width: 30%; text-align: center;">
+                    <img src="{logo_vis_url}" width="75" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); border-radius: 50%; background: #ffffff10; padding: 5px;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/53/53283.png';">
+                    <h3 style="color: white; margin-top: 10px; font-size: 20px;">{eq_vis}</h3>
                 </div>
             </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE
+    st.markdown("### 🏆 Análisis Definitivo del Resultado y Marcador Más Probable")
+    
+    marcadores_sim = [f"{l}-{v}" for l, v in zip(goles_ft_loc, goles_ft_vis)]
+    df_marcadores = pd.Series(marcadores_sim).value_counts(normalize=True) * 100
+    top_marcador = df_marcadores.index[0]
+    prob_marcador = df_marcadores.iloc[0]
+    
+    media_l = np.mean(goles_ft_loc)
+    media_v = np.mean(goles_ft_vis)
+    
+    if media_l > media_v:
+        veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_loc} (Local)"
+    elif media_v > media_l:
+        veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_vis} (Visitante)"
+    else:
+        veredicto_ganador = "🤝 **Pronóstico:** Alta probabilidad de Empate técnico"
+
+    col_an1, col_an2 = st.columns([1.5, 1])
+    with col_an1:
+        st.markdown(f"""
+            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
+                <h4 style="color: #38bdf8; margin-top: 0; font-size: 18px;">🎯 Veredicto de la IA (Monte Carlo)</h4>
+                <p style="font-size: 16px; margin-bottom: 8px; color: #f8fafc;">Marcador más probable: <b style="color: #38bdf8; font-size: 20px;">{eq_loc} {top_marcador} {eq_vis}</b></p>
+                <p style="font-size: 14px; color: #cbd5e1;">Probabilidad estadística: <b style="color: #f8fafc;">{prob_marcador:.1f}%</b></p>
+                <hr style="border-color: #334155; margin: 12px 0;">
+                <p style="font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 0;">{veredicto_ganador}</p>
+            </div>
         """, unsafe_allow_html=True)
-
-        # --- 2. ANÁLISIS DEL RESULTADO Y MARCADOR MÁS PROBABLE ---
-        st.markdown("### 🏆 Análisis Definitivo del Resultado y Marcador Más Probable")
         
-        marcadores_sim = [f"{l}-{v}" for l, v in zip(goles_ft_loc, goles_ft_vis)]
-        df_marcadores = pd.Series(marcadores_sim).value_counts(normalize=True) * 100
-        top_marcador = df_marcadores.index[0]
-        prob_marcador = df_marcadores.iloc[0]
-        
-        media_l = np.mean(goles_ft_loc)
-        media_v = np.mean(goles_ft_vis)
-        
-        if media_l > media_v:
-            veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_loc} (Local)"
-        elif media_v > media_l:
-            veredicto_ganador = f"🔥 **Ganador Predicho:** {eq_vis} (Visitante)"
-        else:
-            veredicto_ganador = "🤝 **Pronóstico:** Alta probabilidad de Empate técnico"
-
-        col_an1, col_an2 = st.columns([1.5, 1])
-        with col_an1:
-            st.markdown(f"""
-                <div style="background: rgba(30, 41, 59, 0.75); padding: 20px; border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.4); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
-                    <h4 style="color: #38bdf8; margin-top: 0; font-size: 18px;">🎯 Veredicto de la IA (Monte Carlo)</h4>
-                    <p style="font-size: 16px; margin-bottom: 8px;">Marcador más probable: <b style="color: #f8fafc; font-size: 18px;">{eq_loc} {top_marcador} {eq_vis}</b></p>
-                    <p style="font-size: 14px; color: #94a3b8;">Probabilidad estadística: <b>{prob_marcador:.1f}%</b></p>
-                    <hr style="border-color: #334155; margin: 12px 0;">
-                    <p style="font-size: 16px; font-weight: bold; color: #38bdf8; margin-bottom: 0;">{veredicto_ganador}</p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with col_an2:
-            st.markdown(f"""
-                <div style="background: rgba(30, 41, 59, 0.75); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);">
-                    <h4 style="color: #f8fafc; margin-top: 0; font-size: 16px;">📋 Top 3 Marcadores</h4>
-            """, unsafe_allow_html=True)
-            for m, p in df_marcadores.head(3).items():
-                st.markdown(f"• **{m}**: `{p:.1f}%`")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        # --- 3. CANCHA TÁCTICA (MPLSOCCER) ---
-        st.markdown("### 🗺️ Búnker Táctico: Posicionamiento en Cancha")
-        pitch = Pitch(pitch_type='statsbomb', pitch_color='#1b4d3e', line_color='#ffffff', stripe=True)
-        fig, ax = pitch.draw(figsize=(10, 6))
-        
-        pitch.scatter([15], [40], s=300, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([35, 35, 35, 35], [20, 35, 50, 65], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([60, 60], [30, 50], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([85, 85, 85], [25, 50, 75], s=250, color='#38bdf8', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-
-        pitch.scatter([105], [40], s=300, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([85, 85, 85, 85], [20, 35, 50, 65], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([60, 60], [25, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-        pitch.scatter([35, 35, 35], [25, 50, 75], s=250, color='#f43f5e', edgecolors='white', linewidth=2, zorder=3, ax=ax)
-
-        ax.set_title(f"Esquema Táctico en Vivo: {eq_loc} vs {eq_vis}", fontsize=14, color='white', fontweight='bold', pad=15)
-        st.pyplot(fig)
+    with col_an2:
+        st.markdown("""
+            <div style="background: rgba(15, 23, 42, 0.85); padding: 20px; border-radius: 14px; border: 1px solid rgba(51, 65, 85, 0.8); backdrop-filter: blur(10px); box-shadow: 0 8px 32px
 
 
+          
