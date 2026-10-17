@@ -811,10 +811,13 @@ with st.container():
         col_res_l2.metric("Empate Final", f"{p_e_live:.1f}%")
         col_res_l3.metric(f"Victoria {eq_vis}", f"{p_v_live:.1f}%", f"Prom: {media_fin_v:.1f} goles")
 
-import plotly.express as px
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 
-# --- MATRIZ TÉRMICA DE MARCADORES (HEATMAP) ---
+# ==============================================================================
+# --- MÓDULOS AVANZADOS (SISTEMA DE MATRIZ, NARRACIÓN Y ANÁLISIS) ---
+# ==============================================================================
+
+# --- MATRIZ TÉRMICA DE MARCADORES (CON MATPLOTLIB) ---
 def generar_matriz_calor_marcadores(goles_loc, goles_vis, max_goles=5):
     matriz = np.zeros((max_goles + 1, max_goles + 1))
     N = len(goles_loc)
@@ -823,25 +826,30 @@ def generar_matriz_calor_marcadores(goles_loc, goles_vis, max_goles=5):
             matriz[l, v] += 1
     matriz = (matriz / N) * 100
     
-    fig = px.imshow(
-        matriz,
-        labels=dict(x="Goles Visitante", y="Goles Local", color="Probabilidad %"),
-        x=[str(i) for i in range(max_goles + 1)],
-        y=[str(i) for i in range(max_goles + 1)],
-        color_continuous_scale="Viridis",
-        text_auto=".1f"
-    )
-    fig.update_layout(
-        title="🔥 Matriz Térmica de Marcadores Exactos (Monte Carlo)",
-        template="plotly_dark",
-        margin=dict(l=20, r=20, t=40, b=20)
-    )
+    fig, ax = plt.subplots(figsize=(6, 5))
+    cax = ax.matshow(matriz, cmap='viridis')
+    fig.colorbar(cax)
+    
+    ax.set_xticks(range(max_goles + 1))
+    ax.set_yticks(range(max_goles + 1))
+    ax.set_xlabel('Goles Visitante', color='white', fontsize=11)
+    ax.set_ylabel('Goles Local', color='white', fontsize=11)
+    ax.set_title('🔥 Matriz Térmica de Marcadores Exactos (%)', color='white', pad=15, fontsize=12, fontweight='bold')
+    
+    for i in range(max_goles + 1):
+        for j in range(max_goles + 1):
+            ax.text(j, i, f"{matriz[i, j]:.1f}%", ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+            
+    fig.patch.set_facecolor('#0f172a')
+    ax.set_facecolor('#0f172a')
+    ax.tick_params(colors='white')
+    plt.tight_layout()
     return fig
 
 # --- GENERADOR DE RELATO Y NARRACIÓN DEL PARTIDO ---
 def generar_relato_partido(eq_loc, eq_vis, g_loc, g_vis, estilo_loc, estilo_vis, al_loc, al_vis):
-    minutos_gol_loc = sorted(np.random.randint(5, 88, size=g_loc))
-    minutos_gol_vis = sorted(np.random.randint(5, 88, size=g_vis))
+    minutos_gol_loc = sorted(np.random.randint(5, 88, size=g_loc)) if g_loc > 0 else []
+    minutos_gol_vis = sorted(np.random.randint(5, 88, size=g_vis)) if g_vis > 0 else []
     
     jugadores_loc = [j.strip() for j in al_loc.split(",") if j.strip()]
     jugadores_vis = [j.strip() for j in al_vis.split(",") if j.strip()]
@@ -868,7 +876,11 @@ def generar_relato_partido(eq_loc, eq_vis, g_loc, g_vis, estilo_loc, estilo_vis,
         
     relato.append(f"🏁 **90'**: ¡Pitazo final! Resultado definitivo: **{eq_loc} {g_loc} - {g_vis} {eq_vis}**.")
     return relato
-st.title("⚽ Simulador Monte Carlo Predictivo Ultra Pro 2026/2027")
+
+
+# ==============================================================================
+# --- ESTRUCTURA PRINCIPAL DE PESTAÑAS ---
+# ==============================================================================
 
 p1, p2, p3, p4 = st.tabs([
     "🚀 Simulación & Live", 
@@ -877,22 +889,18 @@ p1, p2, p3, p4 = st.tabs([
     "📜 Historial & Backtesting"
 ])
 
-# ==============================================================================
-# PESTAÑA 1: SIMULACIÓN PRINCIPAL Y LIVE
-# ==============================================================================
-with p1:
-    st.info("Utiliza esta pestaña para ejecutar la simulación base, ver el marcador exacto y el panel en vivo de medio tiempo.")
-    # (Aquí mantiene tu código actual de selección de ligas, métricas, botón de calcular y panel en vivo)
-
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # PESTAÑA 2: ALINEACIONES Y NARRACIÓN DEL PARTIDO
-# ==============================================================================
+# ------------------------------------------------------------------------------
 with p2:
     st.subheader("🏟️ Búnker Táctico: Alineaciones, Esquemas y Narración IA")
     col_t1, col_t2 = st.columns(2)
     
+    eq_l_nombre = eq_loc if 'eq_loc' in locals() else 'Equipo Local'
+    eq_v_nombre = eq_vis if 'eq_vis' in locals() else 'Equipo Visitante'
+    
     with col_t1:
-        st.markdown(f"### 🏠 {eq_loc if 'eq_loc' in locals() else 'Equipo Local'}")
+        st.markdown(f"### 🏠 {eq_l_nombre}")
         estilo_loc = st.selectbox("Esquema Táctico del DT (Local):", [
             "4-3-3 Posesión y Presión Alta", 
             "4-4-2 Bloque Medio y Transición", 
@@ -903,7 +911,7 @@ with p2:
                                       "Portero, Def1, Def2, Def3, Def4, Med1, Med2, Med3, Del1, Del2, Del3", key="alin_loc_tab")
         
     with col_t2:
-        st.markdown(f"### ✈️ {eq_vis if 'eq_vis' in locals() else 'Equipo Visitante'}")
+        st.markdown(f"### ✈️ {eq_v_nombre}")
         estilo_vis = st.selectbox("Esquema Táctico del DT (Visitante):", [
             "4-3-3 Posesión y Presión Alta", 
             "4-4-2 Bloque Medio y Transición", 
@@ -918,46 +926,43 @@ with p2:
             g_sim_l = int(np.round(np.mean(goles_ft_loc)))
             g_sim_v = int(np.round(np.mean(goles_ft_vis)))
             
-            comentarios = generar_relato_partido(eq_loc, eq_vis, g_sim_l, g_sim_v, estilo_loc, estilo_vis, alineacion_loc, alineacion_vis)
+            comentarios = generar_relato_partido(eq_l_nombre, eq_v_nombre, g_sim_l, g_sim_v, estilo_loc, estilo_vis, alineacion_loc, alineacion_vis)
             
             st.markdown("---")
             st.markdown("#### 📜 Transmisión y Minuto a Minuto del Partido:")
             for c in comentarios:
                 st.write(c)
         else:
-            st.warning("⚠️ Primero ejecuta la simulación en la Pestaña 1 para obtener las probabilidades del partido.")
+            st.warning("⚠️ Primero ejecuta la simulación en la Pestaña 1 para obtener los marcadores del partido.")
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # PESTAÑA 3: INTELIGENCIA AVANZADA, CONTEXTO DE TORNEO Y APUESTAS DE VALOR
-# ==============================================================================
+# ------------------------------------------------------------------------------
 with p3:
     st.subheader("📊 Centro de Inteligencia Deportivo, Tabla & Apuestas de Valor")
     
-    # 1. EVALUACIÓN DE PUNTOS Y CONTEXTO DE TORNEO
     st.markdown("### 🏆 Contexto de Torneo & Necesidad de Puntos")
     col_p1, col_p2 = st.columns(2)
     with col_p1:
-        pts_loc = st.number_input(f"Puntos actuales ({eq_loc if 'eq_loc' in locals() else 'Local'}):", 0, 120, 45, key="pts_l")
-        pos_loc = st.number_input(f"Posición en la Tabla ({eq_loc if 'eq_loc' in locals() else 'Local'}):", 1, 20, 2, key="pos_l_tab")
+        pts_loc = st.number_input(f"Puntos actuales ({eq_l_nombre}):", 0, 120, 45, key="pts_l")
+        pos_loc = st.number_input(f"Posición en la Tabla ({eq_l_nombre}):", 1, 20, 2, key="pos_l_tab")
     with col_p2:
-        pts_vis = st.number_input(f"Puntos actuales ({eq_vis if 'eq_vis' in locals() else 'Visitante'}):", 0, 120, 42, key="pts_v")
-        pos_vis = st.number_input(f"Posición en la Tabla ({eq_vis if 'eq_vis' in locals() else 'Visitante'}):", 1, 20, 4, key="pos_v_tab")
+        pts_vis = st.number_input(f"Puntos actuales ({eq_v_nombre}):", 0, 120, 42, key="pts_v")
+        pos_vis = st.number_input(f"Posición en la Tabla ({eq_v_nombre}):", 1, 20, 4, key="pos_v_tab")
 
-    # Evaluación automática de necesidad
     obj_loc = "Lucha por el Título" if pos_loc <= 2 else ("Puestos de Champions / Copas" if pos_loc <= 5 else ("Peligro de Descenso" if pos_loc >= 17 else "Zona Media"))
     obj_vis = "Lucha por el Título" if pos_vis <= 2 else ("Puestos de Champions / Copas" if pos_vis <= 5 else ("Peligro de Descenso" if pos_vis >= 17 else "Zona Media"))
     
     st.info(f"📌 **Contexto del Partido:**\n\n"
-            f"• **{eq_loc if 'eq_loc' in locals() else 'Local'}**: {pts_loc} pts (Posición #{pos_loc}) ➔ **Objetivo:** {obj_loc}\n\n"
-            f"• **{eq_vis if 'eq_vis' in locals() else 'Visitante'}**: {pts_vis} pts (Posición #{pos_vis}) ➔ **Objetivo:** {obj_vis}")
+            f"• **{eq_l_nombre}**: {pts_loc} pts (Posición #{pos_loc}) ➔ **Objetivo:** {obj_loc}\n\n"
+            f"• **{eq_v_nombre}**: {pts_vis} pts (Posición #{pos_vis}) ➔ **Objetivo:** {obj_vis}")
 
     st.divider()
 
-    # 2. VALOR DE APUESTAS & MATRIZ TÉRMICA
     col_v1, col_v2 = st.columns(2)
     with col_v1:
         st.markdown("#### 🧮 Comparador de Cuotas (Value Bet Finder)")
-        cuota_loc = st.number_input(f"Cuota Victoria Local ({eq_loc if 'eq_loc' in locals() else 'Local'}):", 1.01, 20.0, 2.10)
+        cuota_loc = st.number_input(f"Cuota Victoria Local ({eq_l_nombre}):", 1.01, 20.0, 2.10)
         
     with col_v2:
         st.markdown("#### ⚡ Calculadora de Volatilidad")
@@ -965,11 +970,9 @@ with p3:
         st.metric("Nivel de Volatilidad del Partido", volatilidad)
 
     if 'goles_ft_loc' in locals():
-        # Matriz térmica de marcadores
         fig_heat = generar_matriz_calor_marcadores(goles_ft_loc, goles_ft_vis)
-        st.plotly_chart(fig_heat, use_container_width=True)
+        st.pyplot(fig_heat)
         
-        # Indicador de Apuesta con Valor
         prob_implicita_cuota = (1 / cuota_loc) * 100
         prob_modelo = np.mean(goles_ft_loc > goles_ft_vis) * 100
         edge = prob_modelo - prob_implicita_cuota
@@ -980,9 +983,10 @@ with p3:
         else:
             st.info(f"⚖️ **Cuota Sin Ventaja Clara:** Probabilidad del Modelo: **{prob_modelo:.1f}%** vs Probabilidad de la Cuota: **{prob_implicita_cuota:.1f}%** (Diferencia: {edge:.1f}%)")
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # PESTAÑA 4: HISTORIAL Y PERFORMANCE DE MODELO
-# ==============================================================================
+# ------------------------------------------------------------------------------
 with p4:
     st.subheader("📜 Rendimiento Histórico y Registros de Pronósticos")
     st.dataframe(st.session_state.historial_df, use_container_width=True)
+
