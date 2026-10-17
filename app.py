@@ -990,3 +990,50 @@ with p4:
     st.subheader("📜 Rendimiento Histórico y Registros de Pronósticos")
     st.dataframe(st.session_state.historial_df, use_container_width=True)
 
+# ==============================================================================
+# --- MÓDULO DE TARJETAS Y EXPULSIONES EN VIVO ---
+# ==============================================================================
+st.markdown("### 🟨🟥 Control de Tarjetas & Expulsiones (Primer Tiempo)")
+
+col_tcar1, col_tcar2 = st.columns(2)
+
+eq_l_nombre = eq_loc if 'eq_loc' in locals() else 'Equipo Local'
+eq_v_nombre = eq_vis if 'eq_vis' in locals() else 'Equipo Visitante'
+
+with col_tcar1:
+    st.markdown(f"**🏠 {eq_l_nombre}**")
+    roja_pt_loc = st.selectbox(
+        "¿Roja en 1íT?", 
+        ["No", "Sí (Min 1'-45')"], 
+        key="roja_loc_pt"
+    )
+    amarillas_loc = st.number_input(
+        "Total Amarillas:", 
+        min_value=0, 
+        max_value=10, 
+        value=0, 
+        key="amarillas_l_val"
+    )
+
+with col_tcar2:
+    st.markdown(f"**✈️ {eq_v_nombre}**")
+    roja_pt_vis = st.selectbox(
+        "¿Roja en 1íT?", 
+        ["No", "Sí (Min 1'-45')"], 
+        key="roja_vis_pt"
+    )
+    amarillas_vis = st.number_input(
+        "Total Amarillas:", 
+        min_value=0, 
+        max_value=10, 
+        value=0, 
+        key="amarillas_v_val"
+    )
+
+# Ajuste automático del modelo si hay expulsión en el primer tiempo
+factor_ajuste_loc = 0.65 if "Sí" in roja_pt_loc else 1.0
+factor_ajuste_vis = 0.65 if "Sí" in roja_pt_vis else 1.0
+
+if "Sí" in roja_pt_loc or "Sí" in roja_pt_vis:
+    st.warning("⚠️ **¡Atención! Expulsión detectada en el primer tiempo:** El modelo ha ajustado automáticamente la expectativa ofensiva y la probabilidad de gol del equipo afectado.")
+
