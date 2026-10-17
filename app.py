@@ -993,7 +993,7 @@ with p4:
 # ==============================================================================
 # --- MÓDULO DE TARJETAS Y EXPULSIONES EN VIVO ---
 # ==============================================================================
-st.markdown("### 🟨🟥 Control de Tarjetas & Expulsiones (Primer Tiempo)")
+st.markdown("### 🟨🟥 Control de Tarjetas & Expulsiones (En Vivo)")
 
 col_tcar1, col_tcar2 = st.columns(2)
 
@@ -1003,12 +1003,12 @@ eq_v_nombre = eq_vis if 'eq_vis' in locals() else 'Equipo Visitante'
 with col_tcar1:
     st.markdown(f"**🏠 {eq_l_nombre}**")
     roja_pt_loc = st.selectbox(
-        "¿Roja en 1íT?", 
+        "¿Roja en 1° Tiempo?", 
         ["No", "Sí (Min 1'-45')"], 
         key="roja_loc_pt"
     )
     amarillas_loc = st.number_input(
-        "Total Amarillas:", 
+        "Total Tarjetas Amarillas:", 
         min_value=0, 
         max_value=10, 
         value=0, 
@@ -1018,22 +1018,44 @@ with col_tcar1:
 with col_tcar2:
     st.markdown(f"**✈️ {eq_v_nombre}**")
     roja_pt_vis = st.selectbox(
-        "¿Roja en 1íT?", 
+        "¿Roja en 1° Tiempo?", 
         ["No", "Sí (Min 1'-45')"], 
         key="roja_vis_pt"
     )
     amarillas_vis = st.number_input(
-        "Total Amarillas:", 
+        "Total Tarjetas Amarillas:", 
         min_value=0, 
         max_value=10, 
         value=0, 
         key="amarillas_v_val"
     )
 
-# Ajuste automático del modelo si hay expulsión en el primer tiempo
-factor_ajuste_loc = 0.65 if "Sí" in roja_pt_loc else 1.0
-factor_ajuste_vis = 0.65 if "Sí" in roja_pt_vis else 1.0
+# ------------------------------------------------------------------------------
+# --- CÁLCULO DEL IMPACTO REAL EN EL MODELO / RESULTADO ---
+# ------------------------------------------------------------------------------
+# 1. Una tarjeta roja reduce la efectividad ofensiva del equipo a ~65% y aumenta
+# la concesión de goles esperados del rival en un +15%.
+# 2. Cada tarjeta amarilla genera un pequeño desgaste disciplinario (-2% por amarilla).
 
+factor_roja_loc = 0.65 if "Sí" in roja_pt_loc else 1.0
+factor_roja_vis = 0.65 if "Sí" in roja_pt_vis else 1.0
+
+desgaste_amarillas_loc = max(0.80, 1.0 - (amarillas_loc * 0.02))
+desgaste_amarillas_vis = max(0.80, 1.0 - (amarillas_vis * 0.02))
+
+# Factores finales que multiplican tus Expected Goals (xG) base
+mult_xg_local = factor_roja_loc * desgaste_amarillas_loc * (1.15 if "Sí" in roja_pt_vis else 1.0)
+mult_xg_visitante = factor_roja_vis * desgaste_amarillas_vis * (1.15 if "Sí" in roja_pt_loc else 1.0)
+
+# Alerta en pantalla si hay expulsados
 if "Sí" in roja_pt_loc or "Sí" in roja_pt_vis:
-    st.warning("⚠️ **¡Atención! Expulsión detectada en el primer tiempo:** El modelo ha ajustado automáticamente la expectativa ofensiva y la probabilidad de gol del equipo afectado.")
+    st.warning("⚠️ **Ajuste de Partido en Vivo:** Expulsión detectada. El modelo ha penalizado la capacidad de ataque del equipo sancionado y ha elevado la probabilidad de gol del rival.")
+
+# ------------------------------------------------------------------------------
+# --- APLICACIÓN A TUS VARIABLES BASE DE xG ---
+# ------------------------------------------------------------------------------
+# (Sustituye 'xg_local_base' y 'xg_vis_base' por las variables donde calculas tus xG en vivo)
+if 'lambda_local' in locals() and 'lambda_vis' in locals():
+    lambda_local_ajustado = lambda_local * mult_xg_local
+    lambda_vis_ajustado = lambda_vis * mult_xg_visitante
 
