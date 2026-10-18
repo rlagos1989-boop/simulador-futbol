@@ -1160,18 +1160,5 @@ with pestana2:
   else:
     st.info("Aún no tienes pronósticos registrados en la base de datos.")
 
-steps:
-      - name: Descargar el repositorio
-        uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      # <--- ESTO ES LO QUE FALTA O DEBE TENER TU ARCHIVO YML --->
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
 
