@@ -999,4 +999,3 @@ with p4:
     st.dataframe(st.session_state.historial_df, use_container_width=True)
 
 
-Este es ek codigo
