@@ -21,6 +21,14 @@ LIGAS_AUTO = {
     "🇩🇪 Bundesliga 26/27": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
     "🇫🇷 Ligue 1 26/27": "https://www.football-data.co.uk/mmz4281/2627/F1.csv"
 }
+# ==============================================================================
+# --- BOTÓN PARA LIMPIAR CACHÉ Y ACTUALIZAR DATOS ---
+# ==============================================================================
+if st.button("🔄 Limpiar Caché y Actualizar Datos"):
+    st.cache_data.clear() # Borra la memoria temporal de Streamlit
+    st.success("¡Caché limpiada correctamente! Recargando datos...")
+    st.rerun() # Refresca la aplicación al instante
+
 
 # Bases completas para competiciones UEFA, Liga MX, Arabia y Honduras
 LIGAS_ESTATICAS = {
