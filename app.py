@@ -19,12 +19,7 @@ LIGAS_AUTO = {
     "🇮🇹 Serie A (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/I1.csv",
     "🇩🇪 Bundesliga (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
     "🇫🇷 Ligue 1 (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/F1.csv",
-    "🇪🇺 UEFA Champions League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/champions-league.csv",
-    "🇪🇺 UEFA Europa League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/europa-league.csv",
-    "🇪🇺 UEFA Conference League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/conference-league.csv",
-    "🇲🇽 Liga MX (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/mexico.csv"
-
-}
+   }
 # ==============================================================================
 # --- BOTÓN PARA LIMPIAR CACHÉ Y ACTUALIZAR DATOS ---
 # ==============================================================================
@@ -105,7 +100,45 @@ LIGAS_ESTATICAS = {
         "Damac FC": {"pj": 10, "gf": 1.10, "gc": 1.60, "gf1t": 0.45, "corners": 4.3, "tarjetas": 2.4, "remates_arco": 3.5},
         "Al-Raed": {"pj": 10, "gf": 0.90, "gc": 1.75, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.6, "remates_arco": 3.3}
     },
+    "🇪🇺 UEFA Champions League (2026/27 - 36 Equipos)": {
+        "Real Madrid": {"pj": 8, "gf": 2.48, "gc": 0.78, "gf1t": 1.15, "corners": 6.5, "tarjetas": 1.7, "remates_arco": 6.6},
+        "Manchester City": {"pj": 8, "gf": 2.45, "gc": 0.80, "gf1t": 1.20, "corners": 7.4, "tarjetas": 1.4, "remates_arco": 6.9},
+        "FC Barcelona": {"pj": 8, "gf": 2.58, "gc": 0.88, "gf1t": 1.20, "corners": 6.7, "tarjetas": 1.9, "remates_arco": 6.5},
+        "Bayern Múnich": {"pj": 8, "gf": 2.62, "gc": 0.82, "gf1t": 1.25, "corners": 7.2, "tarjetas": 1.5, "remates_arco": 6.8},
+        "Arsenal": {"pj": 8, "gf": 2.35, "gc": 0.72, "gf1t": 1.12, "corners": 6.8, "tarjetas": 1.6, "remates_arco": 6.2},
+        "PSG": {"pj": 8, "gf": 2.38, "gc": 0.85, "gf1t": 1.15, "corners": 6.6, "tarjetas": 1.8, "remates_arco": 6.1},
+        "Inter de Milán": {"pj": 8, "gf": 2.18, "gc": 0.68, "gf1t": 0.98, "corners": 6.0, "tarjetas": 1.7, "remates_arco": 5.4},
+        "Liverpool": {"pj": 8, "gf": 2.40, "gc": 0.88, "gf1t": 1.15, "corners": 7.0, "tarjetas": 1.6, "remates_arco": 6.3},
+        "Atlético de Madrid": {"pj": 8, "gf": 1.65, "gc": 0.85, "gf1t": 0.70, "corners": 4.9, "tarjetas": 2.6, "remates_arco": 4.5},
+        "Aston Villa": {"pj": 8, "gf": 1.85, "gc": 1.15, "gf1t": 0.82, "corners": 5.4, "tarjetas": 2.1, "remates_arco": 4.8},
+        "Borussia Dortmund": {"pj": 8, "gf": 2.10, "gc": 1.18, "gf1t": 0.95, "corners": 5.9, "tarjetas": 2.0, "remates_arco": 5.5},
+        "Roma": {"pj": 8, "gf": 1.75, "gc": 1.00, "gf1t": 0.75, "corners": 5.5, "tarjetas": 2.3, "remates_arco": 4.7},
+        "Manchester United": {"pj": 8, "gf": 1.80, "gc": 1.18, "gf1t": 0.78, "corners": 5.8, "tarjetas": 2.0, "remates_arco": 4.9},
+        "Sporting CP": {"pj": 8, "gf": 2.25, "gc": 0.82, "gf1t": 1.08, "corners": 6.3, "tarjetas": 1.8, "remates_arco": 5.8},
+        "Real Betis": {"pj": 8, "gf": 1.80, "gc": 0.95, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.2, "remates_arco": 4.8},
+        "Porto": {"pj": 8, "gf": 1.98, "gc": 0.95, "gf1t": 0.88, "corners": 5.9, "tarjetas": 2.1, "remates_arco": 5.2},
+        "Club Brujas": {"pj": 8, "gf": 1.88, "gc": 1.05, "gf1t": 0.82, "corners": 5.7, "tarjetas": 2.1, "remates_arco": 4.8},
+        "PSV": {"pj": 8, "gf": 2.45, "gc": 0.85, "gf1t": 1.18, "corners": 6.6, "tarjetas": 1.5, "remates_arco": 6.2},
+        "Lille": {"pj": 8, "gf": 1.75, "gc": 1.00, "gf1t": 0.78, "corners": 5.3, "tarjetas": 2.0, "remates_arco": 4.5},
+        "RB Leipzig": {"pj": 8, "gf": 2.00, "gc": 1.08, "gf1t": 0.90, "corners": 5.8, "tarjetas": 1.9, "remates_arco": 5.2},
+        "Napoli": {"pj": 8, "gf": 1.90, "gc": 1.02, "gf1t": 0.82, "corners": 5.6, "tarjetas": 2.1, "remates_arco": 5.0},
+        "Feyenoord": {"pj": 8, "gf": 2.05, "gc": 1.02, "gf1t": 0.92, "corners": 6.1, "tarjetas": 1.8, "remates_arco": 5.3},
+        "Villarreal": {"pj": 8, "gf": 1.78, "gc": 1.12, "gf1t": 0.78, "corners": 5.4, "tarjetas": 2.2, "remates_arco": 4.6},
+        "Galatasaray": {"pj": 8, "gf": 2.22, "gc": 1.12, "gf1t": 1.02, "corners": 6.2, "tarjetas": 2.5, "remates_arco": 5.7},
+        "Shakhtar Donetsk": {"pj": 8, "gf": 1.80, "gc": 1.15, "gf1t": 0.78, "corners": 5.2, "tarjetas": 2.0, "remates_arco": 4.6},
+        "Bodø/Glimt": {"pj": 8, "gf": 2.02, "gc": 1.22, "gf1t": 0.92, "corners": 5.9, "tarjetas": 1.7, "remates_arco": 5.2},
+        "Fenerbahçe": {"pj": 8, "gf": 2.12, "gc": 0.98, "gf1t": 0.98, "corners": 6.0, "tarjetas": 2.4, "remates_arco": 5.5},
+        "Stuttgart": {"pj": 8, "gf": 1.90, "gc": 1.28, "gf1t": 0.82, "corners": 5.6, "tarjetas": 1.9, "remates_arco": 5.0},
+        "Slavia Praga": {"pj": 8, "gf": 1.75, "gc": 1.20, "gf1t": 0.72, "corners": 5.3, "tarjetas": 2.3, "remates_arco": 4.5},
+        "Lens": {"pj": 8, "gf": 1.68, "gc": 1.15, "gf1t": 0.72, "corners": 5.1, "tarjetas": 2.2, "remates_arco": 4.3},
+        "Como": {"pj": 8, "gf": 1.65, "gc": 1.25, "gf1t": 0.70, "corners": 5.0, "tarjetas": 2.2, "remates_arco": 4.2},
+        "Sabah": {"pj": 8, "gf": 1.50, "gc": 1.35, "gf1t": 0.62, "corners": 4.7, "tarjetas": 2.4, "remates_arco": 3.8},
+        "LASK": {"pj": 8, "gf": 1.62, "gc": 1.25, "gf1t": 0.68, "corners": 4.9, "tarjetas": 2.2, "remates_arco": 4.1},
+        "Viking Stavanger": {"pj": 8, "gf": 1.58, "gc": 1.30, "gf1t": 0.65, "corners": 4.8, "tarjetas": 2.3, "remates_arco": 4.0},
+        "Slovan Bratislava": {"pj": 8, "gf": 1.45, "gc": 1.58, "gf1t": 0.58, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.7},
+        "AEK Atenas": {"pj": 8, "gf": 1.70, "gc": 1.15, "gf1t": 0.72, "corners": 5.2, "tarjetas": 2.4, "remates_arco": 4.4}
     }
+}
 
 @st.cache_data(ttl=21600)
 def obtener_promedios_torneo(nombre_torneo):
