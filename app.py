@@ -158,7 +158,7 @@ LIGAS_ESTATICAS = {
         "Lille": {"pj": 2, "gf": 1.0, "gc": 3.0, "gf1t": 0.4, "corners": 5.3, "tarjetas": 2.0, "remates_arco": 4.5},
         "Galatasaray": {"pj": 2, "gf": 1.0, "gc": 3.5, "gf1t": 0.4, "corners": 6.2, "tarjetas": 2.5, "remates_arco": 5.7},
         "Slovan Bratislava": {"pj": 2, "gf": 0.5, "gc": 4.5, "gf1t": 0.2, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.7}
-    },
+    }
     "🇪🇺 UEFA Europa League (2026/27 - 36 Equipos)": {
         "Anderlecht": {"pj": 8, "gf": 1.68, "gc": 1.12, "gf1t": 0.72, "corners": 5.2, "tarjetas": 2.1, "remates_arco": 4.3},
         "Athletic Club Bilbao": {"pj": 8, "gf": 1.80, "gc": 0.95, "gf1t": 0.80, "corners": 5.8, "tarjetas": 2.2, "remates_arco": 4.8},
