@@ -18,7 +18,7 @@ LIGAS_AUTO = {
     "🇪🇸 LaLiga Española (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/SP1.csv",
     "🇮🇹 Serie A (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/I1.csv",
     "🇩🇪 Bundesliga (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
-    "🇫🇷 Ligue 1 (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/F1.csv"
+    "🇫🇷 Ligue 1 (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/F1.csv",
     "🇪🇺 UEFA Champions League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/champions-league.csv",
     "🇪🇺 UEFA Europa League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/europa-league.csv",
     "🇪🇺 UEFA Conference League (2026/27)": "https://raw.githubusercontent.com/footballcsv/database/master/2026-27/conference-league.csv",
