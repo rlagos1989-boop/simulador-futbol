@@ -232,7 +232,6 @@ LIGAS_ESTATICAS = {
         "LincolnRedImps":{"gf":1.08,"gc":1.60,"gf1t":0.40,"gc1t":0.68,"corners":3.7,"tarjetas":2.8,"rojas":0.15},
         "RigaFC":{"gf":1.32,"gc":1.48,"gf1t":0.52,"gc1t":0.60,"corners":4.4,"tarjetas":2.5,"rojas":0.12},
    }
-}
 
 @st.cache_data(ttl=21600)
 def obtener_promedios_torneo(nombre_torneo):
