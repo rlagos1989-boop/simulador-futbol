@@ -50,7 +50,7 @@ LIGAS_ESTATICAS = {
         "Santos Laguna": {"gf": 0.67, "gc": 2.33, "gf1t": 0.25, "corners": 4.6, "tarjetas": 2.4},
         "Juarez": {"gf": 0.33, "gc": 2.33, "gf1t": 0.15, "corners": 4.3, "tarjetas": 2.8}
     },
-    "🇺🇸 MLS (Estados Unidos - 30 Equipos)": {
+"🇺🇸 MLS (Estados Unidos - 30 Equipos)": {
         "Inter Miami": {"pj": 10, "gf": 2.20, "gc": 1.25, "gf1t": 1.05, "corners": 5.0, "tarjetas": 2.0, "remates_arco": 5.8},
         "Los Angeles FC": {"pj": 10, "gf": 1.90, "gc": 1.20, "gf1t": 0.85, "corners": 5.9, "tarjetas": 2.2, "remates_arco": 5.2},
         "LA Galaxy": {"pj": 10, "gf": 1.85, "gc": 1.30, "gf1t": 0.80, "corners": 5.4, "tarjetas": 2.1, "remates_arco": 5.0},
@@ -82,7 +82,7 @@ LIGAS_ESTATICAS = {
         "FC Dallas": {"pj": 10, "gf": 1.40, "gc": 1.38, "gf1t": 0.58, "corners": 4.8, "tarjetas": 2.1, "remates_arco": 3.9},
         "San Diego FC": {"pj": 10, "gf": 1.35, "gc": 1.35, "gf1t": 0.55, "corners": 4.6, "tarjetas": 2.0, "remates_arco": 3.8}
     },
-    "🇭🇳 Liga Nacional (Honduras 2026/27)": {
+"🇭🇳 Liga Nacional (Honduras 2026/27)": {
         "Real Espana": {"pj": 10, "gf": 2.50, "gc": 0.00, "gf1t": 1.00, "corners": 5.5, "tarjetas": 2.3, "remates_arco": 5.0},
         "Olimpia": {"pj": 10, "gf": 2.50, "gc": 0.50, "gf1t": 1.10, "corners": 5.8, "tarjetas": 2.4, "remates_arco": 5.8},
         "Marathon": {"pj": 10, "gf": 1.00, "gc": 0.50, "gf1t": 0.50, "corners": 4.8, "tarjetas": 2.7, "remates_arco": 4.4},
@@ -98,7 +98,7 @@ LIGAS_ESTATICAS = {
         "CD Victoria": {"pj": 10, "gf": 1.25, "gc": 1.45, "gf1t": 0.50, "corners": 4.5, "tarjetas": 2.7, "remates_arco": 3.7},
         "Real Sociedad": {"pj": 10, "gf": 1.05, "gc": 1.60, "gf1t": 0.40, "corners": 4.0, "tarjetas": 2.6, "remates_arco": 3.3}
     },
-    "🇸🇦 Saudi Professional League (2026/27)": {
+"🇸🇦 Saudi Professional League (2026/27)": {
         "Al Hilal": {"gf": 2.30, "gc": 0.80, "gf1t": 1.10, "corners": 6.2, "tarjetas": 1.9},
         "Al Ettifaq": {"gf": 1.45, "gc": 1.25, "gf1t": 0.60, "corners": 4.8, "tarjetas": 2.3},
         "Al Ittihad": {"gf": 1.95, "gc": 1.10, "gf1t": 0.90, "corners": 5.6, "tarjetas": 2.4},
@@ -118,7 +118,7 @@ LIGAS_ESTATICAS = {
         "Al Fayha": {"gf": 1.15, "gc": 1.45, "gf1t": 0.40, "corners": 4.1, "tarjetas": 2.5},
         "Al Kholood": {"gf": 1.05, "gc": 1.60, "gf1t": 0.35, "corners": 3.8, "tarjetas": 2.7}
     },
-    "🇪🇺 UEFA Champions League (2026/27)": {
+"🇪🇺 UEFA Champions League (2026/27)": {
         "Arsenal":{"gf":2.35,"gc":0.72,"gf1t":1.12,"gc1t":0.22,"corners":6.8,"tarjetas":1.6,"rojas":0.05},
         "AstonVilla":{"gf":1.85,"gc":1.15,"gf1t":0.82,"gc1t":0.48,"corners":5.4,"tarjetas":2.1,"rojas":0.06},
         "Liverpool":{"gf":2.40,"gc":0.88,"gf1t":1.15,"gc1t":0.35,"corners":7.0,"tarjetas":1.6,"rojas":0.04},
@@ -156,7 +156,7 @@ LIGAS_ESTATICAS = {
         "RBLeipzig":{"gf":2.00,"gc":1.08,"gf1t":0.90,"gc1t":0.42,"corners":5.8,"tarjetas":1.9,"rojas":0.06},
         "SabahBakú":{"gf":1.30,"gc":1.55,"gf1t":0.50,"gc1t":0.62,"corners":4.2,"tarjetas":2.6,"rojas":0.13},    
     },
-    "🇪🇺 UEFA Europa League (2026/27)": {
+"🇪🇺 UEFA Europa League (2026/27)": {
         "HapoelBeerSheva":{"gf":1.42,"gc":1.30,"gf1t":0.58,"gc1t":0.52,"corners":4.5,"tarjetas":2.5,"rojas":0.11},
         "Sunderland":{"gf":1.55,"gc":1.25,"gf1t":0.65,"gc1t":0.50,"corners":5.0,"tarjetas":2.1,"rojas":0.07},
         "CrystalPalace":{"gf":1.62,"gc":1.20,"gf1t":0.68,"gc1t":0.48,"corners":5.2,"tarjetas":2.0,"rojas":0.06},
@@ -194,7 +194,7 @@ LIGAS_ESTATICAS = {
         "Ferencvaros":{"gf":1.58,"gc":1.22,"gf1t":0.68,"gc1t":0.50,"corners":5.0,"tarjetas":2.4,"rojas":0.10},
         "Ararat- Armenia":{ "gf":1.25, "gc":1.50, "gf1t":0.48, "gc1t":0.62, "corners":4.1, "tarjetas":2.6, "rojas":0.13}, 
     },
-   "🇪🇺 UEFA Conference League (2026/27)": {
+"🇪🇺 UEFA Conference League (2026/27)": {
         "Mjallby":{"gf":1.38,"gc":1.28,"gf1t":0.55,"gc1t":0.52,"corners":4.6,"tarjetas":2.0,"rojas":0.06, },
         "Brighton":{"gf":1.88,"gc":1.25,"gf1t":0.82,"gc1t":0.50,"corners":5.8,"tarjetas":2.0,"rojas":0.06},
         "Mónaco":{"gf":1.95,"gc":1.10,"gf1t":0.88,"gc1t":0.48,"corners":5.6,"tarjetas":2.1,"rojas":0.10},
