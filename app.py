@@ -19,7 +19,7 @@ LIGAS_AUTO = {
     "🇮🇹 Serie A (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/I1.csv",
     "🇩🇪 Bundesliga (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/D1.csv",
     "🇫🇷 Ligue 1 (2026/27)": "https://www.football-data.co.uk/mmz4281/2627/F1.csv",
-   }
+}
 # ==============================================================================
 # --- BOTÓN PARA LIMPIAR CACHÉ Y ACTUALIZAR DATOS ---
 # ==============================================================================
