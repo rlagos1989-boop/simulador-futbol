@@ -137,7 +137,7 @@ LIGAS_ESTATICAS = {
         "Lille": {"pj": 2, "gf": 1.0, "gc": 3.0, "gf1t": 0.4, "corners": 5.3, "tarjetas": 2.0, "remates_arco": 4.5},
         "Galatasaray": {"pj": 2, "gf": 1.0, "gc": 3.5, "gf1t": 0.4, "corners": 6.2, "tarjetas": 2.5, "remates_arco": 5.7},
         "Slovan Bratislava": {"pj": 2, "gf": 0.5, "gc": 4.5, "gf1t": 0.2, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.7}
-    }
+    },
      "🇪🇺 UEFA Europa League (2026/27)": {
         "Juventus": {"pj": 2, "gf": 3.5, "gc": 0.5, "gf1t": 1.6, "corners": 5.5, "tarjetas": 2.0, "remates_arco": 4.9},
         "Bayer Leverkusen": {"pj": 2, "gf": 3.0, "gc": 0.0, "gf1t": 1.4, "corners": 6.2, "tarjetas": 1.9, "remates_arco": 5.8},
@@ -175,7 +175,7 @@ LIGAS_ESTATICAS = {
         "Qarabağ": {"pj": 2, "gf": 1.0, "gc": 3.0, "gf1t": 0.4, "corners": 4.5, "tarjetas": 2.4, "remates_arco": 3.6},
         "Malmö FF": {"pj": 2, "gf": 0.0, "gc": 1.5, "gf1t": 0.0, "corners": 5.2, "tarjetas": 1.9, "remates_arco": 4.2},
         "Slovan Bratislava U": {"pj": 2, "gf": 0.0, "gc": 2.0, "gf1t": 0.0, "corners": 4.4, "tarjetas": 2.5, "remates_arco": 3.7}
-    }
+    },
   "🇪🇺 UEFA Conference League (2026/27)": {
         "Brighton": {"pj": 1, "gf": 4.0, "gc": 0.0, "gf1t": 1.8, "corners": 6.8, "tarjetas": 1.6, "remates_arco": 6.2},
         "FC Copenhague": {"pj": 1, "gf": 3.0, "gc": 0.0, "gf1t": 1.4, "corners": 5.3, "tarjetas": 1.9, "remates_arco": 4.5},
@@ -213,7 +213,7 @@ LIGAS_ESTATICAS = {
         "HJK Helsinki": {"pj": 1, "gf": 0.0, "gc": 2.0, "gf1t": 0.0, "corners": 4.0, "tarjetas": 2.5, "remates_arco": 3.1},
         "Braga": {"pj": 1, "gf": 0.0, "gc": 3.0, "gf1t": 0.0, "corners": 5.6, "tarjetas": 2.2, "remates_arco": 4.8},
         "Drita": {"pj": 1, "gf": 0.0, "gc": 4.0, "gf1t": 0.0, "corners": 3.9, "tarjetas": 2.6, "remates_arco": 3.0}
-    }
+    },
 }
 
 @st.cache_data(ttl=21600)
