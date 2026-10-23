@@ -2,29 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
+import datetime
 
 st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide")
 
-# --- SISTEMA DE CONTRASEÑA CON BOTÓN (100% SEGURO) ---
-if "autenticado" not in st.session_state:
-    st.session_state.autenticado = False
-
-if not st.session_state.autenticado:
-    st.subheader("🔒 Acceso Restringido - Simulador Pro")
-    password_ingresada = st.text_input("Ingresa tu contraseña secreta:", type="password")
-    
-    # Botón físico para evitar problemas con la tecla Enter en celulares/PCs
-    if st.button("Ingresar"):
-        if password_ingresada == "TuClaveSecreta123": # CAMBIA ESTO por la contraseña que quieras
-            st.session_state.autenticado = True
-            st.rerun()
-        else:
-            st.error("😕 Contraseña incorrecta. Acceso denegado.")
-    st.stop()
-
-# ==========================================
-# A PARTIR DE AQUÍ VA TODO TU CÓDIGO ORIGINAL
-# ==========================================
 ARCH_HISTORIAL = "registro_pronosticos.csv"
 
 # ==============================================================================
