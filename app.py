@@ -35,16 +35,6 @@ if not verificar_password():
 # ==========================================
 ARCH_HISTORIAL = "registro_pronosticos.csv"
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-import os
-import datetime
-
-st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide")
-
-ARCH_HISTORIAL = "registro_pronosticos.csv"
-
 # ==============================================================================
 # 1. BASE DE DATOS Y FEEDS AUTOMÁTICOS (100% COBERTURA DE EQUIPOS Y NOMBRES REALES)
 # ==============================================================================
