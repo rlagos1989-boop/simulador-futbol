@@ -8,7 +8,7 @@ st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2
 # --- SISTEMA DE CONTRASEÑA DE ACCESO ---
 def verificar_password():
     def password_entered():
-        # CAMBIA "TuClaveSecreta123" por la contraseña que quieras usar
+        # CAMBIA "Corollas.2010!" por la contraseña que quieras usar
         if st.session_state["password"] == "TuClaveSecreta123":
             st.session_state["password_correct"] = True
             del st.session_state["password"]
