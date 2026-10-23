@@ -1,10 +1,17 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+import os
+
+st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide")
+
 # --- SISTEMA DE CONTRASEÑA DE ACCESO ---
 def verificar_password():
     def password_entered():
-        # CAMBIA "TuClaveSecreta123" por la contraseña que tú quieras usar
+        # CAMBIA "TuClaveSecreta123" por la contraseña que quieras usar
         if st.session_state["password"] == "TuClaveSecreta123":
             st.session_state["password_correct"] = True
-            del st.session_state["password"] # Borra la contraseña de la memoria por seguridad
+            del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
@@ -26,7 +33,7 @@ if not verificar_password():
 # ==========================================
 # A PARTIR DE AQUÍ VA TODO TU CÓDIGO ORIGINAL
 # ==========================================
-
+ARCH_HISTORIAL = "registro_pronosticos.csv"
 
 import streamlit as st
 import pandas as pd
