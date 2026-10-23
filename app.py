@@ -5,29 +5,21 @@ import os
 
 st.set_page_config(page_title="Simulador Monte Carlo Predictivo Ultra Pro 2026/2027", layout="wide")
 
-# --- SISTEMA DE CONTRASEÑA DE ACCESO ---
-def verificar_password():
-    def password_entered():
-        # CAMBIA "Corollas.2010!" por la contraseña que quieras usar
-        if st.session_state["password"] == "TuClaveSecreta123":
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
+# --- SISTEMA DE CONTRASEÑA CON BOTÓN (100% SEGURO) ---
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    st.subheader("🔒 Acceso Restringido - Simulador Pro")
+    password_ingresada = st.text_input("Ingresa tu contraseña secreta:", type="password")
+    
+    # Botón físico para evitar problemas con la tecla Enter en celulares/PCs
+    if st.button("Ingresar"):
+        if password_ingresada == "TuClaveSecreta123": # CAMBIA ESTO por la contraseña que quieras
+            st.session_state.autenticado = True
+            st.rerun()
         else:
-            st.session_state["password_correct"] = False
-
-    if "password_correct" not in st.session_state:
-        st.subheader("🔒 Acceso Restringido - Simulador Pro")
-        st.text_input("Ingresa tu contraseña secreta:", type="password", on_change=password_entered, key="password")
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input("Ingresa tu contraseña secreta:", type="password", on_change=password_entered, key="password")
-        st.error("😕 Contraseña incorrecta. Acceso denegado.")
-        return False
-    else:
-        return True
-
-# Si la contraseña no es correcta, la aplicación se detiene aquí mismo
-if not verificar_password():
+            st.error("😕 Contraseña incorrecta. Acceso denegado.")
     st.stop()
 
 # ==========================================
