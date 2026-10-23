@@ -1,7 +1,7 @@
 # --- SISTEMA DE CONTRASEÑA DE ACCESO ---
 def verificar_password():
     def password_entered():
-        # CAMBIA "Corollas.2010" por la contraseña que tú quieras usar
+        # CAMBIA "TuClaveSecreta123" por la contraseña que tú quieras usar
         if st.session_state["password"] == "TuClaveSecreta123":
             st.session_state["password_correct"] = True
             del st.session_state["password"] # Borra la contraseña de la memoria por seguridad
@@ -26,6 +26,7 @@ if not verificar_password():
 # ==========================================
 # A PARTIR DE AQUÍ VA TODO TU CÓDIGO ORIGINAL
 # ==========================================
+
 
 import streamlit as st
 import pandas as pd
