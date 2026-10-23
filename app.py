@@ -1,3 +1,32 @@
+# --- SISTEMA DE CONTRASEÑA DE ACCESO ---
+def verificar_password():
+    def password_entered():
+        # CAMBIA "Corollas.2010" por la contraseña que tú quieras usar
+        if st.session_state["password"] == "TuClaveSecreta123":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"] # Borra la contraseña de la memoria por seguridad
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.subheader("🔒 Acceso Restringido - Simulador Pro")
+        st.text_input("Ingresa tu contraseña secreta:", type="password", on_change=password_entered, key="password")
+        return False
+    elif not st.session_state["password_correct"]:
+        st.text_input("Ingresa tu contraseña secreta:", type="password", on_change=password_entered, key="password")
+        st.error("😕 Contraseña incorrecta. Acceso denegado.")
+        return False
+    else:
+        return True
+
+# Si la contraseña no es correcta, la aplicación se detiene aquí mismo
+if not verificar_password():
+    st.stop()
+
+# ==========================================
+# A PARTIR DE AQUÍ VA TODO TU CÓDIGO ORIGINAL
+# ==========================================
+
 import streamlit as st
 import pandas as pd
 import numpy as np
