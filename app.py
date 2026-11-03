@@ -142,7 +142,7 @@ LIGAS_ESTATICAS = {
         "PSV": {"pj": 3, "gf": 0.67, "gc": 0.67, "gf1t": 0.30, "corners": 4.8, "tarjetas": 2.2, "remates_arco": 3.9},
         "Villarreal": {"pj": 3, "gf": 2.67, "gc": 2.67, "gf1t": 1.20, "corners": 5.2, "tarjetas": 2.5, "remates_arco": 4.3},
         "Manchester United": {"pj": 3, "gf": 1.67, "gc": 2.00, "gf1t": 0.75, "corners": 5.8, "tarjetas": 2.0, "remates_arco": 4.9},
-        "Enterrar": {"pj": 3, "gf": 1.67, "gc": 2.00, "gf1t": 0.75, "corners": 5.0, "tarjetas": 2.1, "remates_arco": 4.1},
+        "Inter": {"pj": 3, "gf": 1.67, "gc": 2.00, "gf1t": 0.75, "corners": 5.0, "tarjetas": 2.1, "remates_arco": 4.1},
         "Nápoles": {"pj": 3, "gf": 1.67, "gc": 2.33, "gf1t": 0.75, "corners": 5.4, "tarjetas": 2.3, "remates_arco": 4.5},
         "Galatasaray": {"pj": 3, "gf": 2.00, "gc": 3.00, "gf1t": 0.90, "corners": 6.2, "tarjetas": 2.5, "remates_arco": 5.7},
         "LASK": {"pj": 3, "gf": 2.00, "gc": 3.00, "gf1t": 0.90, "corners": 4.2, "tarjetas": 2.6, "remates_arco": 3.4},
